@@ -178,7 +178,8 @@ def correct_treebank(transcript: Transcript):
         targets = get_targets(treebank)
         method_name = transcript.corpus.method_category.name.lower()
 
-        corr, error_dict, origandalts = correcttreebank(treebank, targets, method_name, corrn)
+        corr, error_dict, origandalts = correcttreebank(
+            treebank=treebank, targets=targets, method=method_name, allsamplecorrections={}, corr=corrn)
 
         return corr, error_dict, origandalts
 
