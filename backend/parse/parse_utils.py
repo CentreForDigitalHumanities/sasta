@@ -175,8 +175,8 @@ def create_utterance_objects(transcript):
 def correct_treebank(transcript: Transcript):
     try:
         treebank = etree.parse(transcript.parsed_content).getroot()
-        targets = get_targets(treebank)
         method_name = transcript.corpus.method_category.name.lower()
+        targets = get_targets(treebank, method_name)
 
         corr, error_dict, origandalts = correcttreebank(
             treebank=treebank, targets=targets, method=method_name, allsamplecorrections={}, corr=corrn)
