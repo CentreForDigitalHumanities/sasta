@@ -16,6 +16,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { StepsModule } from 'primeng/steps';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
+import { RenderStringArrayPipe } from './pipes/render-string-array.pipe';
 
 const primeNGModules = [
     // PrimeNG
@@ -36,8 +37,13 @@ const primeNGModules = [
 ];
 
 @NgModule({
-    declarations: [],
+    declarations: [RenderStringArrayPipe],
     imports: [CommonModule, FontAwesomeModule, FormsModule, ...primeNGModules],
-    exports: [...primeNGModules, FontAwesomeModule, FormsModule],
+    exports: [
+        ...primeNGModules,
+        FontAwesomeModule,
+        FormsModule,
+        RenderStringArrayPipe,
+    ],
 })
 export class SharedModule {}
