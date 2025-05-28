@@ -295,7 +295,7 @@ class AssessmentQuery(models.Model):
         default=list)
     implies = ArrayField(
         base_field=models.CharField(max_length=50, blank=True),
-        default=list)
+        default=list, null=True, blank=True)
     original = models.BooleanField()
     pages = models.CharField(max_length=50, blank=True, default='')
     fase = models.IntegerField(blank=True, null=True)
@@ -306,7 +306,8 @@ class AssessmentQuery(models.Model):
     literal = models.CharField(max_length=200, blank=True, default='')
     stars = models.CharField(max_length=50, blank=True, default='')
     filter = models.CharField(max_length=200, blank=True, default='')
-    variants = models.CharField(max_length=200, blank=True, default='')
+    variants = ArrayField(
+        base_field=models.CharField(max_length=200, blank=True), default=list, null=True, blank=True)
     unused1 = models.CharField(max_length=50, blank=True, default='')
     unused2 = models.CharField(max_length=50, blank=True, default='')
     comments = models.TextField(blank=True, default='')
