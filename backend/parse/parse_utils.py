@@ -154,7 +154,11 @@ def create_utterance_objects(transcript):
                     # setting utt_id according to targets
                     if transcript.target_ids:
                         # check if xsids are unique and consecutive
-                        assert instance.xsid == marked_utt_counter
+                        if instance.xsid != marked_utt_counter:
+                            logger.warning(
+                                f'xsid {instance.xsid} is not consecutive, '
+                                f'expected {marked_utt_counter}'
+                            )
                     instance.utt_id = marked_utt_counter
                     marked_utt_counter += 1
 
