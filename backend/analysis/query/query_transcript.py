@@ -4,7 +4,9 @@ from sastadev.sastacore import SastaCoreParameters, sastacore
 from sastadev.targets import get_targets
 from lxml import etree
 from sastadev.methods import Method
+from sastadev.sastatypes import SampleSizeTuple
 
+from analysis.results.results import AllResults
 from annotations.reader import read_saf
 from parse.parse_utils import correct_transcript
 
@@ -34,7 +36,7 @@ def prepare_treebanks(transcript: Transcript) -> Tuple[Tuple[str, etree.ElementT
     )
 
 
-def run_sastacore(transcript: Transcript, method: AssessmentMethod, annotation_input: bool = False):
+def run_sastacore(transcript: Transcript, method: AssessmentMethod, annotation_input: bool = False) -> Tuple[AllResults, SampleSizeTuple]:
     # get treebanks
     orig_tb, corr_tb = prepare_treebanks(transcript)
     # Convert method to sastadev version

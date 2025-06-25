@@ -2,6 +2,7 @@ import glob
 from collections import Counter
 from os import path as op
 import os
+from typing import Optional
 
 import pytest
 from analysis.convert.convert import convert
@@ -16,16 +17,19 @@ from lxml import etree
 from parse.parse_utils import create_utterance_objects
 
 
-def _get_transcript_filenames(name: str, dir: str):
-    return {
+def _get_transcript_filenames(name: str, dir: Optional[str] = None):
+    fns = {
         'chat': f'{name}.cha',
         'parsed': f'{name}.xml',
         'corrected': f'{name}_corrected.xml'
     }
+    if dir:
+        fns = {k: op.join(dir, v) for k, v in fns.items()}
+    return fns
 
 
 def _make_transcript(corpus: Corpus, name: str, dir: str):
-    filenames = _get_transcript_filenames(name, str)
+    filenames = _get_transcript_filenames(name)
 
     obj = Transcript.objects.create(
         name=name,
@@ -154,6 +158,28 @@ def asta_transcripts(db, asta_corpus, testfiles_dir):
 @pytest.fixture(autouse=True)
 def tarsp_transcripts(db, tarsp_corpus, testfiles_dir):
     return _make_method_transcripts(tarsp_corpus, testfiles_dir)
+
+
+@pytest.fixture
+def single_utt_transcript(db, asta_corpus, single_utt):
+    transcript = Transcript.objects.create(
+        corpus=asta_corpus,
+        name=single_utt['name'],
+        status=Transcript.CREATED,
+    )
+    yield transcript
+    transcript.delete()
+
+
+@pytest.fixture()
+def single_utt(testfiles_dir, single_utt_allresults):
+    dir = op.join(testfiles_dir, 'ASTA', 'single_utt', 'single_utt')
+    name = 'single_utt'
+    fns = _get_transcript_filenames(dir, name)
+    return {**fns,
+            'name': name,
+            'allresults': single_utt_allresults
+            }
 
 
 @pytest.fixture
