@@ -114,7 +114,7 @@ def save_corrected_treebank(transcript: Transcript, treebank: Treebank, error_di
 
 
 def get_corrected_filename(transcript: Transcript, suffix: str = '_corrected') -> str:
-    return transcript.parsed_content.name.replace('.xml', f'{suffix}.xml')
+    return os.path.basename(transcript.parsed_content.name).replace('.xml', f'{suffix}.xml')
 
 
 def treebank_to_file(treebank: Treebank) -> File:
