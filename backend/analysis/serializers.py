@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from sastadev.methodinfo import known_variants
 from .models import (AnalysisRun, AssessmentMethod, AssessmentQuery, Corpus,
                      MethodCategory, Transcript, UploadFile, Utterance)
 
@@ -101,6 +100,8 @@ class MethodCategorySerializer(serializers.ModelSerializer):
                   'levels', 'has_form', 'variants')
 
     def get_variants(self, obj):
+        # TODO: implement with actual variants
+        known_variants = {}
         cat_variants = known_variants.get(obj.name.lower(), None)
         if cat_variants:
             return [{'key': v.get('key'), 'label': v.get('label')} for v in cat_variants]
