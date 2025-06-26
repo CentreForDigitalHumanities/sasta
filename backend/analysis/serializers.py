@@ -1,5 +1,4 @@
 from rest_framework import serializers
-
 from .models import (AnalysisRun, AssessmentMethod, AssessmentQuery, Corpus,
                      MethodCategory, Transcript, UploadFile, Utterance)
 
@@ -93,10 +92,20 @@ class AssessmentQuerySerializer(serializers.ModelSerializer):
 
 class MethodCategorySerializer(serializers.ModelSerializer):
     has_form = serializers.BooleanField()
+    variants = serializers.SerializerMethodField()
 
     class Meta:
         model = MethodCategory
-        fields = ('id', 'name', 'zc_embeddings', 'levels', 'has_form')
+        fields = ('id', 'name', 'zc_embeddings',
+                  'levels', 'has_form', 'variants')
+
+    def get_variants(self, obj):
+        # TODO: implement with actual variants
+        known_variants = {}
+        cat_variants = known_variants.get(obj.name.lower(), None)
+        if cat_variants:
+            return [{'key': v.get('key'), 'label': v.get('label')} for v in cat_variants]
+        return []
 
 
 class AssessmentMethodSerializer(serializers.ModelSerializer):
