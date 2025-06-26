@@ -88,7 +88,8 @@ def tarsp_corpus(db, admin_user, tarsp_method, tarsp_category):
         default_method=tarsp_method,
         method_category=tarsp_category
     )
-    return obj
+    yield obj
+    obj.delete()
 
 
 @pytest.fixture
@@ -114,13 +115,15 @@ def asta_category(db):
 
 @pytest.fixture
 def asta_corpus(db, admin_user, asta_method, asta_category):
-    return Corpus.objects.create(
+    obj = Corpus.objects.create(
         user=admin_user,
         name='asta_test_corpus',
         status='created',
         default_method=asta_method,
         method_category=asta_category
     )
+    yield obj
+    obj.delete()
 
 
 @pytest.fixture
@@ -136,7 +139,8 @@ def tarsp_method(db, tarsp_category, method_dir):
         instance = AssessmentMethod(
             name='tarsp_test_method', category=tarsp_category)
         instance.content.save(op.basename(file), wrapped_file)
-    return instance
+    yield instance
+    instance.delete()
 
 
 @pytest.fixture
@@ -147,15 +151,16 @@ def asta_method(db, asta_category, method_dir):
         instance = AssessmentMethod(
             name='asta_test_method', category=asta_category)
         instance.content.save(op.basename(file), wrapped_file)
-    return instance
+    yield instance
+    instance.delete()
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture()
 def asta_transcripts(db, asta_corpus, testfiles_dir):
     return _make_method_transcripts(asta_corpus, testfiles_dir)
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture()
 def tarsp_transcripts(db, tarsp_corpus, testfiles_dir):
     return _make_method_transcripts(tarsp_corpus, testfiles_dir)
 
