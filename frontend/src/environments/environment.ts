@@ -5,7 +5,7 @@ import { version } from './version';
 export const environment = {
     appVersion: version,
     production: false,
-    docs: 'https://UUDigitalHumanitieslab.github.io/sasta/',
+    docs: 'https://CentreForDigitalHumanities.github.io/sasta/',
 };
 
 
