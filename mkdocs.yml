@@ -1,6 +1,6 @@
 site_name: SASTA Documentatie
-repo_url: https://github.com/UUDigitalHumanitieslab/sasta
-site_url: https://uudigitalhumanitieslab.github.io/sasta/
+repo_url: https://github.com/CentreForDigitalHumanities/sasta/
+site_url: https://centrefordigitalhumanities.github.io/sasta/
 
 theme:
     name: material

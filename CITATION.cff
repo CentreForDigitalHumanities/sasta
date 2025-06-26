@@ -34,7 +34,7 @@ authors:
 identifiers:
   - type: doi
     value: 10.5281/zenodo.10600256
-repository-code: 'https://github.com/UUDigitalHumanitieslab/sasta'
+repository-code: 'https://github.com/CentreForDigitalHumanities/sasta'
 url: 'https://sasta.hum.uu.nl'
 abstract: >-
   SASTA is a tool for the analysis of spontaneous language
