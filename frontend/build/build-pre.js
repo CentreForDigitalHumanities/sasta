@@ -1,8 +1,7 @@
 const path = require('path');
-const colors = require('colors/safe');
 const fs = require('fs');
 
-console.log(colors.cyan('\nRunning pre-build tasks'));
+console.log('\nRunning pre-build tasks');
 
 var appVersion;
 
@@ -22,18 +21,10 @@ const src = `export const version = '${appVersion}';
 // ensure version module pulls value from package.json
 fs.writeFile(versionFilePath, src, { flat: 'w' }, function (err) {
     if (err) {
-        return console.log(colors.red(err));
+        return console.log(err);
     }
 
-    console.log(
-        colors.green(
-            `Updating application version ${colors.yellow(appVersion)}`
-        )
-    );
-    console.log(
-        `${colors.green('Writing version module to ')}${colors.yellow(
-            versionFilePath
-        )}\n`
-    );
+    console.log(`Updating application version ${appVersion}`);
+    console.log(`${'Writing version module to '}${versionFilePath}\n`);
     console.log(src);
 });
