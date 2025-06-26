@@ -174,6 +174,8 @@ pyparsing==3.0.9
     # via
     #   packaging
     #   rdflib
+pyspellchecker==0.8.3
+    # via sastadev
 pytest==7.1.2
     # via
     #   -r requirements.in
@@ -215,7 +217,7 @@ requests==2.28.1
     #   spacy
 requests-oauthlib==1.3.1
     # via django-allauth
-sastadev==0.3.0
+sastadev==0.3.1
     # via
     #   -r requirements.in
     #   auchann
