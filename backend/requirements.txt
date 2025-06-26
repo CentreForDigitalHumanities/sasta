@@ -174,7 +174,7 @@ pyparsing==3.0.9
     # via
     #   packaging
     #   rdflib
-pyspellchecker==0.8.3
+pyspellchecker==0.8.2
     # via sastadev
 pytest==7.1.2
     # via
