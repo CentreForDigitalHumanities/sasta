@@ -49,9 +49,9 @@ def parse_transcript(transcript, output_path):
     output_path = output_path.replace('.cha', '.xml')
 
     try:
-        logger.info(f'Parsing:\t{transcript.name}...\n')
+        logger.info(f'Parsing:\t{transcript.name}...')
         parsed_filename = initial_parse(transcript.content.path, output_path)
-        logger.info(f'Succesfully parsed:\t{transcript.name}\n')
+        logger.info(f'Succesfully parsed:\t{transcript.name}')
         transcript.save()
 
         # Saving parsed file
@@ -89,12 +89,12 @@ def initial_parse(in_path: str, out_path: str,
 
 
 def correct_transcript(transcript: Transcript) -> str:
-    logger.info(f'Correcting:\t{transcript.name}...\n')
+    logger.info(f'Correcting:\t{transcript.name}...')
     try:
         corrected, error_dict, _origandalts = correct_treebank(transcript)
         save_corrected_treebank(transcript, corrected, error_dict)
         logger.info(
-            f'Successfully corrected:\t{transcript.name}, {len(error_dict)} corrections.\n')
+            f'Successfully corrected:\t{transcript.name}, {len(error_dict)} corrections.')
         return transcript.corrected_content.path
 
     except Exception as err:
@@ -175,12 +175,12 @@ def create_utterance_objects(transcript):
                 num_created += 1
             logger.info(
                 f'Created {num_created} (out of {len(utts)})'
-                f'utterances for:\t{transcript.name}\n')
+                f'utterances for:\t{transcript.name}')
 
         except Exception as e:
             logger.exception(
                 f'ERROR creating utterances for:\t{transcript.name}'
-                f'with message:\t"{e}"\n')
+                f'with message:\t"{e}"')
             transcript.status = transcript.PARSING_FAILED
             transcript.save()
 
