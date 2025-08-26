@@ -1,7 +1,7 @@
 corpus2alpino
 celery
 chamd>=0.5.4
-django>=3.1.12,<3.2
+django>=3.1.12,<3.3
 django_celery_results
 djangorestframework
 django-livereload-server
