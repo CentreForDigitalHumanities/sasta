@@ -6,7 +6,6 @@ from analysis.convert.chat_converter import SifReader, Utterance
 from analysis.convert.replacements import (correct_punctuation, fill_name,
                                            replace_quotation_marks)
 from analysis.utils import docx_to_txt
-from convert.chat_reader import ChatDocument
 
 HERE = op.dirname(op.abspath(__file__))
 
