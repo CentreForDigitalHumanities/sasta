@@ -59,6 +59,9 @@ class MethodCategory(models.Model):
     def has_form(self):
         return True if self.get_form_function() else False
 
+    def get_current_method(self):
+        return self.definitions.latest()
+
 
 class AssessmentMethod(models.Model):
     def upload_path(self, filename):

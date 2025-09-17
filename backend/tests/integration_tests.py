@@ -56,7 +56,13 @@ def test_single_transcript_fullrun(db, single_utt, single_utt_transcript):
     benchmark_results = single_utt.get('allresults')
     assert benchmark_results
 
-    # TODO: assert that results are correct
+    # assert that results are correct
+    non_empty_exactresults = {k: v for k,
+                              v in results.exactresults.items() if v}
+    assert non_empty_exactresults == benchmark_results.exactresults
+
+
+
 
     # TODO: upload corrected annotations
 
