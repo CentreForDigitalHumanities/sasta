@@ -120,7 +120,7 @@ lxml==4.9.1
     #   tei-reader
 markupsafe==2.0.1
     # via jinja2
-more-itertools==10.5.0
+more-itertools==9.1.0
     # via sastadev
 murmurhash==1.0.7
     # via
