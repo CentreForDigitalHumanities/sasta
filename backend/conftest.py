@@ -215,7 +215,7 @@ def single_utt_allresults(testfiles_dir):
         filename='single_utt',
         analysedtrees=[(n + 1, tree) for n, tree in enumerate(utts)],
         annotationinput=True,
-        allutts={1: ['ja', 'uh', 'ik', 'vind', 'het', 'beetje', 'moeilijk',
+        allutts={'1': ['ja', 'uh', 'ik', 'vind', 'het', 'beetje', 'moeilijk',
                      'om', 'het', 'goed', 'te', 'vertellen', 'want', 'ik',
                      'heb', 'een', 'ongeluk', 'gehad']}
     )

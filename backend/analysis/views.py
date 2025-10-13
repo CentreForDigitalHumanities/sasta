@@ -239,7 +239,7 @@ class TranscriptViewSet(viewsets.ModelViewSet):
     def parse_async(self, request, *args, **kwargs):
         transcript = self.get_object()
         if not transcript.parseable():
-            return Response(f'Transcript not parseable', status.HTTP_400_BAD_REQUEST)
+            return Response('Transcript not parseable', status.HTTP_400_BAD_REQUEST)
 
         task = parse_transcript_task.s(transcript.id).delay()
         if not task:

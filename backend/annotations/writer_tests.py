@@ -21,10 +21,10 @@ def test_headers(safwriter: SAFWriter):
 
 
 def test_uttlevel_row(safwriter: SAFWriter):
-    id = 1
+    id = '1'
     words = safwriter.results.allutts[id]
     found = safwriter._uttlevel_row(id, words)
-    expected = [1, SAF_UTT_HEADER, None, 'ja', 'uh', 'ik', 'vind', 'het',
+    expected = ['1', SAF_UTT_HEADER, None, 'ja', 'uh', 'ik', 'vind', 'het',
                 'beetje', 'moeilijk', 'om', 'het', 'goed', 'te', 'vertellen',
                 'want', 'ik', 'heb', 'een', 'ongeluk', 'gehad', None, None]
     assert found == expected

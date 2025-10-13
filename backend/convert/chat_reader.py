@@ -66,6 +66,7 @@ class ChatDocument:
         self.target_speakers: Set[str] = self.find_target_speakers()
         self.process_postcodes()
         self.target_uttids: bool = self.has_xsids
+        self.assign_target_xsids()
 
     @classmethod
     def from_chatfile(cls, filepath: str, method_category: MethodCategory):
@@ -134,6 +135,18 @@ class ChatDocument:
             if any(postcode in line.original for postcode in self.method_category.marking_postcodes):
                 line.tiers['xsid'] = ChatTier('xsid', str(current_xsid))
                 current_xsid += 1
+
+    def assign_target_xsids(self) -> None:
+        '''
+        If there are target speakers, and no specifically targetted utterances,
+        mark all utterances by target speakers with an xsid
+        '''
+        if (len(self.target_speakers) > 0) and not (self.has_xsids):
+            current_xsid = 1
+            for line in self.lines:
+                if line.metadata['speaker'].text in self.target_speakers:
+                    line.tiers['xsid'] = ChatTier('xsid', str(current_xsid))
+                    current_xsid += 1
 
     @staticmethod
     def find_target_roles(header: Optional[Dict]) -> Set[str]:

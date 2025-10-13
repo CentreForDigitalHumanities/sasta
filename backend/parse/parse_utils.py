@@ -209,8 +209,11 @@ def correct_treebank(transcript: Transcript):
             extendhistory=False
         )
 
+        method_obj = transcript.corpus.default_method or transcript.corpus.method_category.get_current_method()
+        sd_method = method_obj.to_sastadev()
+
         correction_parameters = CorrectionParameters(
-            method=method_name,
+            method=sd_method,
             options=correction_options,
             allsamplecorrections={},
             thissamplecorrections={},
