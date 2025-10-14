@@ -101,6 +101,11 @@ LOGGING = {
             'handlers': ['sasta_file', 'console'],
             'level': 'INFO',
             'propagate': True
+        },
+        'sastadev': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False
         }
     },
 }

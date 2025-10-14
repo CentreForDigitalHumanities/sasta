@@ -2,8 +2,10 @@ import csv
 import logging
 import os
 import shutil
+from typing import Union
 
 from django.conf import settings
+from django.db.models.fields.files import FieldFile
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 
@@ -34,14 +36,10 @@ def corpus_delete(sender, instance, **kwargs):
 
 @receiver(post_delete, sender=Transcript)
 def transcript_delete(sender, instance, **kwargs):
-    instance.content.delete(False)
-    instance.parsed_content.delete(False)
-    instance.corrected_content.delete(False)
-    if instance.extracted_filename:
-        try:
-            os.remove(instance.extracted_filename)
-        except FileNotFoundError:
-            pass
+    _attempt_file_delete(instance.content)
+    _attempt_file_delete(instance.parsed_content)
+    _attempt_file_delete(instance.corrected_content)
+    _attempt_file_delete(instance.extracted_filename)
 
 
 @receiver(post_save, sender=UploadFile)
@@ -92,3 +90,21 @@ def initial_default_method(sender, instance, created, **kwargs):
             instance.save()
         except Exception as error:
             logger.exception(error)
+
+
+def _attempt_file_delete(field: Union[FieldFile, str]) -> None:
+    '''Helper function to attempt deletion of a file field.
+    Also deletes the file at storage location if it exists.
+    Works for both FileField and CharField.'''
+    try:
+        if isinstance(field, FieldFile):
+            if field.storage.exists(field.name):
+                field.storage.delete(field.name)
+            field.delete(save=False)
+        elif isinstance(field, str):
+            if os.path.exists(field):
+                os.remove(field)
+    except FileNotFoundError:
+        pass
+    except Exception as error:
+        logger.exception(error)

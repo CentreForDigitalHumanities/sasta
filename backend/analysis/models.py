@@ -4,7 +4,7 @@ import os
 import zipfile
 from io import BytesIO
 from itertools import chain
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 from uuid import uuid4
 
 from analysis.managers import SastaQueryManager
@@ -59,6 +59,9 @@ class MethodCategory(models.Model):
     def has_form(self):
         return True if self.get_form_function() else False
 
+    def get_current_method(self):
+        return self.definitions.latest()
+
 
 class AssessmentMethod(models.Model):
     def upload_path(self, filename):
@@ -79,10 +82,11 @@ class AssessmentMethod(models.Model):
         unique_together = (('category', 'name'))
         get_latest_by = ('date_added', )
 
-    def to_sastadev(self) -> Method:
-        cat_name = self.category.name.lower()
-        location = self.content.path
-        return read_method(cat_name, location)
+    def to_sastadev(self, variant: Optional[str] = None) -> Method:
+        return read_method(
+            methodname=self.category.name.lower(),
+            methodfilename=self.content.path,
+            variant=variant)
 
 
 class Corpus(models.Model):
@@ -295,7 +299,7 @@ class AssessmentQuery(models.Model):
         default=list)
     implies = ArrayField(
         base_field=models.CharField(max_length=50, blank=True),
-        default=list)
+        default=list, null=True, blank=True)
     original = models.BooleanField()
     pages = models.CharField(max_length=50, blank=True, default='')
     fase = models.IntegerField(blank=True, null=True)
@@ -306,7 +310,8 @@ class AssessmentQuery(models.Model):
     literal = models.CharField(max_length=200, blank=True, default='')
     stars = models.CharField(max_length=50, blank=True, default='')
     filter = models.CharField(max_length=200, blank=True, default='')
-    variants = models.CharField(max_length=200, blank=True, default='')
+    variants = ArrayField(
+        base_field=models.CharField(max_length=200, blank=True), default=list, null=True, blank=True)
     unused1 = models.CharField(max_length=50, blank=True, default='')
     unused2 = models.CharField(max_length=50, blank=True, default='')
     comments = models.TextField(blank=True, default='')

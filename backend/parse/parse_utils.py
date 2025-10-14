@@ -1,7 +1,8 @@
 import io
 import logging
 import os
-from typing import Any, Generator
+from types import SimpleNamespace
+from typing import Optional
 
 from analysis.models import Transcript, Utterance
 from bs4 import BeautifulSoup
@@ -9,12 +10,14 @@ from corpus2alpino.annotators.alpino import AlpinoAnnotator
 from corpus2alpino.collectors.filesystem import FilesystemCollector
 from corpus2alpino.converter import Converter
 from corpus2alpino.targets.filesystem import FilesystemTarget
-from corpus2alpino.writers.lassy import LassyWriter
 from corpus2alpino.targets.memory import MemoryTarget
+from corpus2alpino.writers.lassy import LassyWriter
 from django.conf import settings
 from django.core.files import File
 from lxml import etree
+from sastadev.correctionparameters import CorrectionParameters
 from sastadev.correcttreebank import correcttreebank, corrn
+from sastadev.sastatypes import ErrorDict, Treebank
 from sastadev.targets import get_targets
 
 logger = logging.getLogger('sasta')
@@ -32,35 +35,32 @@ def parse_and_create(transcript):
             '/transcripts', '/parsed')
         output_dir = os.path.dirname(output_path)
         os.makedirs(output_dir, exist_ok=True)
-        result = parse_transcript(transcript, output_dir, output_path)
+        result = parse_transcript(transcript, output_path)
         create_utterance_objects(transcript)
         return result
     except Exception:
         logger.exception(f'ERROR parsing {transcript.name}')
 
 
-def parse_transcript(transcript, output_dir, output_path):
+def parse_transcript(transcript, output_path):
     transcript.status = Transcript.PARSING
     transcript.save()
 
     output_path = output_path.replace('.cha', '.xml')
 
     try:
-        logger.info(f'Parsing:\t{transcript.name}...\n')
-        parses = corpus2alpino_parse(transcript.content.path, output_path)
-        for _parse in parses:
-            logger.info(f'Succesfully parsed:\t{transcript.name}\n')
+        logger.info(f'Parsing:\t{transcript.name}...')
+        parsed_filename = initial_parse(transcript.content.path, output_path)
+        logger.info(f'Succesfully parsed:\t{transcript.name}')
         transcript.save()
 
         # Saving parsed file
-        parsed_filename = os.path.basename(
-            output_path).replace('.cha', '.xml')
-        transcript.parsed_content.name = transcript.upload_path_parsed(parsed_filename)
+        transcript.parsed_content.name = transcript.upload_path_parsed(
+            parsed_filename)
         transcript.save()
 
         # Correcting and reparsing
         correct_transcript(transcript)
-
         transcript.status = Transcript.PARSED
         transcript.save()
         return transcript
@@ -72,20 +72,30 @@ def parse_transcript(transcript, output_dir, output_path):
         transcript.save()
 
 
-def correct_transcript(transcript: Transcript) -> None:
-    logger.info(f'Correcting:\t{transcript.name}...\n')
+def initial_parse(in_path: str, out_path: str,
+                  annotator: AlpinoAnnotator = ALPINO,
+                  in_memory: bool = False) -> Optional[str]:
+
+    target = MemoryTarget() if in_memory else FilesystemTarget(out_path, merge_files=True)
+    converter = Converter(
+        collector=FilesystemCollector([in_path]),
+        annotators=[annotator],
+        target=target,
+        writer=LassyWriter(merge_treebanks=True),
+    )
+    # actual parsing
+    next(converter.convert())
+    return None if in_memory else out_path
+
+
+def correct_transcript(transcript: Transcript) -> str:
+    logger.info(f'Correcting:\t{transcript.name}...')
     try:
         corrected, error_dict, _origandalts = correct_treebank(transcript)
-        corrected_content = etree.tostring(corrected, encoding='utf-8')
-        corrected_filename = os.path.basename(
-            transcript.parsed_content.name.replace('.xml', '_corrected.xml'))
-        corrected_file = File(io.BytesIO(corrected_content))
-        transcript.corrected_content.save(corrected_filename, corrected_file)
-        # Save corrections
-        transcript.corrections = error_dict
-        transcript.save()
+        save_corrected_treebank(transcript, corrected, error_dict)
         logger.info(
-            f'Successfully corrected:\t{transcript.name}, {len(error_dict)} corrections.\n')
+            f'Successfully corrected:\t{transcript.name}, {len(error_dict)} corrections.')
+        return transcript.corrected_content.path
 
     except Exception as err:
         transcript.corrections = {'error': str(err)}
@@ -94,21 +104,23 @@ def correct_transcript(transcript: Transcript) -> None:
         raise
 
 
-def corpus2alpino_parse(
-    inpath: str,
-        outpath: str,
-        annotator: AlpinoAnnotator = ALPINO,
-        in_memory: bool = False
-) -> Generator[Any, Any, None]:
-    target = MemoryTarget() if in_memory else FilesystemTarget(outpath, merge_files=True)
-    converter = Converter(
-        collector=FilesystemCollector([inpath]),
-        annotators=[annotator],
-        target=target,
-        writer=LassyWriter(merge_treebanks=True),
-    )
-    # actual parsing
-    return converter.convert()
+def save_corrected_treebank(transcript: Transcript, treebank: Treebank, error_dict: ErrorDict) -> str:
+    corrected_file = treebank_to_file(treebank)
+    transcript.corrected_content.save(
+        get_corrected_filename(transcript), corrected_file)
+    transcript.corrections = error_dict
+    transcript.save()
+    return transcript.corrected_content.path
+
+
+def get_corrected_filename(transcript: Transcript, suffix: str = '_corrected') -> str:
+    return os.path.basename(transcript.parsed_content.name).replace('.xml', f'{suffix}.xml')
+
+
+def treebank_to_file(treebank: Treebank) -> File:
+    content = etree.tostring(treebank, encoding='utf-8')
+    file = File(io.BytesIO(content))
+    return file
 
 
 def create_utterance_objects(transcript):
@@ -144,7 +156,8 @@ def create_utterance_objects(transcript):
                 instance = Utterance(
                     transcript=transcript,
                     uttno=uttno,
-                    xsid=int(xsid_el['value']) if xsid_el is not None else None,
+                    xsid=int(xsid_el['value']
+                             ) if xsid_el is not None else None,
                     speaker=speaker,
                     sentence=sent,
                     parse_tree=str(utt)
@@ -166,12 +179,12 @@ def create_utterance_objects(transcript):
                 num_created += 1
             logger.info(
                 f'Created {num_created} (out of {len(utts)})'
-                f'utterances for:\t{transcript.name}\n')
+                f'utterances for:\t{transcript.name}')
 
         except Exception as e:
             logger.exception(
                 f'ERROR creating utterances for:\t{transcript.name}'
-                f'with message:\t"{e}"\n')
+                f'with message:\t"{e}"')
             transcript.status = transcript.PARSING_FAILED
             transcript.save()
 
@@ -179,10 +192,41 @@ def create_utterance_objects(transcript):
 def correct_treebank(transcript: Transcript):
     try:
         treebank = etree.parse(transcript.parsed_content).getroot()
-        targets = get_targets(treebank)
         method_name = transcript.corpus.method_category.name.lower()
+        targets = get_targets(treebank, method_name)
 
-        corr, error_dict, origandalts = correcttreebank(treebank, targets, method_name, corrn)
+        correction_options = SimpleNamespace(
+            infilename=transcript.parsed_content.path,
+            methodname=method_name,
+            variant=None,
+            annotationfilename=None,
+            goldfilename=None,
+            goldcountsfilename=None,
+            platinuminfilename=None,
+            includeimplies=True,
+            logfilename=None,
+            corr=corrn,
+            methodfilename=None,
+            doauchann=True,
+            dospellingcorrection=False,
+            dohistory=False,
+            extendhistory=False
+        )
+
+        method_obj = transcript.corpus.default_method or transcript.corpus.method_category.get_current_method()
+        sd_method = method_obj.to_sastadev()
+
+        correction_parameters = CorrectionParameters(
+            method=sd_method,
+            options=correction_options,
+            allsamplecorrections={},
+            thissamplecorrections={},
+            treebank=treebank,
+            contextdict={}
+        )
+
+        corr, error_dict, origandalts = correcttreebank(
+            treebank=treebank, targets=targets, correctionparameters=correction_parameters, corr=corrn)
 
         return corr, error_dict, origandalts
 

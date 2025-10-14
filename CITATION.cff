@@ -34,12 +34,12 @@ authors:
 identifiers:
   - type: doi
     value: 10.5281/zenodo.10600256
-repository-code: 'https://github.com/UUDigitalHumanitieslab/sasta'
+repository-code: 'https://github.com/CentreForDigitalHumanities/sasta'
 url: 'https://sasta.hum.uu.nl'
 abstract: >-
   SASTA is a tool for the analysis of spontaneous language
   transcripts, to aid clinical linguists and research into
   language development and language disorders.
 license: BSD-3-Clause
-version: 0.9.8
-date-released: '2025-02-19'
+version: 0.10.0
+date-released: '2025-10-13'

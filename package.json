@@ -1,10 +1,10 @@
 {
     "name": "sasta",
-    "version": "0.9.8",
+    "version": "0.10.0",
     "description": "Annotate and analyze transcripts",
     "author": "UU Digital Humanities Lab",
     "license": "BSD-3-Clause",
-    "repository": "github:UUDigitalHumanitieslab/sasta",
+    "repository": "github:CentreForDigitalHumanities/sasta",
     "private": true,
     "scripts": {
         "front": "cd frontend && ",
