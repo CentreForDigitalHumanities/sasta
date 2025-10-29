@@ -11,6 +11,7 @@ from django.conf import settings
 from django.core.files import File
 from sastadev.allresults import AllResults
 from sastadev.conf import settings as sd_settings
+from django.contrib.auth.models import User
 
 from lxml import etree
 
@@ -72,6 +73,14 @@ def testfiles_dir():
 
 
 @pytest.fixture
+def normal_user():
+    new_user = User.objects.create(
+        username='new_user',
+        password='secret'
+    )
+    return new_user
+
+@pytest.fixture
 def tarsp_category(db):
     return MethodCategory.objects.create(
         name='TARSP', zc_embeddings=True,
@@ -84,12 +93,10 @@ def tarsp_corpus(db, admin_user, tarsp_method, tarsp_category):
     obj = Corpus.objects.create(
         user=admin_user,
         name='tarsp_test_corpus',
-        status='created',
         default_method=tarsp_method,
         method_category=tarsp_category
     )
-    yield obj
-    obj.delete()
+    return obj
 
 
 @pytest.fixture
@@ -118,7 +125,6 @@ def asta_corpus(db, admin_user, asta_method, asta_category):
     obj = Corpus.objects.create(
         user=admin_user,
         name='asta_test_corpus',
-        status='created',
         default_method=asta_method,
         method_category=asta_category
     )

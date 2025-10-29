@@ -93,7 +93,6 @@ class Corpus(models.Model):
     user = models.ForeignKey(
         User, related_name='corpora', on_delete=models.PROTECT)
     name = models.CharField(max_length=255)
-    status = models.CharField(max_length=50)
     uuid = models.UUIDField(default=uuid4)
     date_added = models.DateField(auto_now_add=True)
     date_modified = models.DateField(auto_now=True)
@@ -126,6 +125,7 @@ class Corpus(models.Model):
 
     class Meta:
         verbose_name_plural = 'corpora'
+        unique_together = ('user', 'name')
 
 
 class Transcript(models.Model):

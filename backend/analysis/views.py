@@ -12,6 +12,7 @@ from annotations.writers.saf_chat import enrich_chat
 from annotations.writers.saf_xlsx import SAFWriter
 from celery import group
 from convert.chat_writer import ChatWriter
+from django.db import IntegrityError
 from django.db.models import Q
 from django.http import HttpResponse
 from openpyxl import load_workbook
@@ -19,7 +20,7 @@ from parse.parse_utils import parse_and_create
 from parse.tasks import parse_transcript_task
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import ParseError
+from rest_framework.exceptions import APIException, ParseError
 from rest_framework.response import Response
 
 from .convert.convert import convert
@@ -67,7 +68,8 @@ class TranscriptViewSet(viewsets.ModelViewSet):
             saf.save(stream)
         else:
             stream = saf
-        run = AnalysisRun(transcript=transcript, method=method, is_manual_correction=is_manual)
+        run = AnalysisRun(transcript=transcript, method=method,
+                          is_manual_correction=is_manual)
 
         now = datetime.datetime.now()
         stamp = now.strftime('%Y%m%d_%H%M')
@@ -139,7 +141,8 @@ class TranscriptViewSet(viewsets.ModelViewSet):
         run = AnalysisRun.objects.filter(transcript=obj).latest()
 
         filename = run.annotation_file.name.split('/')[-1]
-        response = HttpResponse(run.annotation_file, content_type=SPREADSHEET_MIMETYPE)
+        response = HttpResponse(run.annotation_file,
+                                content_type=SPREADSHEET_MIMETYPE)
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
         return response
 
@@ -161,7 +164,8 @@ class TranscriptViewSet(viewsets.ModelViewSet):
 
         file = request.FILES['content'].file
 
-        new_run = self.create_analysis_run(obj, latest_run.method, file, is_manual=True)
+        new_run = self.create_analysis_run(
+            obj, latest_run.method, file, is_manual=True)
 
         try:
             read_saf(new_run.annotation_file.path,
@@ -251,6 +255,15 @@ class CorpusViewSet(viewsets.ModelViewSet):
     queryset = Corpus.objects.all()
     permission_classes = (IsCorpusOwner, )
 
+    def create(self, request, *args, **kwargs):
+        try:
+            return super().create(request, *args, **kwargs)
+        except IntegrityError as exc:
+            if 'duplicate key value' in exc.args[0]:
+                raise APIException(
+                    'Corpus with unique constraints already exists.')
+            raise APIException(exc)
+
     def get_serializer_class(self):
         if self.action == 'list':
             return CorpusListSerializer
@@ -293,7 +306,8 @@ class CorpusViewSet(viewsets.ModelViewSet):
     def parse_all_async(self, request, *args, **kwargs):
         corpus = self.get_object()
         transcripts = Transcript.objects.filter(
-            Q(corpus=corpus), Q(status=Transcript.CONVERTED) | Q(status=Transcript.PARSING_FAILED)
+            Q(corpus=corpus), Q(status=Transcript.CONVERTED) | Q(
+                status=Transcript.PARSING_FAILED)
         )
 
         # If in DEBUG mode and celery not running, parse synchronously
@@ -302,7 +316,8 @@ class CorpusViewSet(viewsets.ModelViewSet):
         #     logger.info('Bypassing Celery')
         #     return self.parse_all()
 
-        task = group(parse_transcript_task.s(t.id) for t in transcripts).delay()
+        task = group(parse_transcript_task.s(t.id)
+                     for t in transcripts).delay()
 
         if not task:
             return Response('Failed to create task', status.HTTP_400_BAD_REQUEST)

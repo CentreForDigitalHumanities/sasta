@@ -9,7 +9,6 @@ export interface ListedCorpus {
 }
 
 export interface Corpus extends Omit<ListedCorpus, 'num_transcripts'> {
-    status: 'created';
     date_added?: Date;
     date_modified?: Date;
     default_method?: number;
