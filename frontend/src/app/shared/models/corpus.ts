@@ -14,4 +14,5 @@ export interface Corpus extends Omit<ListedCorpus, 'num_transcripts'> {
     date_modified?: Date;
     default_method?: number;
     transcripts?: ListedTranscript[];
+    share_permissions: boolean;
 }

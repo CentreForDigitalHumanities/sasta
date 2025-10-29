@@ -74,14 +74,13 @@ class CorpusListSerializer(serializers.ModelSerializer):
 
 class CorpusDetailsSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
-    # files = UploadFileSerializer(read_only=True, many=True)
     transcripts = TranscriptListSerializer(read_only=True, many=True)
     username = serializers.CharField(source="user.username", read_only=True)
 
     class Meta:
         model = Corpus
         fields = ('id', 'name', 'status', 'default_method', 'method_category',
-                  'date_added', 'date_modified', 'transcripts', 'username')
+                  'date_added', 'date_modified', 'transcripts', 'username', 'share_permission')
 
 
 class AssessmentQuerySerializer(serializers.ModelSerializer):

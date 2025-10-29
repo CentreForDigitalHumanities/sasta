@@ -105,6 +105,11 @@ class Corpus(models.Model):
         MethodCategory, on_delete=models.SET_DEFAULT,
         default=1, related_name='corpora')
 
+    share_permission = models.BooleanField(
+        verbose_name='Permission to share data',
+        default=False
+    )
+
     def __str__(self):
         return self.name
 
