@@ -1,42 +1,36 @@
 <h1 class="title">Upload</h1>
 <form (submit)="startUpload()">
+    <div class="field">
+        <label class="label">Corpus</label>
+
     <div class="field is-grouped">
-        <div class="field">
-            <label class="label">To corpus</label>
-            <div class="control">
-                <p-dropdown
-                    [options]="corpora"
-                    optionLabel="name"
-                    name="corpus-dropdown"
-                    placeholder="select corpus"
-                    [(ngModel)]="selectedCorpus"
-                    showClear="true"
-                    [disabled]="!(corpora?.length > 0)"
-                    (onChange)="onSelectCorpus()"
-                >
-                </p-dropdown>
+
+                <div class="control">
+                    <p-dropdown
+                        [options]="corpora$ | async"
+                        optionLabel="name"
+                        optionValue="id"
+                        name="corpus-dropdown"
+                        placeholder="select corpus"
+                        [(ngModel)]="selectedCorpusId"
+                        showClear="true"
+                        [disabled]="!((corpora$|async)?.length > 0)"
+                    >
+                    </p-dropdown>
+                </div>
+                <div class="divider is-vertical">or</div>
+                <div class="control">
+                    <button
+                        class="button is-primary"
+                        type="button"
+                        [ngClass]="{ 'is-loading': loading$ | async }"
+                        (click)="openNewCorpus()"
+                    >
+                        Create new corpus
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="divider is-vertical">or</div>
-        <div class="field">
-            <label class="label">New corpus</label>
-            <div class="control">
-                <input
-                    class="input"
-                    type="text"
-                    name="name"
-                    placeholder="..."
-                    [(ngModel)]="newCorpusName"
-                    [class.is-danger]="newCorpusName && corpusNameInUse()"
-                    [disabled]="selectedCorpus"
-                />
             </div>
-            <p *ngIf="corpusNameInUse()" class="help is-danger">
-                Corpus name in use, provide a unique name or pick one from the
-                list
-            </p>
-        </div>
-    </div>
 
     <div class="field">
         <label class="label">File(s)</label>
@@ -56,28 +50,20 @@
     </div>
 
     <div class="field">
-        <label class="label">Method category</label>
-        <div class="control">
-            <p-dropdown
-                [options]="categories$ | async"
-                optionLabel="name"
-                name="category-dropdown"
-                [placeholder]="selectedCategory?.name || 'select category'"
-                [(ngModel)]="selectedCategory"
-                [disabled]="selectedCorpus"
-            >
-            </p-dropdown>
-        </div>
-    </div>
-    <div class="field">
         <div class="control">
             <button
                 class="button is-primary"
+                type="submit"
                 [disabled]="!fullyFilled()"
-                [ngClass]="{ 'is-loading': uploading }"
+                [ngClass]="{ 'is-loading': loading$ | async }"
             >
-                Process
+                Upload & process files
             </button>
         </div>
     </div>
 </form>
+
+<p-dialog header="Create corpus" [modal]="true" [(visible)]="corpusModalVisible">
+    <sas-new-corpus (cancel)="corpusModalVisible=false" (accept)="setCorpus($event)"></sas-new-corpus>
+</p-dialog>
+

@@ -17,7 +17,7 @@ export class UploadFileService {
             uploadFile.content.name
         );
         formData.append('name', uploadFile.name);
-        formData.append('corpus', String(uploadFile.corpus.id));
+        formData.append('corpus', String(uploadFile.corpus_id));
         formData.append('status', 'pending');
         return this.httpClient.post<UploadFile>('/api/upload_files/', formData);
     }

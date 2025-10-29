@@ -1,0 +1,53 @@
+<form (submit)="onSubmit()">
+    <div class="field">
+        <label class="label">Corpus name</label>
+        <div class="control">
+            <input class="input" type="text" name="name" placeholder="..." [(ngModel)]="newCorpus.name"
+                [class.is-danger]="(errors$ | async) === 'notUnique'" />
+        </div>
+        <p *ngIf="(errors$ | async) === 'notUnique'" class="help is-danger">
+            Corpus name in use, provide a unique name or pick one from the list
+        </p>
+    </div>
+    <div class="field">
+        <label class="label">Method category</label>
+        <div class="control">
+            <p-dropdown [(ngModel)]="newCorpus.method_category" [options]="categories$ | async" optionLabel="name"
+                optionValue="id" name="category-dropdown" placeholder="select category">
+            </p-dropdown>
+        </div>
+    </div>
+    <div class="field">
+        <label class="label">Do you want to share your data with the researchers?</label>
+        <div class="control">
+            <label class="radio">
+                <input type="radio" name="share" [(ngModel)]="newCorpus.share_permission" [value]="true" />Yes
+            </label>
+            <label class="radio">
+                <input type="radio" name="share" [(ngModel)]="newCorpus.share_permission" [value]="false" />No
+            </label>
+            <p class="help">
+                The analysis perfomed on the uploaded transcripts can be shared
+                with researchers involved in the SASTA research project.<br />
+                They help assessing the quality of the analysis, and improve
+                your future analyses.<br />
+                Please refer to the privacy statement for more information about
+                how your data is processed.
+            </p>
+        </div>
+    </div>
+
+    <div class="field is-grouped">
+        <p class="control">
+            <button class="button is-primary" type="submit" [class.is-loading]="loading$ | async"
+                [disabled]="!newCorpus.name || !newCorpus.method_category">
+                Create corpus
+            </button>
+        </p>
+        <p class="control">
+            <button class="button" type="button" (click)="cancel.next()" [class.is-loading]="loading$ | async">
+                Cancel
+            </button>
+        </p>
+    </div>
+</form>

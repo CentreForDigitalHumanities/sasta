@@ -1,5 +1,6 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { DestroyRef, inject, Injectable } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Corpus, ListedCorpus } from '@models';
 import { Observable, Subject } from 'rxjs';
 
@@ -7,6 +8,8 @@ import { Observable, Subject } from 'rxjs';
     providedIn: 'root',
 })
 export class CorpusService {
+    readonly #destroyRef = inject(DestroyRef);
+
     private corpora$: Subject<ListedCorpus[]> = new Subject();
 
     constructor(private httpClient: HttpClient) {}
@@ -15,9 +18,10 @@ export class CorpusService {
         return this.corpora$;
     }
 
-    public init(): void {
+    public refresh(): void {
         this.httpClient
             .get<ListedCorpus[]>('/api/corpora/')
+            .pipe(takeUntilDestroyed(this.#destroyRef))
             .subscribe((corpora) => this.corpora$.next(corpora));
     }
 
@@ -29,8 +33,8 @@ export class CorpusService {
         return this.httpClient.delete<null>(`/api/corpora/${corpus.id}/`);
     }
 
-    list(): Observable<Corpus[]> {
-        return this.httpClient.get<Corpus[]>('/api/corpora/');
+    list(): Observable<ListedCorpus[]> {
+        return this.httpClient.get<ListedCorpus[]>('/api/corpora/');
     }
 
     getByID(id: number): Observable<Corpus> {

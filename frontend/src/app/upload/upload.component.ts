@@ -1,12 +1,18 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    DestroyRef,
+    inject,
+    OnInit,
+    ViewChild,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
-import { Corpus, MethodCategory, UploadFile } from '@models';
-import { CorpusService, MethodService, UploadFileService } from '@services';
-import _ from 'lodash';
+import { Corpus, ListedCorpus, UploadFile } from '@models';
+import { CorpusService, UploadFileService } from '@services';
 import { FileUpload, FileUploadHandlerEvent } from 'primeng/fileupload';
-import { forkJoin, Observable } from 'rxjs';
-import { concatMap, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
+import { filter, switchMap, take, tap } from 'rxjs/operators';
 
 @Component({
     selector: 'sas-upload',
@@ -15,6 +21,8 @@ import { concatMap, switchMap } from 'rxjs/operators';
 })
 export class UploadComponent implements OnInit {
     @ViewChild('fileInput') fileInput: FileUpload;
+    readonly #destroyRef = inject(DestroyRef);
+    loading$ = new BehaviorSubject<boolean>(false);
 
     files: File[];
     fileAccept = [
@@ -29,84 +37,50 @@ export class UploadComponent implements OnInit {
         'multipart/x-zip',
     ].join(',');
 
-    newCorpusName: string;
-
     faUpload = faUpload;
 
-    uploading: boolean;
+    corpora$: Observable<ListedCorpus[]>;
+    selectedCorpusId: number;
 
-    corpora: Corpus[];
-    selectedCorpus: Corpus;
-
-    categories: MethodCategory[];
-    selectedCategory: MethodCategory;
-
-    categories$: Observable<MethodCategory[]>;
+    corpusModalVisible: boolean = false;
 
     constructor(
         private router: Router,
         private corpusService: CorpusService,
         private uploadFileService: UploadFileService,
-        private methodService: MethodService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
     ) {}
 
     ngOnInit() {
-        this.corpusService.list().subscribe((res) => {
-            this.corpora = res;
-        });
+        this.corpusService.refresh();
 
-        this.corpusService
-            .list()
+        this.corpora$ = this.corpusService.getCorpora();
+
+        this.route.queryParams
             .pipe(
-                switchMap((response: Corpus[]) => {
-                    this.corpora = response;
-                    return this.route.queryParams;
-                })
+                takeUntilDestroyed(this.#destroyRef),
+                filter((params: Params) => !!params.corpus),
+                switchMap((params: Params) =>
+                    this.corpusService.getByID(params.corpus),
+                ),
             )
-            .subscribe((params: Params) => {
-                if (params.corpus) {
-                    this.selectedCorpus = this.corpora.find(
-                        (c) => c.id === +params.corpus
-                    );
-                    this.onSelectCorpus();
-                }
+            .subscribe((corpus: Corpus) => {
+                this.selectedCorpusId = corpus.id;
             });
-
-        this.categories$ = this.methodService.getCategories();
     }
 
     fullyFilled(): boolean {
-        return (
-            (this.newCorpusName || this.selectedCorpus) &&
-            this.selectedCategory &&
-            !this.corpusNameInUse() &&
-            this.fileInput.files.length > 0
-        );
+        return this.selectedCorpusId && this.fileInput.files.length > 0;
     }
 
-    onSelectCorpus(): void {
-        if (this.selectedCorpus) {
-            this.methodService
-                .getCategory(this.selectedCorpus.method_category)
-                .subscribe((next) => (this.selectedCategory = next));
-            this.newCorpusName = undefined;
-        } else {
-            this.selectedCategory = undefined;
-        }
+    openNewCorpus(): void {
+        this.corpusModalVisible = true;
     }
 
-    corpusNameInUse(): boolean {
-        return _.some(this.corpora, ['name', this.newCorpusName]);
-    }
-
-    createCorpus$(): Observable<Corpus> {
-        const newCorpus: Corpus = {
-            name: this.newCorpusName,
-            status: 'created',
-            method_category: this.selectedCategory.id,
-        };
-        return this.corpusService.create(newCorpus);
+    setCorpus(corpus: Corpus): void {
+        this.corpusService.refresh();
+        this.selectedCorpusId = corpus.id;
+        this.corpusModalVisible = false;
     }
 
     onUpload(event: FileUploadHandlerEvent): void {
@@ -114,51 +88,35 @@ export class UploadComponent implements OnInit {
         this.files = event.files;
     }
 
-    upload$(toCorpus: Corpus, file: File): Observable<UploadFile> {
-        const newUploadFile: UploadFile = {
-            name: file.name,
-            content: file,
-            status: 'uploading',
-            corpus: toCorpus,
-        };
-        return this.uploadFileService.upload(newUploadFile);
-    }
-
-    uploadFiles$(toCorpus: Corpus): Observable<UploadFile[]> {
+    uploadFiles$(toCorpusId: number): Observable<UploadFile[]> {
         const uploadFiles: UploadFile[] = this.files.map((f: File) => ({
             name: f.name,
             content: f,
             status: 'uploading',
-            corpus: toCorpus,
+            corpus_id: toCorpusId,
         }));
         return forkJoin(
-            uploadFiles.map((file) => this.uploadFileService.upload(file))
+            uploadFiles.map((file) => this.uploadFileService.upload(file)),
         );
     }
 
     startUpload(): void {
-        this.uploading = true;
-        let uploadSteps$: Observable<UploadFile[]>;
-
         this.fileInput.upload();
 
-        if (!this.selectedCorpus && this.newCorpusName) {
-            uploadSteps$ = this.createCorpus$().pipe(
-                concatMap((corpus) => this.uploadFiles$(corpus))
-            );
-        } else {
-            uploadSteps$ = this.uploadFiles$(this.selectedCorpus);
-        }
-
-        uploadSteps$.subscribe(
-            (response) => {
-                this.uploading = false;
-                this.router.navigate([`/process/${response[0].corpus}`]);
-            },
-            (error) => {
-                console.error(error);
-                this.uploading = false;
-            }
-        );
+        this.uploadFiles$(this.selectedCorpusId)
+            .pipe(
+                takeUntilDestroyed(this.#destroyRef),
+                tap(() => this.loading$.next(true)),
+            )
+            .subscribe({
+                next: (response) => {
+                    this.loading$.next(false);
+                    this.router.navigate([`/process/${response[0].corpus}`]);
+                },
+                error: (error) => {
+                    console.error(error);
+                    this.loading$.next(false);
+                },
+            });
     }
 }

@@ -41,7 +41,7 @@ export class ListCorpusComponent implements OnInit, OnDestroy {
     }
 
     refreshCorpora(): void {
-        this.corpusService.init();
+        this.corpusService.refresh();
     }
 
     confirmDeleteCorpus(event: Event, corpus: ListedCorpus): void {
