@@ -1,95 +1,100 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { faArrowRight, faCogs } from '@fortawesome/free-solid-svg-icons';
-import { Corpus, Transcript } from '@models';
-import { CorpusService, ParseService } from '@services';
-import { MenuItem } from 'primeng/api';
-import { interval, Observable, of, Subscription } from 'rxjs';
-import { catchError, concatMap, startWith } from 'rxjs/operators';
+import { Corpus } from '@models';
+import { CorpusService } from '@services';
+import { interval, Observable, of, Subject } from 'rxjs';
+import {
+    catchError,
+    concatMap,
+    finalize,
+    shareReplay,
+    startWith,
+    takeUntil,
+} from 'rxjs/operators';
 
 @Component({
     selector: 'sas-process',
     templateUrl: './process.component.html',
     styleUrls: ['./process.component.scss'],
 })
-export class ProcessComponent implements OnInit, OnDestroy {
-    corpus: Corpus;
-    id: number;
+export class ProcessComponent implements OnInit {
+    readonly #destroyRef = inject(DestroyRef);
 
-    stepsItems: MenuItem[] = [
-        { label: 'Convert to CHAT' },
-        { label: 'Parse' },
-        { label: 'Done' },
-    ];
-    stepsIndex: number;
+    corpus: Corpus;
+    corpusId: number;
+
     processing = false;
 
-    subscription$: Subscription;
     interval$: Observable<number> = interval(2000);
 
     faCogs = faCogs;
     faArrowRight = faArrowRight;
 
+    corpus$: Observable<Corpus>;
+
+    processingComplete$ = new Subject<boolean>();
+
     constructor(
         private route: ActivatedRoute,
         private corpusService: CorpusService,
-        private parseService: ParseService
     ) {
         this.route.paramMap.subscribe(
-            (params) => (this.id = +params.get('id'))
+            (params) => (this.corpusId = +params.get('id')),
         );
     }
 
     ngOnInit() {
-        this.subscription$ = this.interval$
-            .pipe(startWith(0))
-            .subscribe(() => this.getCorpus());
-    }
+        this.corpus$ = this.interval$.pipe(
+            takeUntilDestroyed(this.#destroyRef),
+            startWith(0),
+            takeUntil(this.processingComplete$),
+            concatMap(() => this.corpusService.getByID(this.corpusId)),
+            shareReplay(1),
+        );
 
-    ngOnDestroy() {
-        this.subscription$.unsubscribe();
-    }
-
-    getCorpus(): void {
-        this.corpusService.getByID(this.id).subscribe(
-            (res) => {
-                this.corpus = res;
+        this.corpus$.subscribe({
+            next: (corpus: Corpus) => {
+                if (this.shouldStartProcessing(corpus)) {
+                    this.fullProcess(corpus);
+                }
+                if (this.shouldStopProcessing(corpus)) {
+                    this.processingComplete$.next();
+                }
             },
-            (err) => console.error(err)
+            error: console.error,
+        });
+    }
+
+    fullProcess(corpus: Corpus): void {
+        this.processing = true;
+        this.corpusService
+            .convertAll(corpus.id)
+            .pipe(
+                takeUntilDestroyed(this.#destroyRef),
+                concatMap((convertedCorpus) =>
+                    this.corpusService.parseAllAsync(convertedCorpus.id),
+                ),
+                finalize(() => (this.processing = false)),
+                catchError((err) => of('error', err)),
+            )
+            .subscribe({ next: console.log, error: console.error });
+    }
+
+    private shouldStartProcessing(corpus: Corpus): boolean {
+        return (
+            !this.processing &&
+            corpus.transcripts.some((t) => t.status_name === 'created')
         );
     }
 
-    async fullProcess(): Promise<void> {
-        this.processing = true;
-        this.stepsIndex = 0;
-        this.corpusService
-            .convertAll(this.corpus.id)
-            .pipe(
-                concatMap((_) =>
-                    this.corpusService.parseAllAsync(this.corpus.id)
-                ),
-                catchError((err) => of('error', err))
-            )
-            .subscribe(
-                (res) => {
-                    console.error(res);
-                    this.stepsIndex += 1;
-                },
-                (err) => {
-                    console.error(err);
-                    this.stepsIndex += 1;
-                },
-                () => {
-                    this.processing = false;
-                    // this.router.navigate([`/corpora/${this.corpus.id}`]);
-                }
-            );
-    }
-
-    fullSingle(transcript: Transcript): void {
-        this.parseService.fullProcess(transcript).subscribe(
-            (next) => console.log(next),
-            (err) => console.error(err)
+    private shouldStopProcessing(corpus: Corpus): boolean {
+        return corpus.transcripts.every(
+            (t) =>
+                t.status_name === 'parsed' ||
+                t.status_name === 'parsing-failed' ||
+                t.status_name === 'conversion-failed',
         );
     }
 }

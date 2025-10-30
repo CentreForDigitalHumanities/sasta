@@ -1,9 +1,8 @@
-<ng-container *ngIf="corpus">
+<ng-container *ngIf="(corpus$ | async) as corpus">
     <h1 class="title">{{corpus.name}}</h1>
     <h2 class="subtitle">{{corpus.transcripts.length}} transcripts</h2>
-    <!-- <p-steps [model]="stepsItems" [activeIndex]="stepsIndex"></p-steps> -->
     <div class="buttons">
-        <button class="button is-primary" [ngClass]=" {'is-loading': processing}" (click)="fullProcess()">
+        <button class="button is-primary" [class.is-loading]="processing" (click)="fullProcess(corpus)">
             <span class="icon is-small">
                 <fa-icon [icon]="faCogs"></fa-icon>
             </span>
