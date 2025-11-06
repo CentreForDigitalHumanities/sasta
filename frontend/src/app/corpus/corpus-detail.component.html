@@ -31,18 +31,22 @@
             </p-dropdown>
         </div>
     </div>
-    <table class="table is-fullwidth is-hoverable">
-        <thead>
+
+    <p-table [value]="corpus.transcripts" [rowHover]="true" sortField="date" [sortOrder]="-1">
+        <ng-template pTemplate="header">
             <tr>
-                <th>Transcript</th>
-                <th>Status</th>
-                <th>Utterances (#)</th>
-                <th>Created on</th>
+                <th pSortableColumn="name">Transcript<p-sortIcon field="name" /></th>
+                <th pSortableColumn="status_name">Status<p-sortIcon field="status_name" /></th>
+                <th pSortableColumn="utterances.length">
+                    Utterances (#) <p-sortIcon field="utterances.length" />
+                </th>
+                <th pSortableColumn="date">Created on<p-sortIcon field="date" /></th>
                 <th class="has-text-right">Actions</th>
             </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let transcript of corpus.transcripts">
+        </ng-template>
+
+        <ng-template pTemplate="body" let-transcript>
+            <tr>
                 <td class="transcript-name" [routerLink]="['/transcript/', transcript.id]">
                     <a>{{ transcript.name }}</a>
                 </td>
@@ -64,6 +68,8 @@
                     </div>
                 </td>
             </tr>
-        </tbody>
-    </table>
+        </ng-template>
+
+    </p-table>
+
 </ng-container>
