@@ -9,6 +9,7 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { FileUploadModule } from 'primeng/fileupload';
 import { MessageModule } from 'primeng/message';
 import { MessagesModule } from 'primeng/messages';
+import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { PanelModule } from 'primeng/panel';
@@ -29,6 +30,7 @@ const primeNGModules = [
     FileUploadModule,
     MessageModule,
     MessagesModule,
+    TableModule,
     ToastModule,
     TooltipModule,
     PanelModule,
