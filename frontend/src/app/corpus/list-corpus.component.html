@@ -1,28 +1,37 @@
-<ng-container *ngIf="(corpora$ | async) as corpora; else loading;">
-    <table class="table is-fullwidth is-hoverable" *ngIf="corpora.length > 0">
-        <thead>
+<ng-container *ngIf="corpora$ | async as corpora; else loading">
+    <p-table [value]="corpora" [rowHover]="true">
+        <ng-template pTemplate="header">
             <tr>
-                <th>Name</th>
-                <th>transcripts (#)</th>
-                <th *ngIf="(authService.currentUser$ | async).isAdmin">Owner</th>
+                <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
+                <th pSortableColumn="num_transcripts">
+                    Transcripts (#) <p-sortIcon field="num_transcripts" />
+                </th>
+                <th
+                    pSortableColumn="username"
+                    *ngIf="(authService.currentUser$ | async).isAdmin"
+                >
+                    Owner <p-sortIcon field="username" />
+                </th>
                 <th class="has-text-right">Actions</th>
             </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let corp of corpora" [routerLink]="['/corpora/', corp.id]">
-                <td>{{ corp.name }}</td>
-                <td>{{ corp.num_transcripts|| "0" }}</td>
-                <td *ngIf="(authService.currentUser$ | async).isAdmin">{{corp.username}}</td>
+        </ng-template>
+        <ng-template pTemplate="body" let-corpus>
+            <tr [routerLink]="['/corpora/', corpus.id]">
+                <td>{{ corpus.name }}</td>
+                <td>{{ corpus.num_transcripts || "0" }}</td>
+                <td *ngIf="(authService.currentUser$ | async).isAdmin">
+                    {{ corpus.username }}
+                </td>
                 <td class="has-text-right">
                     <div class="buttons is-right">
                         <button class="button is-success" pTooltip="add transcripts" (click)="$event.stopPropagation()"
-                            [routerLink]="['/upload']" [queryParams]="{ corpus: corp.id }">
+                            [routerLink]="['/upload']" [queryParams]="{ corpus: corpus.id }">
                             <span class="icon is-small">
                                 <fa-icon [icon]="faPlus"></fa-icon>
                             </span>
                         </button>
                         <button class="button is-danger" pTooltip="delete corpus"
-                            (click)="confirmDeleteCorpus($event, corp)">
+                            (click)="confirmDeleteCorpus($event, corpus)">
                             <span class="icon is-small">
                                 <fa-icon [icon]="faTrash"></fa-icon>
                             </span>
@@ -30,8 +39,8 @@
                     </div>
                 </td>
             </tr>
-        </tbody>
-    </table>
+        </ng-template>
+    </p-table>
 
     <h1 *ngIf="corpora.length === 0" class="title is-2">
         No corpora yet!
