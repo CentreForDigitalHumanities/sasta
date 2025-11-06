@@ -1,5 +1,5 @@
 <ng-container *ngIf="corpora$ | async as corpora; else loading">
-    <p-table [value]="corpora" [rowHover]="true">
+    <p-table [value]="corpora" [rowHover]="true" sortField="date_added" [sortOrder]="-1">
         <ng-template pTemplate="header">
             <tr>
                 <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
@@ -12,6 +12,7 @@
                 >
                     Owner <p-sortIcon field="username" />
                 </th>
+                <th pSortableColumn="date_added">Created on<p-sortIcon field="date_added" /></th>
                 <th class="has-text-right">Actions</th>
             </tr>
         </ng-template>
@@ -22,6 +23,7 @@
                 <td *ngIf="(authService.currentUser$ | async).isAdmin">
                     {{ corpus.username }}
                 </td>
+                <td>{{ corpus.date_added | date: "dd/MM/yyyy" }}</td>
                 <td class="has-text-right">
                     <div class="buttons is-right">
                         <button class="button is-success" pTooltip="add transcripts" (click)="$event.stopPropagation()"
