@@ -91,7 +91,7 @@ djangorestframework==3.13.1
     # via
     #   -r requirements.in
     #   django-rest-auth
-editdistance==0.6.2
+editdistance==0.6.1
     # via auchann
 et-xmlfile==1.1.0
     # via openpyxl
