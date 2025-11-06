@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    <p-table [value]="corpus.transcripts" [rowHover]="true" sortField="date" [sortOrder]="-1">
+    <p-table [value]="corpus.transcripts" [rowHover]="true" sortField="date_added" [sortOrder]="-1">
         <ng-template pTemplate="header">
             <tr>
                 <th pSortableColumn="name">Transcript<p-sortIcon field="name" /></th>
