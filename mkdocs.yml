@@ -12,6 +12,7 @@ theme:
         primary: custom
 nav:
     - Home: 'index.md'
+    - Privacy Policy: 'privacy.md'
     - Gebruikersaccount: 'accounts.md'
     - Uploaden van transcripten: 'upload.md'
     - Voorbewerking (process): 'process.md'
