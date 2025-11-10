@@ -6,6 +6,7 @@ export interface ListedCorpus {
     method_category: number;
     num_transcripts: number;
     username?: string;
+    date_added?: Date;
 }
 
 export interface Corpus extends Omit<ListedCorpus, 'num_transcripts'> {

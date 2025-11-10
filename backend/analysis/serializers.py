@@ -70,7 +70,7 @@ class CorpusListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Corpus
         fields = ('id', 'name', 'method_category',
-                  'num_transcripts', 'username')
+                  'num_transcripts', 'username', 'date_added')
 
 
 class CorpusDetailsSerializer(serializers.ModelSerializer):
