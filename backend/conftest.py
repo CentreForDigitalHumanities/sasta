@@ -15,6 +15,7 @@ from sastadev.conf import settings as sd_settings
 from lxml import etree
 
 from parse.parse_utils import create_utterance_objects
+from allauth.account.models import EmailAddress
 
 
 def _get_transcript_filenames(name: str, dir: Optional[str] = None):
@@ -224,3 +225,32 @@ def single_utt_allresults(testfiles_dir):
 @pytest.fixture
 def all_transcripts(asta_transcripts, tarsp_transcripts):
     return Transcript.objects.all()
+
+
+@pytest.fixture
+def user_credentials():
+    return {'username': 'basic_user',
+            'password': 'basic_user',
+            'email': 'basicuser@textcavator.com'}
+
+
+@pytest.fixture
+def auth_user(django_user_model, user_credentials):
+    user = django_user_model.objects.create_user(
+        username=user_credentials['username'],
+        password=user_credentials['password'],
+        email=user_credentials['email'])
+    EmailAddress.objects.create(user=user,
+                                email=user.email,
+                                verified=True,
+                                primary=True)
+    return user
+
+
+@pytest.fixture
+def auth_client(client, auth_user, user_credentials):
+    client.login(
+        username=user_credentials['username'],
+        password=user_credentials['password'])
+    yield client
+    client.logout()

@@ -4,9 +4,17 @@ import { LoginComponent } from './login.component';
 import { RegisterComponent } from './register.component';
 import { VerifyComponent } from './verify.component';
 import { SharedModule } from '../shared/shared.module';
+import { RequestResetComponent } from './reset-password/request-reset.component';
+import { ResetPasswordComponent } from './reset-password//reset-password.component';
 
 @NgModule({
-    declarations: [LoginComponent, RegisterComponent, VerifyComponent],
+    declarations: [
+        LoginComponent,
+        RegisterComponent,
+        VerifyComponent,
+        RequestResetComponent,
+        ResetPasswordComponent,
+    ],
     imports: [CommonModule, SharedModule],
     exports: [LoginComponent, RegisterComponent, VerifyComponent],
 })

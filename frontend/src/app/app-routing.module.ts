@@ -9,6 +9,8 @@ import { TranscriptComponent } from './transcript/transcript.component';
 import { ProcessComponent } from './process/process.component';
 import { UploadComponent } from './upload/upload.component';
 import { HomeComponent } from './core/home/home.component';
+import { RequestResetComponent } from './auth/reset-password/request-reset.component';
+import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 
 const routes: Routes = [
     {
@@ -47,6 +49,14 @@ const routes: Routes = [
     {
         path: 'confirm-email/:key',
         component: VerifyComponent,
+    },
+    {
+        path: 'reset',
+        component: RequestResetComponent,
+    },
+    {
+        path: 'reset-password/:uid/:token',
+        component: ResetPasswordComponent,
     },
     {
         path: '',
