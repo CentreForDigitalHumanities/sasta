@@ -12,6 +12,11 @@ def redirect_confirm(request, key):
     return HttpResponseRedirect('/confirm-email/{}/'.format(key))
 
 
+def redirect_reset(request, uidb64, token):
+    '''Redirects password reset to the frontend'''
+    return HttpResponseRedirect('/reset-password/{}/{}/'.format(uidb64, token))
+
+
 def has_admin_access(request):
     current_user = request.user
     if current_user.is_staff or current_user.is_superuser:
