@@ -66,7 +66,13 @@ export class ResetPasswordComponent implements OnInit {
         this.isLoading = false;
         this.resetSucceeded = true;
         this.message = response.detail;
-        setTimeout(() => this.router.navigate(['/login']), 3000);
+
+        this.authService
+            .logout()
+            .subscribe(() =>
+                setTimeout(() => this.router.navigate(['/login']), 3000),
+            );
+
     }
 
     private handleError(err) {
