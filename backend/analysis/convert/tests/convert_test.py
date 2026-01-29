@@ -22,6 +22,9 @@ def test_docx_to_txt(testfiles):
         doc.write_chat(cha)
         cha_exp = cha.replace(fn, f'{fn}_exp')
 
+        assert doc.title.replace(
+            '_', '-') == fn.replace('.docx', '').replace('_', '-')
+
         with open(cha, 'r') as of:
             with open(cha_exp) as ef:
                 orig = of.readlines()
