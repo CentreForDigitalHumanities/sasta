@@ -13,7 +13,7 @@ logger = logging.getLogger('sasta')
 # TODO move to config
 AGE_FIELD_NAMES = ['age', 'leeftijd']
 SEX_FIELD_NAMES = ['sex', 'gender', 'geslacht']
-TITLE_FIELD_NAMES = ['samplename', 'title', 'titel']
+TITLE_FIELD_NAMES = ['samplename', 'samplenaam', 'title', 'titel']
 MALE_CODES = ['jongen', 'man', 'boy', 'man']
 FEMALE_CODES = ['meisje', 'vrouw', 'girl', 'woman']
 
