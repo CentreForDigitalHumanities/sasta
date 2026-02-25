@@ -18,6 +18,7 @@ from lxml import etree
 from sastadev.correctionparameters import CorrectionParameters
 from sastadev.correcttreebank import correcttreebank, corrn
 from sastadev.sastatypes import ErrorDict, Treebank
+from sastadev.sastacore import doauchann
 from sastadev.targets import get_targets
 
 logger = logging.getLogger('sasta')
@@ -195,6 +196,8 @@ def correct_treebank(transcript: Transcript):
         method_name = transcript.corpus.method_category.name.lower()
         targets = get_targets(treebank, method_name)
 
+        treebank = apply_auchann(transcript, treebank)
+
         correction_options = SimpleNamespace(
             infilename=transcript.parsed_content.path,
             methodname=method_name,
@@ -233,6 +236,14 @@ def correct_treebank(transcript: Transcript):
     except Exception as e:
         logger.exception(e)
         raise
+
+
+def apply_auchann(transcript: Transcript, treebank: Treebank):
+    logger.info(f'Applying Auchann to {transcript.name}')
+    result = doauchann(treebank)
+    logger.info('Auchann applied')
+    return result
+
 
 
 def correct_uncorrected_transcripts():
