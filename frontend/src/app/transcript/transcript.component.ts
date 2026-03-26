@@ -67,10 +67,10 @@ export class TranscriptComponent implements OnInit, OnDestroy {
         private router: Router,
         private route: ActivatedRoute,
         private messageService: MessageService,
-        public authService: AuthService
+        public authService: AuthService,
     ) {
         this.route.paramMap.subscribe(
-            (params) => (this.id = +params.get('id'))
+            (params) => (this.id = +params.get('id')),
         );
     }
 
@@ -118,13 +118,13 @@ export class TranscriptComponent implements OnInit, OnDestroy {
                 switchMap((m: Method) => {
                     this.currentTam = m;
                     return this.methodService.getMethods(); // get all methods
-                })
+                }),
             )
             .subscribe((tams: Method[]) => {
                 this.tams = tams;
                 this.groupedTams = this.methodService.groupMethods(
                     tams,
-                    this.corpus.method_category
+                    this.corpus.method_category,
                 ); // group methods
             });
     }
@@ -143,7 +143,7 @@ export class TranscriptComponent implements OnInit, OnDestroy {
                 this.downloadFile(
                     res.body,
                     `${this.transcript.name}_latest_SAF.xlsx`,
-                    XLSX_MIME
+                    XLSX_MIME,
                 );
             });
     }
@@ -153,6 +153,39 @@ export class TranscriptComponent implements OnInit, OnDestroy {
             .reset(this.id)
             .pipe(takeUntil(this.onDestroy$))
             .subscribe(() => this.loadData());
+    }
+
+    annotateAsync(outputFormat: AnnotationOutputFormat): void {
+        this.analysisService
+            .createAnnotateTask(
+                this.id,
+                this.currentTam.id.toString(),
+                outputFormat,
+            )
+            .pipe(
+                switchMap((taskID) =>
+                    this.analysisService.pollAnalysisTask(taskID),
+                ),
+            )
+            .subscribe(
+                () => {
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Annotation success',
+                        detail: `Annotation completed for ${this.transcript.name}`,
+                    });
+                    this.loadData();
+                },
+                (err) => {
+                    console.error(err);
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error annotating',
+                        detail: err.message,
+                        sticky: true,
+                    });
+                },
+            );
     }
 
     annotateTranscript(outputFormat: AnnotationOutputFormat): void {
@@ -167,14 +200,14 @@ export class TranscriptComponent implements OnInit, OnDestroy {
                             this.downloadFile(
                                 response.body,
                                 `${this.transcript.name}_SAF.xlsx`,
-                                XLSX_MIME
+                                XLSX_MIME,
                             );
                             break;
                         case 'cha':
                             this.downloadFile(
                                 response.body,
                                 `${this.transcript.name}_annotated.cha`,
-                                TXT_MIME
+                                TXT_MIME,
                             );
                             break;
                         default:
@@ -197,7 +230,7 @@ export class TranscriptComponent implements OnInit, OnDestroy {
                         sticky: true,
                     });
                     this.querying = false;
-                }
+                },
             );
     }
 
@@ -211,7 +244,7 @@ export class TranscriptComponent implements OnInit, OnDestroy {
                     this.downloadFile(
                         response.body,
                         `${this.transcript.name}_matches.xlsx`,
-                        XLSX_MIME
+                        XLSX_MIME,
                     );
                     this.messageService.add({
                         severity: 'success',
@@ -229,7 +262,7 @@ export class TranscriptComponent implements OnInit, OnDestroy {
                         sticky: true,
                     });
                     this.querying = false;
-                }
+                },
             );
     }
 
@@ -243,7 +276,7 @@ export class TranscriptComponent implements OnInit, OnDestroy {
                     this.downloadFile(
                         response.body,
                         `${this.transcript.name}_${this.currentTam.category.name}_form.xlsx`,
-                        XLSX_MIME
+                        XLSX_MIME,
                     );
                     this.messageService.add({
                         severity: 'success',
@@ -261,7 +294,7 @@ export class TranscriptComponent implements OnInit, OnDestroy {
                         sticky: true,
                     });
                     this.querying = false;
-                }
+                },
             );
     }
 
@@ -287,13 +320,13 @@ export class TranscriptComponent implements OnInit, OnDestroy {
                         detail: err.message,
                         sticky: true,
                     });
-                }
+                },
             );
     }
 
     chatFileAvailable(transcript: Transcript): boolean {
         return [TranscriptStatus.CONVERTED, TranscriptStatus.PARSED].includes(
-            transcript.status
+            transcript.status,
         );
     }
 
@@ -327,7 +360,7 @@ export class TranscriptComponent implements OnInit, OnDestroy {
         // Uses reduce to efficiently find the number
         return this.transcript.utterances.reduce(
             (total, utt) => (utt.for_analysis ? ++total : total),
-            0
+            0,
         );
     }
 }

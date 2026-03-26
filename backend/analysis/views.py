@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import datetime
 import logging
 from io import BytesIO, StringIO
+from operator import is_
 
 from analysis.query.run import annotate_transcript
+from analysis.tasks import annotate_transcript_task
+from analysis.utils import create_analysis_run
 from annotations.reader import read_saf
 from annotations.writers.querycounts import querycounts_to_xlsx
 from annotations.writers.saf_chat import enrich_chat
@@ -22,6 +24,8 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import ParseError
 from rest_framework.response import Response
 
+from parse.views import CeleryTaskView
+
 from .convert.convert import convert
 from .models import (AnalysisRun, AssessmentMethod, Corpus, MethodCategory,
                      Transcript, UploadFile)
@@ -30,7 +34,6 @@ from .serializers import (AssessmentMethodSerializer, CorpusDetailsSerializer,
                           CorpusListSerializer, MethodCategorySerializer,
                           TranscriptDetailsSerializer,
                           TranscriptListSerializer, UploadFileSerializer)
-from .utils import StreamFile
 
 logger = logging.getLogger('sasta')
 
@@ -60,22 +63,6 @@ class TranscriptViewSet(viewsets.ModelViewSet):
         if self.request.user.is_superuser:
             return self.queryset.all()
         return self.queryset.filter(corpus__user=self.request.user)
-
-    def create_analysis_run(self, transcript, method, saf, is_manual=False):
-        if not isinstance(saf, BytesIO):
-            stream = BytesIO()
-            saf.save(stream)
-        else:
-            stream = saf
-        run = AnalysisRun(transcript=transcript, method=method, is_manual_correction=is_manual)
-
-        now = datetime.datetime.now()
-        stamp = now.strftime('%Y%m%d_%H%M')
-
-        filename = f'{transcript.name}_{stamp}_saf.xlsx'
-        run.annotation_file.save(filename, StreamFile(stream))
-        run.save()
-        return run
 
     @action(detail=True, methods=['POST'], name='Score transcript')
     def query(self, request, *args, **kwargs):
@@ -107,7 +94,7 @@ class TranscriptViewSet(viewsets.ModelViewSet):
         # Always create an XLSX file for AnalysisRun purposes
         writer = SAFWriter(method.to_sastadev(), allresults)
         spreadsheet = writer.workbook
-        self.create_analysis_run(transcript, method, spreadsheet)
+        create_analysis_run(transcript, method, spreadsheet)
 
         # Adapt output to requested format
         format = request.data.get('format', 'xlsx')
@@ -133,13 +120,38 @@ class TranscriptViewSet(viewsets.ModelViewSet):
 
             return response
 
+    @action(detail=True, methods=['POST'], name='Annotate (async)')
+    def annotate_async(self, request, *args, **kwargs):
+        # Retrieve objects
+        transcript = self.get_object()
+        transcript_id = transcript.pk
+        method_id = request.data.get('method')
+        method = AssessmentMethod.objects.get(pk=method_id)
+
+        # create an AnalysisRun without annotations file to attach the task id to
+        run = AnalysisRun.objects.create(transcript=transcript, method=method,
+                                         is_manual_correction=False)
+        print(run)
+
+        # create the async task
+        task = annotate_transcript_task.s(
+            transcript.pk, method_id, run.pk).delay()
+
+        # attach task id to analysisrun without results
+        run.task_id = task.id
+        run.save()
+
+        # return task_id
+        return Response(task.id)
+
     @action(detail=True, methods=['GET'], name='Download latest annotation', url_path='annotations/latest')
     def latest_annotations(self, request, *args, **kwargs):
         obj = self.get_object()
         run = AnalysisRun.objects.filter(transcript=obj).latest()
 
         filename = run.annotation_file.name.split('/')[-1]
-        response = HttpResponse(run.annotation_file, content_type=SPREADSHEET_MIMETYPE)
+        response = HttpResponse(run.annotation_file,
+                                content_type=SPREADSHEET_MIMETYPE)
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
         return response
 
@@ -161,7 +173,8 @@ class TranscriptViewSet(viewsets.ModelViewSet):
 
         file = request.FILES['content'].file
 
-        new_run = self.create_analysis_run(obj, latest_run.method, file, is_manual=True)
+        new_run = create_analysis_run(
+            obj, latest_run.method, file, is_manual=True)
 
         try:
             read_saf(new_run.annotation_file.path,
@@ -293,7 +306,8 @@ class CorpusViewSet(viewsets.ModelViewSet):
     def parse_all_async(self, request, *args, **kwargs):
         corpus = self.get_object()
         transcripts = Transcript.objects.filter(
-            Q(corpus=corpus), Q(status=Transcript.CONVERTED) | Q(status=Transcript.PARSING_FAILED)
+            Q(corpus=corpus), Q(status=Transcript.CONVERTED) | Q(
+                status=Transcript.PARSING_FAILED)
         )
 
         # If in DEBUG mode and celery not running, parse synchronously
@@ -302,7 +316,8 @@ class CorpusViewSet(viewsets.ModelViewSet):
         #     logger.info('Bypassing Celery')
         #     return self.parse_all()
 
-        task = group(parse_transcript_task.s(t.id) for t in transcripts).delay()
+        task = group(parse_transcript_task.s(t.id)
+                     for t in transcripts).delay()
 
         if not task:
             return Response('Failed to create task', status.HTTP_400_BAD_REQUEST)
@@ -339,3 +354,10 @@ class AssessmentMethodViewSet(viewsets.ModelViewSet):
 class MethodCategoryViewSet(viewsets.ModelViewSet):
     queryset = MethodCategory.objects.all()
     serializer_class = MethodCategorySerializer
+
+
+class AnalysisTaskView(CeleryTaskView):
+    '''View for starting analysis tasks
+    For now, only implements parent functionality of CeleryTaskView,
+    but can be extended with analysis-specific functionality if needed'''
+    pass
