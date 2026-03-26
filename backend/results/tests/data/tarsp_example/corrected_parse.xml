@@ -1,0 +1,259 @@
+<treebank><alpino_ds version="1.14">
+  <metadata><meta type="text" name="charencoding" value="UTF8"/>
+<meta type="text" name="childage" value="4;6"/>
+<meta type="int" name="childmonths" value="54"/>
+<meta type="text" name="comment" value="##META text title = Tarsp_01"/>
+<meta type="text" name="session" value="Tarsp_01"/>
+<meta type="text" name="origutt" value="allemaal varkens zit erin. "/>
+<meta type="text" name="parsefile" value="Unknown_corpus_Tarsp_01_u00000000001.xml"/>
+<meta type="text" name="speaker" value="CHI"/>
+<meta type="int" name="uttendlineno" value="8"/>
+<meta type="int" name="uttid" value="1"/>
+<meta type="int" name="uttstartlineno" value="8"/>
+<meta type="text" name="name" value="chi"/>
+<meta type="text" name="SES" value=""/>
+<meta type="text" name="age" value="4;6"/>
+<meta type="text" name="custom" value=""/>
+<meta type="text" name="education" value=""/>
+<meta type="text" name="group" value=""/>
+<meta type="text" name="language" value="nld"/>
+<meta type="int" name="months" value="54"/>
+<meta type="text" name="role" value="Target_Child"/>
+<meta type="text" name="sex" value="male"/>
+<meta type="text" name="xsid" value="1"/>
+<meta type="int" name="uttno" value="1"/>
+<xmeta name="tokenisation" atype="list" annotationwordlist="['allemaal', 'varkens', 'zit', 'erin', '.']" annotationposlist="[]" annotatedwordlist="[]" annotatedposlist="[]" value="['allemaal', 'varkens', 'zit', 'erin', '.']" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="0"/><xmeta name="cleanedtokenisation" atype="list" annotationwordlist="['allemaal', 'varkens', 'zit', 'erin', '.']" annotationposlist="[]" annotatedwordlist="[]" annotatedposlist="[]" value="['allemaal', 'varkens', 'zit', 'erin', '.']" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="0"/><xmeta name="cleanedtokenpositions" atype="list" annotationwordlist="[10, 20, 30, 40, 50]" annotationposlist="[10, 20, 30, 40, 50]" annotatedwordlist="[]" annotatedposlist="[]" value="[10, 20, 30, 40, 50]" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="0"/></metadata><parser build="Alpino-x86_64-linux-glibc2.5-git722-sicstus" date="2026-03-26T14:53" cats="2" skips="0"/>
+  <node begin="10" cat="top" end="51" id="0" rel="top">
+    <node begin="10" cat="du" end="41" id="1" rel="--">
+      <node begin="10" cat="du" end="21" id="2" rel="dp">
+        <node begin="10" end="11" frame="predm_adverb" his="normal" his_1="normal" id="3" lcat="advp" lemma="allemaal" pos="adv" postag="BW()" pt="bw" rel="dp" root="allemaal" sense="allemaal" special="predm" word="allemaal"/>
+        <node begin="20" end="21" frame="noun(het,count,pl)" gen="het" getal="mv" graad="basis" his="normal" his_1="normal" id="4" lcat="np" lemma="varken" ntype="soort" num="pl" pos="noun" postag="N(soort,mv,basis)" pt="n" rel="dp" rnum="pl" root="varken" sense="varken" word="varkens"/>
+      </node>
+      <node begin="30" cat="sv1" end="41" id="5" rel="dp">
+        <node begin="30" dropped_agr="sg" end="31" frame="verb(hebben,sg,ld_pp)" his="normal" his_1="normal" id="6" infl="sg" lcat="sv1" lemma="zitten" pos="verb" postag="WW(pv,tgw,ev)" pt="ww" pvagr="ev" pvtijd="tgw" rel="hd" root="zit" sc="ld_pp" sense="zit" stype="topic_drop" tense="present" word="zit" wvorm="pv"/>
+        <node begin="40" end="41" frame="er_adverb(in)" his="normal" his_1="normal" id="7" lcat="pp" lemma="erin" pos="pp" postag="BW()" pt="bw" rel="ld" root="erin" sense="erin" special="er" word="erin"/>
+      </node>
+    </node>
+    <node begin="50" end="51" frame="punct(punt)" his="robust_skip" id="8" lcat="--" lemma="." pos="punct" postag="LET()" pt="let" rel="--" root="." sense="." special="punt" word="."/>
+  </node>
+  <sentence sentid="1">allemaal varkens zit erin .</sentence></alpino_ds><alpino_ds version="1.3">
+  <metadata><meta type="text" name="charencoding" value="UTF8"/>
+<meta type="text" name="childage" value="4;6"/>
+<meta type="int" name="childmonths" value="54"/>
+<meta type="text" name="comment" value="##META text title = Tarsp_01"/>
+<meta type="text" name="session" value="Tarsp_01"/>
+<meta type="text" name="origutt" value="&lt;die kan je&gt; [/] die kan je de varken doen."/>
+<meta type="text" name="parsefile" value="Unknown_corpus_Tarsp_01_u00000000002.xml"/>
+<meta type="text" name="speaker" value="CHI"/>
+<meta type="int" name="uttendlineno" value="10"/>
+<meta type="int" name="uttid" value="2"/>
+<meta type="int" name="uttstartlineno" value="10"/>
+<meta type="text" name="name" value="chi"/>
+<meta type="text" name="SES" value=""/>
+<meta type="text" name="age" value="4;6"/>
+<meta type="text" name="custom" value=""/>
+<meta type="text" name="education" value=""/>
+<meta type="text" name="group" value=""/>
+<meta type="text" name="language" value="nld"/>
+<meta type="int" name="months" value="54"/>
+<meta type="text" name="role" value="Target_Child"/>
+<meta type="text" name="sex" value="male"/>
+<meta type="text" name="xsid" value="2"/>
+<meta type="int" name="uttno" value="2"/>
+<xmeta name="GrammarError" atype="text" annotationwordlist="['het']" annotationposlist="[100]" annotatedwordlist="['de']" annotatedposlist="[100]" value="deheterror" cat="Error" subcat="None" source="SASTA" backplacement="2" penalty="100"/><xmeta name="Repetition" atype="text" annotationwordlist="['die', 'kan', 'je']" annotationposlist="[20, 30, 40]" annotatedwordlist="[]" annotatedposlist="[]" value="['die', 'kan', 'je']" cat="None" subcat="None" source="CHAT" backplacement="0" penalty="0"/><xmeta name="tokenisation" atype="list" annotationwordlist="['&lt;', 'die', 'kan', 'je', '&gt;', '[/]', 'die', 'kan', 'je', 'de', 'varken', 'doen', '.']" annotationposlist="[]" annotatedwordlist="[]" annotatedposlist="[]" value="['&lt;', 'die', 'kan', 'je', '&gt;', '[/]', 'die', 'kan', 'je', 'de', 'varken', 'doen', '.']" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="0"/><xmeta name="cleanedtokenisation" atype="list" annotationwordlist="['die', 'kan', 'je', 'de', 'varken', 'doen', '.']" annotationposlist="[]" annotatedwordlist="[]" annotatedposlist="[]" value="['die', 'kan', 'je', 'de', 'varken', 'doen', '.']" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="0"/><xmeta name="cleanedtokenpositions" atype="list" annotationwordlist="[70, 80, 90, 100, 110, 120, 130]" annotationposlist="[70, 80, 90, 100, 110, 120, 130]" annotatedwordlist="[]" annotatedposlist="[]" value="[70, 80, 90, 100, 110, 120, 130]" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="0"/><xmeta name="parsed as" atype="text" annotationwordlist="die kan je het varken doen ." annotationposlist="[]" annotatedwordlist="[]" annotatedposlist="[]" value="die kan je het varken doen ." cat="Correction" subcat="None" source="SASTA" backplacement="0" penalty="0"/></metadata><node begin="70" cat="top" end="131" id="0" rel="top">
+    <node begin="70" cat="smain" end="121" id="1" rel="--">
+      <node begin="80" end="81" frame="verb('hebben/zijn',modal_not_u,aux(inf))" id="2" infl="modal_not_u" lcat="smain" lemma="kunnen" pos="verb" postag="WW(pv,tgw,ev)" pt="ww" pvagr="ev" pvtijd="tgw" rel="hd" root="kan" sc="aux(inf)" sense="kan" stype="declarative" tense="present" word="kan" wvorm="pv"/>
+      <node begin="90" case="both" def="def" end="91" frame="pronoun(nwh,je,sg,de,both,def,wkpro)" gen="de" getal="ev" id="3" index="1" lcat="np" lemma="je" naamval="nomin" num="sg" pdtype="pron" per="je" persoon="2v" pos="pron" postag="VNW(pers,pron,nomin,red,2v,ev)" pt="vnw" rel="su" rnum="sg" root="je" sense="je" special="wkpro" status="red" vwtype="pers" wh="nwh" word="je"/>
+      <node begin="70" cat="inf" end="121" id="4" rel="vc">
+        <node begin="70" end="71" frame="determiner(de,nwh,nmod,pro,nparg)" getal="getal" id="5" infl="de" lcat="np" lemma="die" naamval="stan" pdtype="pron" persoon="3" pos="det" postag="VNW(aanw,pron,stan,vol,3,getal)" pt="vnw" rel="obj1" rnum="sg" root="die" sense="die" status="vol" vwtype="aanw" wh="nwh" word="die"/>
+        <node begin="90" end="91" id="6" index="1" rel="su"/>
+        <node begin="100" cat="np" end="111" id="7" rel="obj2">
+          <node begin="100" end="101" frame="determiner(de)" his="normal" his_1="normal" id="8" infl="de" lcat="detp" lemma="de" lwtype="bep" naamval="stan" npagr="rest" pos="det" postag="LID(bep,stan,rest)" pt="lid" rel="det" root="de" sense="de" word="de"/>
+          <node begin="110" end="111" frame="noun(het,count,sg)" gen="het" genus="onz" getal="ev" graad="basis" id="9" lcat="np" lemma="varken" naamval="stan" ntype="soort" num="sg" pos="noun" postag="N(soort,ev,basis,onz,stan)" pt="n" rel="hd" rnum="sg" root="varken" sense="varken" word="varken"/>
+        </node>
+        <node begin="120" buiging="zonder" end="121" frame="verb(hebben,inf(no_e),np_np)" id="10" infl="inf(no_e)" lcat="inf" lemma="doen" pos="verb" positie="vrij" postag="WW(inf,vrij,zonder)" pt="ww" rel="hd" root="doe" sc="np_np" sense="doe" word="doen" wvorm="inf"/>
+      </node>
+    </node>
+    <node begin="130" end="131" frame="punct(punt)" id="11" lcat="punct" lemma="." pos="punct" postag="LET()" pt="let" rel="--" root="." sense="." special="punt" word="."/>
+  </node>
+  <sentence sentid="2">die kan je de varken doen .</sentence></alpino_ds><alpino_ds version="1.14">
+  <metadata><meta type="text" name="charencoding" value="UTF8"/>
+<meta type="text" name="childage" value="4;6"/>
+<meta type="int" name="childmonths" value="54"/>
+<meta type="text" name="comment" value="##META text title = Tarsp_01"/>
+<meta type="text" name="session" value="Tarsp_01"/>
+<meta type="text" name="origutt" value="dit is een touw."/>
+<meta type="text" name="parsefile" value="Unknown_corpus_Tarsp_01_u00000000003.xml"/>
+<meta type="text" name="speaker" value="CHI"/>
+<meta type="int" name="uttendlineno" value="12"/>
+<meta type="int" name="uttid" value="3"/>
+<meta type="int" name="uttstartlineno" value="12"/>
+<meta type="text" name="name" value="chi"/>
+<meta type="text" name="SES" value=""/>
+<meta type="text" name="age" value="4;6"/>
+<meta type="text" name="custom" value=""/>
+<meta type="text" name="education" value=""/>
+<meta type="text" name="group" value=""/>
+<meta type="text" name="language" value="nld"/>
+<meta type="int" name="months" value="54"/>
+<meta type="text" name="role" value="Target_Child"/>
+<meta type="text" name="sex" value="male"/>
+<meta type="text" name="xsid" value="3"/>
+<meta type="int" name="uttno" value="3"/>
+<xmeta name="tokenisation" atype="list" annotationwordlist="['dit', 'is', 'een', 'touw', '.']" annotationposlist="[]" annotatedwordlist="[]" annotatedposlist="[]" value="['dit', 'is', 'een', 'touw', '.']" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="0"/><xmeta name="cleanedtokenisation" atype="list" annotationwordlist="['dit', 'is', 'een', 'touw', '.']" annotationposlist="[]" annotatedwordlist="[]" annotatedposlist="[]" value="['dit', 'is', 'een', 'touw', '.']" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="0"/><xmeta name="cleanedtokenpositions" atype="list" annotationwordlist="[10, 20, 30, 40, 50]" annotationposlist="[10, 20, 30, 40, 50]" annotatedwordlist="[]" annotatedposlist="[]" value="[10, 20, 30, 40, 50]" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="0"/></metadata><parser build="Alpino-x86_64-linux-glibc2.5-git722-sicstus" date="2026-03-26T14:53" cats="1" skips="0"/>
+  <node begin="10" cat="top" end="51" id="0" rel="top">
+    <node begin="10" cat="smain" end="41" id="1" rel="--">
+      <node begin="10" end="11" frame="determiner(het,nwh,nmod,pro,nparg)" getal="ev" his="normal" his_1="normal" id="2" infl="het" lcat="np" lemma="dit" naamval="stan" pdtype="pron" persoon="3o" pos="det" postag="VNW(aanw,pron,stan,vol,3o,ev)" pt="vnw" rel="su" rnum="sg" root="dit" sense="dit" status="vol" vwtype="aanw" wh="nwh" word="dit"/>
+      <node begin="20" end="21" frame="verb(unacc,sg_is,copula)" his="normal" his_1="normal" id="3" infl="sg_is" lcat="smain" lemma="zijn" pos="verb" postag="WW(pv,tgw,ev)" pt="ww" pvagr="ev" pvtijd="tgw" rel="hd" root="ben" sc="copula" sense="ben" stype="declarative" tense="present" word="is" wvorm="pv"/>
+      <node begin="30" cat="np" end="41" id="4" rel="predc">
+        <node begin="30" end="31" frame="determiner(een)" his="normal" his_1="normal" id="5" infl="een" lcat="detp" lemma="een" lwtype="onbep" naamval="stan" npagr="agr" pos="det" postag="LID(onbep,stan,agr)" pt="lid" rel="det" root="een" sense="een" word="een"/>
+        <node begin="40" end="41" frame="noun(het,count,sg)" gen="het" genus="onz" getal="ev" graad="basis" his="normal" his_1="normal" id="6" lcat="np" lemma="touw" naamval="stan" ntype="soort" num="sg" pos="noun" postag="N(soort,ev,basis,onz,stan)" pt="n" rel="hd" rnum="sg" root="touw" sense="touw" word="touw"/>
+      </node>
+    </node>
+    <node begin="50" end="51" frame="punct(punt)" his="normal" his_1="normal" id="7" lcat="punct" lemma="." pos="punct" postag="LET()" pt="let" rel="--" root="." sense="." special="punt" word="."/>
+  </node>
+  <sentence sentid="3">dit is een touw .</sentence></alpino_ds><alpino_ds version="1.14">
+  <metadata><meta type="text" name="charencoding" value="UTF8"/>
+<meta type="text" name="childage" value="4;6"/>
+<meta type="int" name="childmonths" value="54"/>
+<meta type="text" name="comment" value="##META text title = Tarsp_01"/>
+<meta type="text" name="session" value="Tarsp_01"/>
+<meta type="text" name="origutt" value="naar boven gaat."/>
+<meta type="text" name="parsefile" value="Unknown_corpus_Tarsp_01_u00000000004.xml"/>
+<meta type="text" name="speaker" value="CHI"/>
+<meta type="int" name="uttendlineno" value="14"/>
+<meta type="int" name="uttid" value="4"/>
+<meta type="int" name="uttstartlineno" value="14"/>
+<meta type="text" name="name" value="chi"/>
+<meta type="text" name="SES" value=""/>
+<meta type="text" name="age" value="4;6"/>
+<meta type="text" name="custom" value=""/>
+<meta type="text" name="education" value=""/>
+<meta type="text" name="group" value=""/>
+<meta type="text" name="language" value="nld"/>
+<meta type="int" name="months" value="54"/>
+<meta type="text" name="role" value="Target_Child"/>
+<meta type="text" name="sex" value="male"/>
+<meta type="text" name="xsid" value="4"/>
+<meta type="int" name="uttno" value="4"/>
+<xmeta name="tokenisation" atype="list" annotationwordlist="['naar', 'boven', 'gaat', '.']" annotationposlist="[]" annotatedwordlist="[]" annotatedposlist="[]" value="['naar', 'boven', 'gaat', '.']" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="0"/><xmeta name="cleanedtokenisation" atype="list" annotationwordlist="['naar', 'boven', 'gaat', '.']" annotationposlist="[]" annotatedwordlist="[]" annotatedposlist="[]" value="['naar', 'boven', 'gaat', '.']" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="0"/><xmeta name="cleanedtokenpositions" atype="list" annotationwordlist="[10, 20, 30, 40]" annotationposlist="[10, 20, 30, 40]" annotatedwordlist="[]" annotatedposlist="[]" value="[10, 20, 30, 40]" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="0"/></metadata><parser build="Alpino-x86_64-linux-glibc2.5-git722-sicstus" date="2026-03-26T14:53" cats="2" skips="0"/>
+  <node begin="10" cat="top" end="41" id="0" rel="top">
+    <node begin="10" cat="du" end="31" id="1" rel="--">
+      <node begin="10" cat="pp" end="21" id="2" rel="dp">
+        <node begin="10" end="11" frame="preposition(naar,[toe],loc_adv)" his="normal" his_1="normal" id="3" lcat="pp" lemma="naar" pos="prep" postag="VZ(init)" pt="vz" rel="hd" root="naar" sc="loc_adv" sense="naar" vztype="init" word="naar"/>
+        <node begin="20" end="21" frame="loc_adverb" his="normal" his_1="normal" id="4" lcat="advp" lemma="boven" pos="adv" postag="VZ(fin)" pt="vz" rel="obj1" root="boven" sense="boven" special="loc" vztype="fin" word="boven"/>
+      </node>
+      <node begin="30" dropped_agr="sg" dropped_prs="thi" end="31" frame="verb(zijn,sg3,intransitive)" his="normal" his_1="normal" id="5" infl="sg3" lcat="sv1" lemma="gaan" pos="verb" postag="WW(pv,tgw,met-t)" pt="ww" pvagr="met-t" pvtijd="tgw" rel="dp" root="ga" sc="intransitive" sense="ga" stype="topic_drop" tense="present" word="gaat" wvorm="pv"/>
+    </node>
+    <node begin="40" end="41" frame="punct(punt)" his="robust_skip" id="6" lcat="--" lemma="." pos="punct" postag="LET()" pt="let" rel="--" root="." sense="." special="punt" word="."/>
+  </node>
+  <sentence sentid="4">naar boven gaat .</sentence></alpino_ds><alpino_ds version="1.14">
+  <metadata><meta type="text" name="charencoding" value="UTF8"/>
+<meta type="text" name="childage" value="4;6"/>
+<meta type="int" name="childmonths" value="54"/>
+<meta type="text" name="comment" value="##META text title = Tarsp_01"/>
+<meta type="text" name="session" value="Tarsp_01"/>
+<meta type="text" name="origutt" value="al bijna."/>
+<meta type="text" name="parsefile" value="Unknown_corpus_Tarsp_01_u00000000005.xml"/>
+<meta type="text" name="speaker" value="CHI"/>
+<meta type="int" name="uttendlineno" value="16"/>
+<meta type="int" name="uttid" value="5"/>
+<meta type="int" name="uttstartlineno" value="16"/>
+<meta type="text" name="name" value="chi"/>
+<meta type="text" name="SES" value=""/>
+<meta type="text" name="age" value="4;6"/>
+<meta type="text" name="custom" value=""/>
+<meta type="text" name="education" value=""/>
+<meta type="text" name="group" value=""/>
+<meta type="text" name="language" value="nld"/>
+<meta type="int" name="months" value="54"/>
+<meta type="text" name="role" value="Target_Child"/>
+<meta type="text" name="sex" value="male"/>
+<meta type="text" name="xsid" value="5"/>
+<meta type="int" name="uttno" value="5"/>
+<xmeta name="tokenisation" atype="list" annotationwordlist="['al', 'bijna', '.']" annotationposlist="[]" annotatedwordlist="[]" annotatedposlist="[]" value="['al', 'bijna', '.']" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="0"/><xmeta name="cleanedtokenisation" atype="list" annotationwordlist="['al', 'bijna', '.']" annotationposlist="[]" annotatedwordlist="[]" annotatedposlist="[]" value="['al', 'bijna', '.']" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="0"/><xmeta name="cleanedtokenpositions" atype="list" annotationwordlist="[10, 20, 30]" annotationposlist="[10, 20, 30]" annotatedwordlist="[]" annotatedposlist="[]" value="[10, 20, 30]" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="0"/></metadata><parser build="Alpino-x86_64-linux-glibc2.5-git722-sicstus" date="2026-03-26T14:53" cats="1" skips="0"/>
+  <node begin="10" cat="top" end="31" id="0" rel="top">
+    <node begin="10" cat="du" end="21" id="1" rel="--">
+      <node begin="10" end="11" frame="adverb" his="normal" his_1="normal" id="2" lcat="advp" lemma="al" pos="adv" postag="BW()" pt="bw" rel="dp" root="al" sense="al" word="al"/>
+      <node begin="20" end="21" frame="sentence_adverb" his="normal" his_1="normal" id="3" lcat="advp" lemma="bijna" pos="adv" postag="BW()" pt="bw" rel="dp" root="bijna" sense="bijna" special="sentence" word="bijna"/>
+    </node>
+    <node begin="30" end="31" frame="punct(punt)" his="normal" his_1="normal" id="4" lcat="punct" lemma="." pos="punct" postag="LET()" pt="let" rel="--" root="." sense="." special="punt" word="."/>
+  </node>
+  <sentence sentid="5">al bijna .</sentence></alpino_ds><alpino_ds version="1.14">
+  <metadata><meta type="text" name="charencoding" value="UTF8"/>
+<meta type="text" name="childage" value="4;6"/>
+<meta type="int" name="childmonths" value="54"/>
+<meta type="text" name="comment" value="##META text title = Tarsp_01"/>
+<meta type="text" name="session" value="Tarsp_01"/>
+<meta type="text" name="origutt" value="hij wil naar boven. "/>
+<meta type="text" name="parsefile" value="Unknown_corpus_Tarsp_01_u00000000006.xml"/>
+<meta type="text" name="speaker" value="CHI"/>
+<meta type="int" name="uttendlineno" value="18"/>
+<meta type="int" name="uttid" value="6"/>
+<meta type="int" name="uttstartlineno" value="18"/>
+<meta type="text" name="name" value="chi"/>
+<meta type="text" name="SES" value=""/>
+<meta type="text" name="age" value="4;6"/>
+<meta type="text" name="custom" value=""/>
+<meta type="text" name="education" value=""/>
+<meta type="text" name="group" value=""/>
+<meta type="text" name="language" value="nld"/>
+<meta type="int" name="months" value="54"/>
+<meta type="text" name="role" value="Target_Child"/>
+<meta type="text" name="sex" value="male"/>
+<meta type="text" name="xsid" value="6"/>
+<meta type="int" name="uttno" value="6"/>
+<xmeta name="tokenisation" atype="list" annotationwordlist="['hij', 'wil', 'naar', 'boven', '.']" annotationposlist="[]" annotatedwordlist="[]" annotatedposlist="[]" value="['hij', 'wil', 'naar', 'boven', '.']" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="0"/><xmeta name="cleanedtokenisation" atype="list" annotationwordlist="['hij', 'wil', 'naar', 'boven', '.']" annotationposlist="[]" annotatedwordlist="[]" annotatedposlist="[]" value="['hij', 'wil', 'naar', 'boven', '.']" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="0"/><xmeta name="cleanedtokenpositions" atype="list" annotationwordlist="[10, 20, 30, 40, 50]" annotationposlist="[10, 20, 30, 40, 50]" annotatedwordlist="[]" annotatedposlist="[]" value="[10, 20, 30, 40, 50]" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="0"/></metadata><parser build="Alpino-x86_64-linux-glibc2.5-git722-sicstus" date="2026-03-26T14:53" cats="1" skips="0"/>
+  <node begin="10" cat="top" end="51" id="0" rel="top">
+    <node begin="10" cat="smain" end="41" id="1" rel="--">
+      <node begin="10" case="nom" def="def" end="11" frame="pronoun(nwh,thi,sg,de,nom,def)" gen="de" genus="masc" getal="ev" his="normal" his_1="normal" id="2" lcat="np" lemma="hij" naamval="nomin" num="sg" pdtype="pron" per="thi" persoon="3" pos="pron" postag="VNW(pers,pron,nomin,vol,3,ev,masc)" pt="vnw" rel="su" rnum="sg" root="hij" sense="hij" status="vol" vwtype="pers" wh="nwh" word="hij"/>
+      <node begin="20" end="21" frame="verb(hebben,modal_not_u,ld_pp)" his="normal" his_1="normal" id="3" infl="modal_not_u" lcat="smain" lemma="willen" pos="verb" postag="WW(pv,tgw,ev)" pt="ww" pvagr="ev" pvtijd="tgw" rel="hd" root="wil" sc="ld_pp" sense="wil" stype="declarative" tense="present" word="wil" wvorm="pv"/>
+      <node begin="30" cat="pp" end="41" id="4" rel="ld">
+        <node begin="30" end="31" frame="preposition(naar,[toe],loc_adv)" his="normal" his_1="normal" id="5" lcat="pp" lemma="naar" pos="prep" postag="VZ(init)" pt="vz" rel="hd" root="naar" sc="loc_adv" sense="naar" vztype="init" word="naar"/>
+        <node begin="40" end="41" frame="loc_adverb" his="normal" his_1="normal" id="6" lcat="advp" lemma="boven" pos="adv" postag="VZ(fin)" pt="vz" rel="obj1" root="boven" sense="boven" special="loc" vztype="fin" word="boven"/>
+      </node>
+    </node>
+    <node begin="50" end="51" frame="punct(punt)" his="normal" his_1="normal" id="7" lcat="punct" lemma="." pos="punct" postag="LET()" pt="let" rel="--" root="." sense="." special="punt" word="."/>
+  </node>
+  <sentence sentid="6">hij wil naar boven .</sentence></alpino_ds><alpino_ds version="1.3">
+  <metadata><meta type="text" name="charencoding" value="UTF8"/>
+<meta type="text" name="childage" value="4;6"/>
+<meta type="int" name="childmonths" value="54"/>
+<meta type="text" name="comment" value="##META text title = Tarsp_01"/>
+<meta type="text" name="session" value="Tarsp_01"/>
+<meta type="text" name="origutt" value="is helemaal veilig in [: bij] die varken."/>
+<meta type="text" name="parsefile" value="Unknown_corpus_Tarsp_01_u00000000007.xml"/>
+<meta type="text" name="speaker" value="CHI"/>
+<meta type="int" name="uttendlineno" value="20"/>
+<meta type="int" name="uttid" value="7"/>
+<meta type="int" name="uttstartlineno" value="20"/>
+<meta type="text" name="name" value="chi"/>
+<meta type="text" name="SES" value=""/>
+<meta type="text" name="age" value="4;6"/>
+<meta type="text" name="custom" value=""/>
+<meta type="text" name="education" value=""/>
+<meta type="text" name="group" value=""/>
+<meta type="text" name="language" value="nld"/>
+<meta type="int" name="months" value="54"/>
+<meta type="text" name="role" value="Target_Child"/>
+<meta type="text" name="sex" value="male"/>
+<meta type="text" name="xsid" value="7"/>
+<meta type="int" name="uttno" value="7"/>
+<xmeta name="GrammarError" atype="text" annotationwordlist="['dat']" annotationposlist="[80]" annotatedwordlist="['die']" annotatedposlist="[80]" value="deheterror" cat="Error" subcat="None" source="SASTA" backplacement="2" penalty="100"/><xmeta name="Alpino Improvement" atype="text" annotationwordlist="['hem']" annotationposlist="[80]" annotatedwordlist="['die']" annotatedposlist="[80]" value="hem" cat="Alpino Improvement" subcat="None" source="SASTA" backplacement="2" penalty="15"/><xmeta name="Replacement" atype="text" annotationwordlist="['bij']" annotationposlist="[60]" annotatedwordlist="['in']" annotatedposlist="[40]" value="['bij']" cat="None" subcat="None" source="CHAT" backplacement="8" penalty="0"/><xmeta name="tokenisation" atype="list" annotationwordlist="['is', 'helemaal', 'veilig', 'in', '[: ', 'bij', ']', 'die', 'varken', '.']" annotationposlist="[]" annotatedwordlist="[]" annotatedposlist="[]" value="['is', 'helemaal', 'veilig', 'in', '[: ', 'bij', ']', 'die', 'varken', '.']" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="0"/><xmeta name="cleanedtokenisation" atype="list" annotationwordlist="['is', 'helemaal', 'veilig', 'bij', 'die', 'varken', '.']" annotationposlist="[]" annotatedwordlist="[]" annotatedposlist="[]" value="['is', 'helemaal', 'veilig', 'bij', 'die', 'varken', '.']" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="0"/><xmeta name="cleanedtokenpositions" atype="list" annotationwordlist="[10, 20, 30, 60, 80, 90, 100]" annotationposlist="[10, 20, 30, 60, 80, 90, 100]" annotatedwordlist="[]" annotatedposlist="[]" value="[10, 20, 30, 60, 80, 90, 100]" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="0"/><xmeta name="parsed as" atype="text" annotationwordlist="is helemaal veilig bij dat varken ." annotationposlist="[]" annotatedwordlist="[]" annotatedposlist="[]" value="is helemaal veilig bij dat varken ." cat="Correction" subcat="None" source="SASTA" backplacement="0" penalty="0"/></metadata><node begin="10" cat="top" end="101" id="0" rel="top">
+    <node begin="100" end="101" frame="punct(punt)" id="11" lcat="punct" lemma="." pos="punct" postag="LET()" pt="let" rel="--" root="." sense="." special="punt" word="."/>
+  <node begin="10" cat="sv1" end="91" id="1" rel="--">
+      <node begin="10" end="11" frame="verb(unacc,sg_heeft,copula)" id="2" infl="sg_heeft" lcat="sv1" lemma="zijn" pos="verb" postag="WW(pv,tgw,ev)" pt="ww" pvagr="ev" pvtijd="tgw" rel="hd" root="ben" sc="copula" sense="ben" stype="topic_drop" tense="present" word="is" wvorm="pv"/>
+      <node begin="20" cat="ap" end="31" id="3" rel="predc">
+        <node begin="20" end="21" frame="adverb" id="4" lcat="advp" lemma="helemaal" pos="adv" postag="BW()" pt="bw" rel="mod" root="helemaal" sense="helemaal" word="helemaal"/>
+        <node aform="base" begin="30" buiging="zonder" end="31" frame="adjective(no_e(adv))" graad="basis" id="5" infl="no_e" lcat="ap" lemma="veilig" pos="adj" positie="vrij" postag="ADJ(vrij,basis,zonder)" pt="adj" rel="hd" root="veilig" sense="veilig" vform="adj" word="veilig"/>
+      </node>
+      <node begin="60" cat="pp" end="91" id="6" rel="mod">
+        <node begin="80" cat="np" end="91" id="8" rel="obj1">
+          <node begin="80" end="81" frame="determiner(de,nwh,nmod,pro,nparg)" getal="getal" his="normal" his_1="normal" id="8" infl="de" lcat="np" lemma="die" naamval="stan" pdtype="pron" persoon="3" pos="det" postag="VNW(aanw,pron,stan,vol,3,getal)" pt="vnw" rel="det" rnum="sg" root="die" sense="die" status="vol" vwtype="aanw" wh="nwh" word="die" positie="prenom"/>
+      <node begin="90" end="91" frame="noun(het,count,sg)" gen="het" genus="onz" getal="ev" graad="basis" id="10" lcat="np" lemma="varken" naamval="stan" ntype="soort" num="sg" pos="noun" postag="N(soort,ev,basis,onz,stan)" pt="n" rel="hd" rnum="sg" root="varken" sense="varken" word="varken"/>
+        </node>
+      <node begin="60" end="61" frame="preposition(bij,[vandaan])" id="7" lcat="pp" lemma="bij" pos="prep" postag="VZ(init)" pt="vz" rel="hd" root="bij" sense="bij" vztype="init" word="in"/>
+        </node>
+    </node>
+    </node>
+  <sentence sentid="7">is helemaal veilig in die varken .</sentence></alpino_ds></treebank>
