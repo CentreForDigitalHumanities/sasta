@@ -4,28 +4,31 @@ from analysis.models import AnalysisRun, AssessmentMethod, Transcript
 from analysis.query.run import annotate_transcript
 from analysis.utils import update_analysis_run
 from annotations.writers.saf_xlsx import SAFWriter
+from results.serializers import allresults_to_json
 
 
 @shared_task
-def annotate_transcript_task(transcript_id: int, method_id: int, run_id: int) -> str:
+def analyse_transcript_task(transcript_id: int, method_id: int, run_id: int) -> str:
     '''For a transcript and method, perform analysis and save results to an AnalysisRun'''
     # Retrieve objects
     transcript = Transcript.objects.get(pk=transcript_id)
     method = AssessmentMethod.objects.get(pk=method_id)
     run = AnalysisRun.objects.get(pk=run_id)
 
-    # for testing purposes, wait for 5 minutes to simulate a long-running task
-    import time
-    time.sleep(30)
+    # for testing purposes, wait to simulate a long-running task
+    # import time
+    # time.sleep(30)
 
     # Perform querying
     allresults = annotate_transcript(transcript, method)
 
-    # Create XLSX annotations file
-    writer = SAFWriter(method.to_sastadev(), allresults)
-    spreadsheet = writer.workbook
+    # Serialize results to JSON for storage in the AnalysisRun
+    # Make analysedtrees and allmatches empty to save space
+    allresults.analysedtrees = {}
+    allresults.allmatches = {}
 
-    # Update the AnalysisRun with the new annotations file
-    run = update_analysis_run(run, transcript, spreadsheet)
+    json_allresults = allresults_to_json(allresults)
+    run.allresults = json_allresults
+    run.save()
 
-    return f'Transcript {transcript.name} annotated'
+    return 'Transcript analysed successfully'

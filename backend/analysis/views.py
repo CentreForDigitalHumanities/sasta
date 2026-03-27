@@ -6,7 +6,7 @@ from io import BytesIO, StringIO
 from operator import is_
 
 from analysis.query.run import annotate_transcript
-from analysis.tasks import annotate_transcript_task
+from analysis.tasks import analyse_transcript_task
 from analysis.utils import create_analysis_run
 from annotations.reader import read_saf
 from annotations.writers.querycounts import querycounts_to_xlsx
@@ -121,7 +121,7 @@ class TranscriptViewSet(viewsets.ModelViewSet):
             return response
 
     @action(detail=True, methods=['POST'], name='Annotate (async)')
-    def annotate_async(self, request, *args, **kwargs):
+    def analyse_async(self, request, *args, **kwargs):
         # Retrieve objects
         transcript = self.get_object()
         transcript_id = transcript.pk
@@ -131,11 +131,10 @@ class TranscriptViewSet(viewsets.ModelViewSet):
         # create an AnalysisRun without annotations file to attach the task id to
         run = AnalysisRun.objects.create(transcript=transcript, method=method,
                                          is_manual_correction=False)
-        print(run)
 
         # create the async task
-        task = annotate_transcript_task.s(
-            transcript.pk, method_id, run.pk).delay()
+        task = analyse_transcript_task.s(
+            transcript_id, method_id, run.pk).delay()
 
         # attach task id to analysisrun without results
         run.task_id = task.id

@@ -157,7 +157,7 @@ export class TranscriptComponent implements OnInit, OnDestroy {
 
     annotateAsync(outputFormat: AnnotationOutputFormat): void {
         this.analysisService
-            .createAnnotateTask(
+            .createAnalysisTask(
                 this.id,
                 this.currentTam.id.toString(),
                 outputFormat,

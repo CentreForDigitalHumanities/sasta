@@ -57,7 +57,7 @@ export class AnalysisService {
     taskSuccess = (response: TaskResult): boolean =>
         response.status === 'SUCCESS';
 
-    createAnnotateTask(
+    createAnalysisTask(
         transcriptID: number,
         methodID: string,
         outputFormat: AnnotationOutputFormat,
@@ -66,20 +66,21 @@ export class AnalysisService {
         data.append('method', methodID);
         data.append('format', outputFormat);
         return this.http.post<string>(
-            `/api/transcripts/${transcriptID}/annotate_async/`,
+            `/api/transcripts/${transcriptID}/analyse_async/`,
             data,
         );
     }
 
-    getAnnotateTask(taskID: string): Observable<TaskResult> {
+    getAnalysisTask(taskID: string): Observable<TaskResult> {
         return this.http.get<TaskResult>(`/api/analysis/tasks/${taskID}/`);
     }
 
     pollAnalysisTask(taskID: string): Observable<TaskResult> {
         return timer(0, 1000).pipe(
-            switchMap((_) => this.getAnnotateTask(taskID)),
+            switchMap((_) => this.getAnalysisTask(taskID)),
             tap((res) => console.log(res)),
             filter(this.taskSuccess),
+            take(1),
         );
     }
 }

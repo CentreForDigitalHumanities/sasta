@@ -49,10 +49,11 @@ def allresults_to_dict(allresults):
         ]
         for k, matches in allresults.allmatches.items()
     }
-    analysedtrees = {
-        utt_id: _encode_syntree(tree)
-        for utt_id, tree in allresults.analysedtrees.items()
-    }
+    trees = allresults.analysedtrees
+    analysedtrees = [
+        [utt_id, _encode_syntree(tree)]
+        for utt_id, tree in (trees.items() if isinstance(trees, dict) else trees)
+    ]
     return {
         'uttcount': allresults.uttcount,
         'filename': allresults.filename,
@@ -80,10 +81,10 @@ def allresults_from_dict(d):
         ]
         for k, matches in d['allmatches'].items()
     }
-    analysedtrees = {
-        utt_id: _decode_syntree(xml_str)
-        for utt_id, xml_str in d['analysedtrees'].items()
-    }
+    analysedtrees = [
+        (utt_id, _decode_syntree(xml_str))
+        for utt_id, xml_str in d['analysedtrees']
+    ]
     return AllResults(
         uttcount=d['uttcount'],
         filename=d['filename'],
