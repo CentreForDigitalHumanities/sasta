@@ -4,7 +4,7 @@ import { TaskResult } from '@shared/models';
 import { Observable, timer } from 'rxjs';
 import { filter, switchMap, take, tap } from 'rxjs/operators';
 
-export type AnnotationOutputFormat = 'xlsx' | 'cha';
+export type AnnotationOutputFormat = 'xlsx' | 'cha' | 'form';
 
 @Injectable({
     providedIn: 'root',
@@ -81,6 +81,19 @@ export class AnalysisService {
             tap((res) => console.log(res)),
             filter(this.taskSuccess),
             take(1),
+        );
+    }
+
+    getResults(
+        transcriptID: number,
+        format: 'xlsx' | 'cha' | 'form',
+    ): Observable<HttpResponse<Blob>> {
+        const formData: FormData = new FormData();
+        formData.append('format', format);
+        return this.http.post(
+            `/api/transcripts/${transcriptID}/results/`,
+            formData,
+            { observe: 'response', responseType: 'blob' },
         );
     }
 }

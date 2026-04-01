@@ -183,11 +183,6 @@ class TranscriptViewSet(viewsets.ModelViewSet):
             logger.exception(e)
             return Response(str(e), status.HTTP_400_BAD_REQUEST)
 
-        # TODO: re-enable proper error logging for reading SAF files
-        # if reader.errors:
-        #     new_run.delete()
-        #     return Response(reader.formatted_errors(), status.HTTP_400_BAD_REQUEST)
-
         return Response('Success', status.HTTP_200_OK)
 
     @action(detail=True, methods=['POST'], name='Generate form')
@@ -257,6 +252,67 @@ class TranscriptViewSet(viewsets.ModelViewSet):
         if not task:
             return Response('Failed to create task', status.HTTP_400_BAD_REQUEST)
         return Response(task.id)
+
+    @action(detail=True, methods=['POST'], name='results')
+    def get_results(self, request, *args, **kwargs):
+        '''Use existing AnalysisRun to get results for a transcript and method, without re-running sastacore'''
+        transcript = self.get_object()
+        run = AnalysisRun.objects.filter(transcript=obj).latest()
+        method = run.method
+
+        format = request.data.get('format', 'xlsx')
+
+        # format: xlsx
+        if format == 'xlsx':
+            filename = run.annotation_file.name.split('/')[-1]
+            response = HttpResponse(run.annotation_file,
+                                    content_type=SPREADSHEET_MIMETYPE)
+            response['Content-Disposition'] = 'attachment; filename=%s' % filename
+            return response
+
+        # format: cha
+        # return enriched chat based on analysisrun.allresults
+        if format == 'xlsx':
+            enriched = enrich_chat(transcript, run.allresults, method)
+            output = StringIO()
+            writer = ChatWriter(enriched, target=output)
+            writer.write()
+            output.seek(0)
+
+            response = HttpResponse(
+                output.getvalue(), content_type='text/plain')
+            response['Content-Disposition'] = f'attachment; filename={transcript.name}_{method.category.name}_annotated.cha'
+
+            return response
+
+        # format: form
+        # return form based on analysisrun.allresults
+        if format == 'form':
+            form_func = method.category.get_form_function()
+            if not form_func:
+                raise ParseError(detail='No form definition for this method.')
+
+            form = form_func(run.allresults, None, in_memory=True)
+
+            form.seek(0)
+
+            # Weird hack to prevent Excel warning about corrupted files: copying the whole workbook to a new bytestream
+            # TODO: Find out why openpyxl corrupts only the STAP forms (probably to do with copying of exisitng xlsx file)
+            if method.category.name == 'STAP':
+                new_target = BytesIO()
+                wb = load_workbook(form)
+                wb.save(new_target)
+                new_target.seek(0)
+            else:
+                new_target = form
+
+            response = HttpResponse(
+                new_target,
+                content_type=SPREADSHEET_MIMETYPE)
+            response['Content-Disposition'] = f"attachment; filename={transcript.name}_{method.category.name}_form.xlsx"
+
+            return response
+
 
 
 class CorpusViewSet(viewsets.ModelViewSet):

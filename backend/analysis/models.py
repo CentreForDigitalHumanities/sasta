@@ -16,7 +16,7 @@ from sastadev.external_functions import form_map
 from sastadev.methods import Method
 from sastadev.query import Query
 from sastadev.readmethod import read_method
-
+from celery.result import AsyncResult
 logger = logging.getLogger('sasta')
 
 
@@ -378,3 +378,12 @@ class AnalysisRun(models.Model):
 
     def __str__(self):
         return f'{self.transcript.name}'
+
+    def task_success(self):
+        return self.task_status() == 'SUCCESS'
+
+    def task_status(self):
+        if self.task_id:
+            result = AsyncResult(self.task_id)
+            return result.status
+        return None

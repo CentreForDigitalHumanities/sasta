@@ -10,9 +10,12 @@ class UploadFileSerializer(serializers.ModelSerializer):
 
 
 class AnalysisRunSerializer(serializers.ModelSerializer):
+    task_status = serializers.CharField()
+
     class Meta:
         model = AnalysisRun
-        fields = ('id', 'created', 'annotation_file', 'method', 'is_manual_correction')
+        fields = ('id', 'created', 'annotation_file', 'method',
+                  'is_manual_correction', 'task_status')
 
 
 class UtteranceSerializer(serializers.ModelSerializer):

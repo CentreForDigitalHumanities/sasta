@@ -27,8 +27,13 @@ def analyse_transcript_task(transcript_id: int, method_id: int, run_id: int) -> 
     allresults.analysedtrees = {}
     allresults.allmatches = {}
 
+    # Store json allresults
     json_allresults = allresults_to_json(allresults)
     run.allresults = json_allresults
-    run.save()
+
+    # Store SAF file
+    writer = SAFWriter(method.to_sastadev(), allresults)
+    spreadsheet = writer.workbook
+    _ = update_analysis_run(run=run, transcript=transcript, saf=spreadsheet)
 
     return 'Transcript analysed successfully'

@@ -135,6 +135,63 @@ export class TranscriptComponent implements OnInit, OnDestroy {
         saveAs(blob, filename);
     }
 
+    getResults(format: AnnotationOutputFormat): void {
+        this.querying = true;
+        this.analysisService
+            .getResults(this.id, format)
+            .pipe(takeUntil(this.onDestroy$))
+            .subscribe(
+                (response) => {
+                    let msg: string;
+                    switch (format) {
+                        case 'xlsx':
+                            this.downloadFile(
+                                response.body,
+                                `${this.transcript.name}_SAF.xlsx`,
+                                XLSX_MIME,
+                            );
+                            msg = 'Annotation success';
+                            break;
+                        case 'cha':
+                            this.downloadFile(
+                                response.body,
+                                `${this.transcript.name}_annotated.cha`,
+                                TXT_MIME,
+                            );
+                            msg = 'Annotation success';
+                            break;
+                        case 'form':
+                            this.downloadFile(
+                                response.body,
+                                `${this.transcript.name}_${this.currentTam.category.name}_form.xlsx`,
+                                XLSX_MIME,
+                            );
+                            msg = 'Generated form';
+                            break;
+                        default:
+                            break;
+                    }
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: msg,
+                        detail: '',
+                    });
+                    this.querying = false;
+                    this.loadData();
+                },
+                (err) => {
+                    console.error(err);
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error generating results',
+                        detail: err.message,
+                        sticky: true,
+                    });
+                    this.querying = false;
+                },
+            );
+    }
+
     downloadLatestAnnotations(): void {
         this.annotationsService
             .latest(this.id)

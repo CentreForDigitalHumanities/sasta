@@ -106,6 +106,48 @@
                             </button>
                         </div>
                     </div>
+
+
+                    <!-- Async placeholders -->
+                    <div class="field is-grouped">
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-primary" [disabled]="!currentTam"
+                                    (click)="annotateAsync('xlsx')">
+                                    start task
+                                </button>
+                            </div>
+                        </div>
+                        <div class="divider is-vertical">or</div>
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-primary" [disabled]="!currentTam"
+                                    (click)="getResults('xlsx')" [ngClass]="{ 'is-loading': querying }">
+                                    Results (xlsx)
+                                </button>
+                            </div>
+                        </div>
+                        <div class="divider is-vertical">or</div>
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-primary" [disabled]="!currentTam"
+                                    (click)="getResults('cha')" [ngClass]="{ 'is-loading': querying }">
+                                    Results (cha)
+                                </button>
+                            </div>
+                        </div>
+                        <div class="divider is-vertical">or</div>
+                        <div class="control">
+                            <button class="button is-primary" [disabled]="
+                                !currentTam || !currentTam?.category.has_form
+                            " (click)="getResults('form')" [ngClass]="{ 'is-loading': querying }">
+                                Results (form)
+                            </button>
+                        </div>
+                    </div>
+
+
+
                 </form>
             </ng-container>
 
