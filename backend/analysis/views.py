@@ -253,11 +253,11 @@ class TranscriptViewSet(viewsets.ModelViewSet):
             return Response('Failed to create task', status.HTTP_400_BAD_REQUEST)
         return Response(task.id)
 
-    @action(detail=True, methods=['POST'], name='results')
+    @action(detail=True, methods=['POST'], name='results', url_name='results', url_path='results')
     def get_results(self, request, *args, **kwargs):
         '''Use existing AnalysisRun to get results for a transcript and method, without re-running sastacore'''
         transcript = self.get_object()
-        run = AnalysisRun.objects.filter(transcript=obj).latest()
+        run = AnalysisRun.objects.filter(transcript=transcript).latest()
         method = run.method
 
         format = request.data.get('format', 'xlsx')
@@ -272,7 +272,7 @@ class TranscriptViewSet(viewsets.ModelViewSet):
 
         # format: cha
         # return enriched chat based on analysisrun.allresults
-        if format == 'xlsx':
+        if format == 'cha':
             enriched = enrich_chat(transcript, run.allresults, method)
             output = StringIO()
             writer = ChatWriter(enriched, target=output)

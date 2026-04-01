@@ -80,24 +80,6 @@
                             </div>
                         </div>
                         <div class="divider is-vertical">or</div>
-                        <div class="field">
-                            <div class="control">
-                                <button class="button is-primary" [disabled]="!currentTam"
-                                    (click)="annotateAsync('xlsx')">
-                                    start task
-                                </button>
-                            </div>
-                        </div>
-                        <div class="divider is-vertical">or</div>
-                        <div class="field">
-                            <div class="control">
-                                <button class="button is-primary" [disabled]="!currentTam"
-                                    (click)="annotateAsync('xlsx')" [ngClass]="{ 'is-loading': querying }">
-                                    Annotate async
-                                </button>
-                            </div>
-                        </div>
-                        <div class="divider is-vertical">or</div>
                         <div class="control">
                             <button class="button is-primary" [disabled]="
                                 !currentTam || !currentTam?.category.has_form
