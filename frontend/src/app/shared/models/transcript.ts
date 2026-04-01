@@ -6,7 +6,9 @@ export interface AnalysisRun {
     annotation_file: string;
     method: number;
     is_manual_correction: boolean;
+    task_id: string;
     task_status: TaskStatus;
+    results_available: boolean;
 }
 
 export interface Utterance {

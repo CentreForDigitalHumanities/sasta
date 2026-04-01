@@ -137,10 +137,6 @@ class TranscriptViewSet(viewsets.ModelViewSet):
         task = analyse_transcript_task.s(
             transcript_id, method_id, run.pk).delay()
 
-        # attach task id to analysisrun without results
-        run.task_id = task.id
-        run.save()
-
         # return task_id
         return Response(task.id)
 

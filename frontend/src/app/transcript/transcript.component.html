@@ -43,7 +43,7 @@
         <p-panel header="Scoring" [ngSwitch]="transcript.status">
             <ng-container *ngSwitchCase="TranscriptStatus.PARSED">
                 <form>
-                    <div class="field">
+                    <!-- <div class="field">
                         <div class="control" *ngIf="(authService.currentUser$ | async).isAdmin">
                             <p-dropdown [options]="groupedTams" [(ngModel)]="currentTam" placeholder="Select a method"
                                 name="tam-dropdown" [group]="true" showClear="true" appendTo="body"
@@ -87,15 +87,26 @@
                                 Generate form
                             </button>
                         </div>
-                    </div>
+                    </div> -->
 
 
                     <!-- Async placeholders -->
+                    analysis in progress: {{analysisInProgress$ | async}}<br/>
+                    results available: {{resultsAvailable$ | async}}
+
+                    <div *ngIf="analysisInProgress$ | async" class="field">
+                        <div class="control">
+                            <label class="label">analysing transcript..</label>
+                            <progress class="progress is-primary"></progress>
+                        </div>
+
+                    </div>
                     <div class="field is-grouped">
+
                         <div class="field">
                             <div class="control">
                                 <button class="button is-primary" [disabled]="!currentTam"
-                                    (click)="annotateAsync('xlsx')">
+                                    (click)="analyseAsync()">
                                     start task
                                 </button>
                             </div>
@@ -103,8 +114,8 @@
                         <div class="divider is-vertical">or</div>
                         <div class="field">
                             <div class="control">
-                                <button class="button is-primary" [disabled]="!currentTam"
-                                    (click)="getResults('xlsx')" [ngClass]="{ 'is-loading': querying }">
+                                <button class="button is-primary" [disabled]="(resultsAvailable$|async) === false"
+                                    (click)="getResults('xlsx')" [ngClass]="{ 'is-loading': (analysisInProgress$|async) === true }">
                                     Results (xlsx)
                                 </button>
                             </div>
@@ -112,17 +123,15 @@
                         <div class="divider is-vertical">or</div>
                         <div class="field">
                             <div class="control">
-                                <button class="button is-primary" [disabled]="!currentTam"
-                                    (click)="getResults('cha')" [ngClass]="{ 'is-loading': querying }">
+                                <button class="button is-primary" [disabled]="(resultsAvailable$|async) === false"
+                                    (click)="getResults('cha')" [ngClass]="{ 'is-loading': (analysisInProgress$|async) === true }">
                                     Results (cha)
                                 </button>
                             </div>
                         </div>
                         <div class="divider is-vertical">or</div>
                         <div class="control">
-                            <button class="button is-primary" [disabled]="
-                                !currentTam || !currentTam?.category.has_form
-                            " (click)="getResults('form')" [ngClass]="{ 'is-loading': querying }">
+                            <button class="button is-primary" [disabled]="(resultsAvailable$|async) === false" (click)="getResults('form')" [ngClass]="{ 'is-loading': (analysisInProgress$|async) === true }">
                                 Results (form)
                             </button>
                         </div>
@@ -190,22 +199,6 @@
     <div class="block">
         <p-panel header="Annotations">
             <div class="field is-grouped">
-                <div class="control">
-                    <button class="button is-primary" pTooltip="Download the latest generated annotations file"
-                        [disabled]="!transcript.latest_run" (click)="downloadLatestAnnotations()">
-                        <span class="icon is-small">
-                            <fa-icon [icon]="faDownload"></fa-icon>
-                        </span>
-                        <span>Download annotations</span>
-                    </button>
-                    <p class="help" *ngIf="transcript.latest_run">
-                        Latest annotations:
-                        <span>{{
-                            transcript.latest_run.created
-                            | date: "dd/MM/yyyy, HH:mm"
-                            }}</span>
-                    </p>
-                </div>
                 <div class="control">
                     <button class="button is-primary" pTooltip="Provide a manually corrected annotations file"
                         [disabled]="!allowCorrectionUpload()" (click)="showCorrectionsUpload()">

@@ -7,17 +7,20 @@ from annotations.writers.saf_xlsx import SAFWriter
 from results.serializers import allresults_to_json
 
 
-@shared_task
-def analyse_transcript_task(transcript_id: int, method_id: int, run_id: int) -> str:
+@shared_task(bind=True)
+def analyse_transcript_task(self, transcript_id: int, method_id: int, run_id: int) -> str:
     '''For a transcript and method, perform analysis and save results to an AnalysisRun'''
     # Retrieve objects
     transcript = Transcript.objects.get(pk=transcript_id)
     method = AssessmentMethod.objects.get(pk=method_id)
     run = AnalysisRun.objects.get(pk=run_id)
 
+    run.task_id = self.request.id
+    run.save(update_fields=['task_id'])
+
     # for testing purposes, wait to simulate a long-running task
-    # import time
-    # time.sleep(30)
+    import time
+    time.sleep(10)
 
     # Perform querying
     allresults = annotate_transcript(transcript, method)

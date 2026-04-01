@@ -387,3 +387,6 @@ class AnalysisRun(models.Model):
             result = AsyncResult(self.task_id)
             return result.status
         return None
+
+    def allresults_available(self):
+        return (self.allresults is not None) and self.task_success()

@@ -11,7 +11,7 @@ import {
 import { Corpus, Method, Transcript, TranscriptStatus } from '@models';
 import { saveAs } from 'file-saver';
 import { MessageService, SelectItemGroup } from 'primeng/api';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 import {
     AnalysisService,
@@ -58,6 +58,10 @@ export class TranscriptComponent implements OnInit, OnDestroy {
 
     readonly TranscriptStatus = TranscriptStatus;
 
+    // Checking for analysis in progress
+    analysisInProgress$ = new BehaviorSubject<boolean>(false);
+    resultsAvailable$ = new BehaviorSubject<boolean>(false);
+
     constructor(
         private transcriptService: TranscriptService,
         private corpusService: CorpusService,
@@ -89,8 +93,12 @@ export class TranscriptComponent implements OnInit, OnDestroy {
         return this.hasLatestRun();
     }
 
-    allowScoring(): boolean {
-        return this.transcript.status === TranscriptStatus.PARSED;
+    shouldAnalyse(): boolean {
+        return (
+            _.isNil(this.transcript.latest_run) ||
+            this.transcript.latest_run?.task_status === 'FAILURE' ||
+            _.isNil(this.transcript.latest_run?.task_id)
+        );
     }
 
     ngOnInit() {
@@ -109,6 +117,17 @@ export class TranscriptComponent implements OnInit, OnDestroy {
                 // get transcript
                 switchMap((t: Transcript) => {
                     this.transcript = t;
+                    if (t.latest_run?.task_status === 'PENDING') {
+                        this.analysisInProgress$.next(true);
+                        this.pollResultsAvailable(t.latest_run.task_id);
+                    } else {
+                        this.analysisInProgress$.next(false);
+                    }
+
+                    this.resultsAvailable$.next(
+                        t.latest_run?.results_available === true,
+                    );
+                    console.log(t);
                     return this.corpusService.getByID(t.corpus); // get corpus
                 }),
                 switchMap((c: Corpus) => {
@@ -126,6 +145,10 @@ export class TranscriptComponent implements OnInit, OnDestroy {
                     tams,
                     this.corpus.method_category,
                 ); // group methods
+
+                if (this.shouldAnalyse()) {
+                    this.analyseAsync();
+                }
             });
     }
 
@@ -212,23 +235,36 @@ export class TranscriptComponent implements OnInit, OnDestroy {
             .subscribe(() => this.loadData());
     }
 
-    annotateAsync(outputFormat: AnnotationOutputFormat): void {
+    analyseAsync(): void {
+        this.analysisInProgress$.next(true);
         this.analysisService
-            .createAnalysisTask(
-                this.id,
-                this.currentTam.id.toString(),
-                outputFormat,
-            )
-            .pipe(
-                switchMap((taskID) =>
-                    this.analysisService.pollAnalysisTask(taskID),
-                ),
-            )
+            .createAnalysisTask(this.id, this.currentTam.id.toString())
+            .subscribe(
+                (taskID: string) => this.pollResultsAvailable(taskID),
+                (err) => {
+                    console.error(err);
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error creating analysis task',
+                        detail: err.message,
+                        sticky: true,
+                    });
+                },
+            );
+    }
+
+    /**
+     * Wait for async results to be available.
+     */
+    pollResultsAvailable(taskID: string): void {
+        this.analysisService
+            .pollAnalysisTask(taskID)
+            .pipe(takeUntil(this.onDestroy$))
             .subscribe(
                 () => {
                     this.messageService.add({
                         severity: 'success',
-                        summary: 'Annotation success',
+                        summary: 'Analysis success',
                         detail: `Annotation completed for ${this.transcript.name}`,
                     });
                     this.loadData();
@@ -237,7 +273,7 @@ export class TranscriptComponent implements OnInit, OnDestroy {
                     console.error(err);
                     this.messageService.add({
                         severity: 'error',
-                        summary: 'Error annotating',
+                        summary: 'Error analysing transcript',
                         detail: err.message,
                         sticky: true,
                     });

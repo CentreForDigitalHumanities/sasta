@@ -60,11 +60,9 @@ export class AnalysisService {
     createAnalysisTask(
         transcriptID: number,
         methodID: string,
-        outputFormat: AnnotationOutputFormat,
     ): Observable<string> {
         const data: FormData = new FormData();
         data.append('method', methodID);
-        data.append('format', outputFormat);
         return this.http.post<string>(
             `/api/transcripts/${transcriptID}/analyse_async/`,
             data,
