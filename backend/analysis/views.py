@@ -12,7 +12,7 @@ from annotations.reader import read_saf
 from annotations.writers.querycounts import querycounts_to_xlsx
 from annotations.writers.saf_chat import enrich_chat
 from annotations.writers.saf_xlsx import SAFWriter
-from celery import group
+from celery import chain, group
 from convert.chat_writer import ChatWriter
 from django.db.models import Q
 from django.http import HttpResponse
@@ -25,6 +25,7 @@ from rest_framework.exceptions import ParseError
 from rest_framework.response import Response
 
 from parse.views import CeleryTaskView
+from results.serializers import allresults_from_dict, allresults_from_json
 
 from .convert.convert import convert
 from .models import (AnalysisRun, AssessmentMethod, Corpus, MethodCategory,
@@ -273,7 +274,8 @@ class TranscriptViewSet(viewsets.ModelViewSet):
         # format: cha
         # return enriched chat based on analysisrun.allresults
         if format == 'cha':
-            enriched = enrich_chat(transcript, run.allresults, method)
+            allresults = allresults_from_json(run.allresults)
+            enriched = enrich_chat(transcript, allresults, method)
             output = StringIO()
             writer = ChatWriter(enriched, target=output)
             writer.write()
@@ -291,8 +293,8 @@ class TranscriptViewSet(viewsets.ModelViewSet):
             form_func = method.category.get_form_function()
             if not form_func:
                 raise ParseError(detail='No form definition for this method.')
-
-            form = form_func(run.allresults, None, in_memory=True)
+            allresults = allresults_from_json(run.allresults)
+            form = form_func(allresults, None, in_memory=True)
 
             form.seek(0)
 
@@ -360,19 +362,30 @@ class CorpusViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['GET'], name='parse_all_async')
     def parse_all_async(self, request, *args, **kwargs):
         corpus = self.get_object()
+        method = corpus.default_method
+        if not method:
+            return Response('No default method set for this corpus', status.HTTP_400_BAD_REQUEST)
+
         transcripts = Transcript.objects.filter(
             Q(corpus=corpus), Q(status=Transcript.CONVERTED) | Q(
                 status=Transcript.PARSING_FAILED)
         )
 
-        # If in DEBUG mode and celery not running, parse synchronously
-        # TODO: fix
-        # if settings.DEBUG and get_celery_worker_status():
-        #     logger.info('Bypassing Celery')
-        #     return self.parse_all()
+        if not transcripts.exists():
+            return Response('No transcripts to process', status.HTTP_400_BAD_REQUEST)
 
-        task = group(parse_transcript_task.s(t.id)
-                     for t in transcripts).delay()
+        chains = []
+        for t in transcripts:
+            run = AnalysisRun.objects.create(
+                transcript=t, method=method, is_manual_correction=False)
+            chains.append(
+                chain(
+                    parse_transcript_task.s(t.id),
+                    analyse_transcript_task.si(t.id, method.pk, run.pk),
+                )
+            )
+
+        task = group(*chains).delay()
 
         if not task:
             return Response('Failed to create task', status.HTTP_400_BAD_REQUEST)
