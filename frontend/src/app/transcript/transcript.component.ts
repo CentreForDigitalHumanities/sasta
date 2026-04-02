@@ -95,9 +95,10 @@ export class TranscriptComponent implements OnInit, OnDestroy {
 
     shouldAnalyse(): boolean {
         return (
-            _.isNil(this.transcript.latest_run) ||
-            this.transcript.latest_run?.task_status === 'FAILURE' ||
-            _.isNil(this.transcript.latest_run?.task_id)
+            (_.isNil(this.transcript.latest_run) ||
+                this.transcript.latest_run?.task_status === 'FAILURE' ||
+                _.isNil(this.transcript.latest_run?.task_id)) &&
+            this.transcript.latest_run?.task_status !== 'PENDING'
         );
     }
 
@@ -444,10 +445,11 @@ export class TranscriptComponent implements OnInit, OnDestroy {
     }
 
     onCorrectionsUploadClose(event: boolean): void {
-        this.displayCorrUpload = event;    }
+        this.displayCorrUpload = event;
+    }
 
     onAnnotationsUploaded(): void {
-        this.analyseAsync();
+        this.loadData();
     }
 
     numUtterancesAnalysed(): number {
