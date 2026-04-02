@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 import logging
 from io import BytesIO, StringIO
 
@@ -48,13 +46,47 @@ from .serializers import (
 
 logger = logging.getLogger('sasta')
 
-SPREADSHEET_MIMETYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+SPREADSHEET_MIMETYPE = (
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+)
+
+
+def _xlsx_response(filename, content=None, workbook=None):
+    if workbook is not None:
+        response = HttpResponse(content_type=SPREADSHEET_MIMETYPE)
+        workbook.save(response)
+    else:
+        response = HttpResponse(content, content_type=SPREADSHEET_MIMETYPE)
+    response['Content-Disposition'] = f'attachment; filename={filename}'
+    return response
+
+
+def _cha_response(transcript, allresults, method, filename):
+    enriched = enrich_chat(transcript, allresults, method)
+    output = StringIO()
+    writer = ChatWriter(enriched, target=output)
+    writer.write()
+    output.seek(0)
+    response = HttpResponse(output.getvalue(), content_type='text/plain')
+    response['Content-Disposition'] = f'attachment; filename={filename}'
+    return response
+
+
+def _apply_stap_workaround(form, method):
+    """Workaround for openpyxl corrupting STAP forms when copying existing xlsx files."""
+    if method.category.name == 'STAP':
+        new_target = BytesIO()
+        wb = load_workbook(form)
+        wb.save(new_target)
+        new_target.seek(0)
+        return new_target
+    return form
 
 
 class UploadFileViewSet(viewsets.ModelViewSet):
     queryset = UploadFile.objects.all()
     serializer_class = UploadFileSerializer
-    permission_classes = (IsCorpusChildOwner, )
+    permission_classes = (IsCorpusChildOwner,)
 
     def get_queryset(self):
         return self.queryset.filter(corpus__user=self.request.user)
@@ -80,16 +112,10 @@ class TranscriptViewSet(viewsets.ModelViewSet):
         method_id = request.data.get('method')
         method = AssessmentMethod.objects.get(pk=method_id)
 
-        response = HttpResponse(
-            content_type=SPREADSHEET_MIMETYPE)
-        response['Content-Disposition'] = "attachment; filename=matches_output.xlsx"
-
         allresults = annotate_transcript(transcript, method)
-
         spreadsheet = querycounts_to_xlsx(allresults, method)
-        spreadsheet.save(response)
 
-        return response
+        return _xlsx_response('matches_output.xlsx', workbook=spreadsheet)
 
     @action(detail=True, methods=['POST'], name='Annotate')
     def annotate(self, request, *args, **kwargs):
@@ -107,28 +133,18 @@ class TranscriptViewSet(viewsets.ModelViewSet):
         create_analysis_run(transcript, method, spreadsheet)
 
         # Adapt output to requested format
-        format = request.data.get('format', 'xlsx')
+        output_format = request.data.get('format', 'xlsx')
 
-        if format == 'xlsx':
-            response = HttpResponse(
-                content_type=SPREADSHEET_MIMETYPE)
-            response['Content-Disposition'] = "attachment; filename=saf_output.xlsx"
-            spreadsheet.save(response)
+        if output_format == 'xlsx':
+            return _xlsx_response('saf_output.xlsx', workbook=spreadsheet)
 
-            return response
+        if output_format == 'cha':
+            return _cha_response(transcript, allresults, method, 'annotated.cha')
 
-        if format == 'cha':
-            enriched = enrich_chat(transcript, allresults, method)
-            output = StringIO()
-            writer = ChatWriter(enriched, target=output)
-            writer.write()
-            output.seek(0)
-
-            response = HttpResponse(
-                output.getvalue(), content_type='text/plain')
-            response['Content-Disposition'] = "attachment; filename=annotated.cha"
-
-            return response
+        return Response(
+            f'Unsupported format: {output_format}',
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     @action(detail=True, methods=['POST'], name='Annotate (async)')
     def analyse_async(self, request, *args, **kwargs):
@@ -139,54 +155,67 @@ class TranscriptViewSet(viewsets.ModelViewSet):
         method = AssessmentMethod.objects.get(pk=method_id)
 
         # create an AnalysisRun without annotations file to attach the task id to
-        run = AnalysisRun.objects.create(transcript=transcript, method=method,
-                                         is_manual_correction=False)
+        run = AnalysisRun.objects.create(
+            transcript=transcript, method=method, is_manual_correction=False
+        )
 
         # create the async task
-        task = analyse_transcript_task.s(
-            transcript_id, method_id, run.pk).delay()
+        task = analyse_transcript_task.s(transcript_id, method_id, run.pk).delay()
 
         # return task_id
         return Response(task.id)
 
-    @action(detail=True, methods=['GET'], name='Download latest annotation', url_path='annotations/latest')
+    @action(
+        detail=True,
+        methods=['GET'],
+        name='Download latest annotation',
+        url_path='annotations/latest',
+    )
     def latest_annotations(self, request, *args, **kwargs):
         obj = self.get_object()
         run = AnalysisRun.objects.filter(transcript=obj).latest()
 
         filename = run.annotation_file.name.split('/')[-1]
-        response = HttpResponse(run.annotation_file,
-                                content_type=SPREADSHEET_MIMETYPE)
-        response['Content-Disposition'] = 'attachment; filename=%s' % filename
-        return response
+        return _xlsx_response(filename, content=run.annotation_file)
 
-    @action(detail=True, methods=['GET'], name='Reset annotations', url_path='annotations/reset')
+    @action(
+        detail=True,
+        methods=['GET'],
+        name='Reset annotations',
+        url_path='annotations/reset',
+    )
     def reset_annotations(self, request, *args, **kwargs):
         obj = self.get_object()
         all_runs = AnalysisRun.objects.filter(transcript=obj)
         all_runs.delete()
         return Response('Success', status.HTTP_200_OK)
 
-    @action(detail=True, methods=['POST'], name='Upload annotations', url_path='annotations/upload')
+    @action(
+        detail=True,
+        methods=['POST'],
+        name='Upload annotations',
+        url_path='annotations/upload',
+    )
     def upload_annotations(self, request, *args, **kwargs):
         obj = self.get_object()
         try:
             latest_run = AnalysisRun.objects.filter(transcript=obj).latest()
         except AnalysisRun.DoesNotExist:
-            return Response('No previous annotations found for this transcript. Run regular annotating at least once before providing corrected input.',
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                'No previous annotations found for this transcript. Run regular annotating at least once before providing corrected input.',
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         file = request.FILES['content'].file
 
-        new_run = create_analysis_run(
-            obj, latest_run.method, file, is_manual=True)
+        new_run = create_analysis_run(obj, latest_run.method, file, is_manual=True)
 
         try:
-            read_saf(new_run.annotation_file.path,
-                     latest_run.method.to_sastadev())
+            read_saf(new_run.annotation_file.path, latest_run.method.to_sastadev())
             # create the async task to analyse the new annotations and update the AnalysisRun
             task = analyse_transcript_task.s(
-                obj.pk, latest_run.method.pk, new_run.pk).delay()
+                obj.pk, latest_run.method.pk, new_run.pk
+            ).delay()
         except Exception as e:
             new_run.delete()
             logger.exception(e)
@@ -209,25 +238,11 @@ class TranscriptViewSet(viewsets.ModelViewSet):
         allresults = annotate_transcript(transcript, method)
 
         form = form_func(allresults, None, in_memory=True)
-
         form.seek(0)
+        content = _apply_stap_workaround(form, method)
+        filename = f'{transcript.name}_{method.category.name}_form.xlsx'
 
-        # Weird hack to prevent Excel warning about corrupted files: copying the whole workbook to a new bytestream
-        # TODO: Find out why openpyxl corrupts only the STAP forms (probably to do with copying of exisitng xlsx file)
-        if method.category.name == 'STAP':
-            new_target = BytesIO()
-            wb = load_workbook(form)
-            wb.save(new_target)
-            new_target.seek(0)
-        else:
-            new_target = form
-
-        response = HttpResponse(
-            new_target,
-            content_type=SPREADSHEET_MIMETYPE)
-        response['Content-Disposition'] = f"attachment; filename={transcript.name}_{method.category.name}_form.xlsx"
-
-        return response
+        return _xlsx_response(filename, content=content)
 
     @action(detail=True, methods=['GET'], name='convert')
     def convert(self, request, *args, **kwargs):
@@ -262,72 +277,50 @@ class TranscriptViewSet(viewsets.ModelViewSet):
             return Response('Failed to create task', status.HTTP_400_BAD_REQUEST)
         return Response(task.id)
 
-    @action(detail=True, methods=['POST'], name='results', url_name='results', url_path='results')
+    @action(
+        detail=True,
+        methods=['POST'],
+        name='results',
+        url_name='results',
+        url_path='results',
+    )
     def get_results(self, request, *args, **kwargs):
-        '''Use existing AnalysisRun to get results for a transcript and method, without re-running sastacore'''
+        """Use existing AnalysisRun to get results for a transcript and method, without re-running sastacore"""
         transcript = self.get_object()
         run = AnalysisRun.objects.filter(transcript=transcript).latest()
         method = run.method
 
-        format = request.data.get('format', 'xlsx')
+        output_format = request.data.get('format', 'xlsx')
 
-        # format: xlsx
-        if format == 'xlsx':
+        if output_format == 'xlsx':
             filename = run.annotation_file.name.split('/')[-1]
-            response = HttpResponse(run.annotation_file,
-                                    content_type=SPREADSHEET_MIMETYPE)
-            response['Content-Disposition'] = 'attachment; filename=%s' % filename
-            return response
+            return _xlsx_response(filename, content=run.annotation_file)
 
-        # format: cha
-        # return enriched chat based on analysisrun.allresults
-        if format == 'cha':
+        if output_format == 'cha':
             allresults = allresults_from_json(run.allresults)
-            enriched = enrich_chat(transcript, allresults, method)
-            output = StringIO()
-            writer = ChatWriter(enriched, target=output)
-            writer.write()
-            output.seek(0)
+            filename = f'{transcript.name}_{method.category.name}_annotated.cha'
+            return _cha_response(transcript, allresults, method, filename)
 
-            response = HttpResponse(
-                output.getvalue(), content_type='text/plain')
-            response['Content-Disposition'] = f'attachment; filename={transcript.name}_{method.category.name}_annotated.cha'
-
-            return response
-
-        # format: form
-        # return form based on analysisrun.allresults
-        if format == 'form':
+        if output_format == 'form':
             form_func = method.category.get_form_function()
             if not form_func:
                 raise ParseError(detail='No form definition for this method.')
             allresults = allresults_from_json(run.allresults)
             form = form_func(allresults, None, in_memory=True)
-
             form.seek(0)
+            content = _apply_stap_workaround(form, method)
+            filename = f'{transcript.name}_{method.category.name}_form.xlsx'
+            return _xlsx_response(filename, content=content)
 
-            # Weird hack to prevent Excel warning about corrupted files: copying the whole workbook to a new bytestream
-            # TODO: Find out why openpyxl corrupts only the STAP forms (probably to do with copying of exisitng xlsx file)
-            if method.category.name == 'STAP':
-                new_target = BytesIO()
-                wb = load_workbook(form)
-                wb.save(new_target)
-                new_target.seek(0)
-            else:
-                new_target = form
-
-            response = HttpResponse(
-                new_target,
-                content_type=SPREADSHEET_MIMETYPE)
-            response['Content-Disposition'] = f"attachment; filename={transcript.name}_{method.category.name}_form.xlsx"
-
-            return response
-
+        return Response(
+            f'Unsupported format: {output_format}',
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 class CorpusViewSet(viewsets.ModelViewSet):
     queryset = Corpus.objects.all()
-    permission_classes = (IsCorpusOwner, )
+    permission_classes = (IsCorpusOwner,)
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -347,7 +340,8 @@ class CorpusViewSet(viewsets.ModelViewSet):
         corpus = self.get_object()
         transcripts = Transcript.objects.filter(
             Q(corpus=corpus),
-            Q(status=Transcript.CREATED) | Q(status=Transcript.CONVERSION_FAILED))
+            Q(status=Transcript.CREATED) | Q(status=Transcript.CONVERSION_FAILED),
+        )
 
         for t in transcripts:
             res = convert(t)
@@ -360,7 +354,8 @@ class CorpusViewSet(viewsets.ModelViewSet):
         corpus = self.get_object()
         transcripts = Transcript.objects.filter(
             Q(corpus=corpus),
-            Q(status=Transcript.CONVERTED) | Q(status=Transcript.PARSING_FAILED))
+            Q(status=Transcript.CONVERTED) | Q(status=Transcript.PARSING_FAILED),
+        )
         for t in transcripts:
             res = parse_and_create(t)
             if not res:
@@ -372,11 +367,13 @@ class CorpusViewSet(viewsets.ModelViewSet):
         corpus = self.get_object()
         method = corpus.default_method
         if not method:
-            return Response('No default method set for this corpus', status.HTTP_400_BAD_REQUEST)
+            return Response(
+                'No default method set for this corpus', status.HTTP_400_BAD_REQUEST
+            )
 
         transcripts = Transcript.objects.filter(
-            Q(corpus=corpus), Q(status=Transcript.CONVERTED) | Q(
-                status=Transcript.PARSING_FAILED)
+            Q(corpus=corpus),
+            Q(status=Transcript.CONVERTED) | Q(status=Transcript.PARSING_FAILED),
         )
 
         if not transcripts.exists():
@@ -385,7 +382,8 @@ class CorpusViewSet(viewsets.ModelViewSet):
         chains = []
         for t in transcripts:
             run = AnalysisRun.objects.create(
-                transcript=t, method=method, is_manual_correction=False)
+                transcript=t, method=method, is_manual_correction=False
+            )
             chains.append(
                 chain(
                     parse_transcript_task.s(t.id),
@@ -404,7 +402,8 @@ class CorpusViewSet(viewsets.ModelViewSet):
         corpus = self.get_object()
         stream = corpus.download_as_zip()
         response = HttpResponse(
-            stream.getvalue(), content_type='application/x-zip-compressed')
+            stream.getvalue(), content_type='application/x-zip-compressed'
+        )
         response['Content-Disposition'] = f'attachment; filename={corpus.name}.zip'
 
         return response
@@ -433,7 +432,8 @@ class MethodCategoryViewSet(viewsets.ModelViewSet):
 
 
 class AnalysisTaskView(CeleryTaskView):
-    '''View for starting analysis tasks
+    """View for starting analysis tasks
     For now, only implements parent functionality of CeleryTaskView,
-    but can be extended with analysis-specific functionality if needed'''
+    but can be extended with analysis-specific functionality if needed"""
+
     pass
