@@ -8,7 +8,7 @@ from results.serializers import allresults_to_json
 
 
 @shared_task(bind=True)
-def analyse_transcript_task(self, transcript_id: int, method_id: int, run_id: int) -> str:
+def analyse_transcript_task(self, transcript_id: int, method_id: int, run_id: int, use_existing=False) -> str:
     '''For a transcript and method, perform analysis and save results to an AnalysisRun'''
     # Retrieve objects
     transcript = Transcript.objects.get(pk=transcript_id)

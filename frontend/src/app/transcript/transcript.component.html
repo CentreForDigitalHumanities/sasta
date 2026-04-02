@@ -260,6 +260,6 @@
         </p-fieldset>
     </div>
     <sas-upload-saf *ngIf="displayCorrUpload" [display]="displayCorrUpload"
-        (displayChange)="onCorrectionsUploadClose($event)" [transcript]="transcript">
+        (displayChange)="onCorrectionsUploadClose($event)" (annotationsUploaded)="onAnnotationsUploaded()" [transcript]="transcript">
     </sas-upload-saf>
 </ng-container>

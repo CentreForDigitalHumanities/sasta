@@ -127,7 +127,7 @@ export class TranscriptComponent implements OnInit, OnDestroy {
                     this.resultsAvailable$.next(
                         t.latest_run?.results_available === true,
                     );
-                    console.log(t);
+                    console.log(t.latest_run);
                     return this.corpusService.getByID(t.corpus); // get corpus
                 }),
                 switchMap((c: Corpus) => {
@@ -444,8 +444,10 @@ export class TranscriptComponent implements OnInit, OnDestroy {
     }
 
     onCorrectionsUploadClose(event: boolean): void {
-        this.displayCorrUpload = event;
-        this.loadData();
+        this.displayCorrUpload = event;    }
+
+    onAnnotationsUploaded(): void {
+        this.analyseAsync();
     }
 
     numUtterancesAnalysed(): number {

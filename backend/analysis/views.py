@@ -129,9 +129,17 @@ class TranscriptViewSet(viewsets.ModelViewSet):
         method_id = request.data.get('method')
         method = AssessmentMethod.objects.get(pk=method_id)
 
-        # create an AnalysisRun without annotations file to attach the task id to
-        run = AnalysisRun.objects.create(transcript=transcript, method=method,
-                                         is_manual_correction=False)
+        use_existing_annotations = request.data.get(
+            'use_existing_annotations', False)
+
+        if use_existing_annotations:
+            run = transcript.latest_run
+            assert run is not None
+            assert run.is_manual_correction
+        else:
+            # create an AnalysisRun without annotations file to attach the task id to
+            run = AnalysisRun.objects.create(transcript=transcript, method=method,
+                                             is_manual_correction=False)
 
         # create the async task
         task = analyse_transcript_task.s(

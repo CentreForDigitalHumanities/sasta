@@ -21,6 +21,7 @@ export class UploadSafComponent implements OnDestroy {
     @Input() display: boolean;
 
     @Output() displayChange = new EventEmitter();
+    @Output() annotationsUploaded = new EventEmitter<void>();
 
     content: File;
     fileName: string;
@@ -31,7 +32,7 @@ export class UploadSafComponent implements OnDestroy {
 
     constructor(
         private messageService: MessageService,
-        private annotationsService: AnnotationsService
+        private annotationsService: AnnotationsService,
     ) {}
 
     ngOnDestroy() {
@@ -62,12 +63,13 @@ export class UploadSafComponent implements OnDestroy {
                 () => {
                     this.uploading = false;
                     this.onClose();
+                    this.annotationsUploaded.emit();
                     this.messageService.add({
                         severity: 'success',
                         summary: `Annotations uploaded for ${this.transcript.name}`,
                     });
                 },
-                (error) => this.handleErrors(error)
+                (error) => this.handleErrors(error),
             );
     }
 
