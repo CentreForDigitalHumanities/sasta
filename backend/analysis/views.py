@@ -3,7 +3,15 @@ from __future__ import unicode_literals
 
 import logging
 from io import BytesIO, StringIO
-from operator import is_
+
+from celery import chain, group
+from django.db.models import Q
+from django.http import HttpResponse
+from openpyxl import load_workbook
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
+from rest_framework.exceptions import ParseError
+from rest_framework.response import Response
 
 from analysis.query.run import annotate_transcript
 from analysis.tasks import analyse_transcript_task
@@ -12,33 +20,34 @@ from annotations.reader import read_saf
 from annotations.writers.querycounts import querycounts_to_xlsx
 from annotations.writers.saf_chat import enrich_chat
 from annotations.writers.saf_xlsx import SAFWriter
-from celery import chain, group
 from convert.chat_writer import ChatWriter
-from django.db.models import Q
-from django.http import HttpResponse
-from openpyxl import load_workbook
 from parse.parse_utils import parse_and_create
 from parse.tasks import parse_transcript_task
-from rest_framework import status, viewsets
-from rest_framework.decorators import action
-from rest_framework.exceptions import ParseError
-from rest_framework.response import Response
-
 from parse.views import CeleryTaskView
-from results.serializers import allresults_from_dict, allresults_from_json
+from results.serializers import allresults_from_json
 
 from .convert.convert import convert
-from .models import (AnalysisRun, AssessmentMethod, Corpus, MethodCategory,
-                     Transcript, UploadFile)
+from .models import (
+    AnalysisRun,
+    AssessmentMethod,
+    Corpus,
+    MethodCategory,
+    Transcript,
+    UploadFile,
+)
 from .permissions import IsCorpusChildOwner, IsCorpusOwner
-from .serializers import (AssessmentMethodSerializer, CorpusDetailsSerializer,
-                          CorpusListSerializer, MethodCategorySerializer,
-                          TranscriptDetailsSerializer,
-                          TranscriptListSerializer, UploadFileSerializer)
+from .serializers import (
+    AssessmentMethodSerializer,
+    CorpusDetailsSerializer,
+    CorpusListSerializer,
+    MethodCategorySerializer,
+    TranscriptDetailsSerializer,
+    TranscriptListSerializer,
+    UploadFileSerializer,
+)
 
 logger = logging.getLogger('sasta')
 
-# flake8: noqa: E501
 SPREADSHEET_MIMETYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
 

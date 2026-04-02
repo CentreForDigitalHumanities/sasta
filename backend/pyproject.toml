@@ -1,0 +1,31 @@
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "sasta.settings"
+python_files = ["tests.py", "test_*.py", "*_tests.py", "*_test.py"]
+log_level = "WARNING"
+# Ignore sastadev tests
+addopts = "--ignore backend/sastadev -p no:warnings"
+
+[tool.mypy]
+ignore_missing_imports = true
+
+[tool.ruff]
+exclude = [
+    "sastadev",
+    ".env",
+    ".env37",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "C90"]
+ignore = ["E501"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.per-file-ignores]
+"*_test.py" = ["F401", "F811"]
+"*_tests.py" = ["F401", "F811"]
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
