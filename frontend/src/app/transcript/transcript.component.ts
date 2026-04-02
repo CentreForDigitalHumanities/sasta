@@ -11,7 +11,7 @@ import {
 import { Corpus, Method, Transcript, TranscriptStatus } from '@models';
 import { saveAs } from 'file-saver';
 import { MessageService, SelectItemGroup } from 'primeng/api';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 import {
     AnalysisService,
@@ -108,6 +108,7 @@ export class TranscriptComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.onDestroy$.next();
+        this.onDestroy$.complete();
     }
 
     loadData(): void {
@@ -128,7 +129,6 @@ export class TranscriptComponent implements OnInit, OnDestroy {
                     this.resultsAvailable$.next(
                         t.latest_run?.results_available === true,
                     );
-                    console.log(t.latest_run);
                     return this.corpusService.getByID(t.corpus); // get corpus
                 }),
                 switchMap((c: Corpus) => {
@@ -159,61 +159,70 @@ export class TranscriptComponent implements OnInit, OnDestroy {
         saveAs(blob, filename);
     }
 
-    getResults(format: AnnotationOutputFormat): void {
+    private showSuccess(summary: string, detail = ''): void {
+        this.messageService.add({ severity: 'success', summary, detail });
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private showError(summary: string, err: any): void {
+        console.error(err);
+        this.messageService.add({
+            severity: 'error',
+            summary,
+            detail: err.message,
+            sticky: true,
+        });
+    }
+
+    private performQueryAction(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        obs$: Observable<any>,
+        config: { filename: string; mime: string; successMsg: string },
+        errorMsg: string,
+    ): void {
         this.querying = true;
-        this.analysisService
-            .getResults(this.id, format)
-            .pipe(takeUntil(this.onDestroy$))
-            .subscribe(
-                (response) => {
-                    let msg: string;
-                    switch (format) {
-                        case 'xlsx':
-                            this.downloadFile(
-                                response.body,
-                                `${this.transcript.name}_SAF.xlsx`,
-                                XLSX_MIME,
-                            );
-                            msg = 'Annotation success';
-                            break;
-                        case 'cha':
-                            this.downloadFile(
-                                response.body,
-                                `${this.transcript.name}_annotated.cha`,
-                                TXT_MIME,
-                            );
-                            msg = 'Annotation success';
-                            break;
-                        case 'form':
-                            this.downloadFile(
-                                response.body,
-                                `${this.transcript.name}_${this.currentTam.category.name}_form.xlsx`,
-                                XLSX_MIME,
-                            );
-                            msg = 'Generated form';
-                            break;
-                        default:
-                            break;
-                    }
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: msg,
-                        detail: '',
-                    });
-                    this.querying = false;
-                    this.loadData();
-                },
-                (err) => {
-                    console.error(err);
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error generating results',
-                        detail: err.message,
-                        sticky: true,
-                    });
-                    this.querying = false;
-                },
-            );
+        obs$.pipe(takeUntil(this.onDestroy$)).subscribe({
+            next: (response) => {
+                this.downloadFile(response.body, config.filename, config.mime);
+                this.showSuccess(config.successMsg);
+                this.querying = false;
+                this.loadData();
+            },
+            error: (err) => {
+                this.showError(errorMsg, err);
+                this.querying = false;
+            },
+        });
+    }
+
+    getResults(format: AnnotationOutputFormat): void {
+        const configMap: Record<
+            string,
+            { filename: string; mime: string; successMsg: string }
+        > = {
+            xlsx: {
+                filename: `${this.transcript.name}_SAF.xlsx`,
+                mime: XLSX_MIME,
+                successMsg: 'Annotation success',
+            },
+            cha: {
+                filename: `${this.transcript.name}_annotated.cha`,
+                mime: TXT_MIME,
+                successMsg: 'Annotation success',
+            },
+            form: {
+                filename: `${this.transcript.name}_${this.currentTam.category.name}_form.xlsx`,
+                mime: XLSX_MIME,
+                successMsg: 'Generated form',
+            },
+        };
+        const config = configMap[format];
+        if (!config) return;
+        this.performQueryAction(
+            this.analysisService.getResults(this.id, format),
+            config,
+            'Error generating results',
+        );
     }
 
     downloadLatestAnnotations(): void {
@@ -240,18 +249,11 @@ export class TranscriptComponent implements OnInit, OnDestroy {
         this.analysisInProgress$.next(true);
         this.analysisService
             .createAnalysisTask(this.id, this.currentTam.id.toString())
-            .subscribe(
-                (taskID: string) => this.pollResultsAvailable(taskID),
-                (err) => {
-                    console.error(err);
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error creating analysis task',
-                        detail: err.message,
-                        sticky: true,
-                    });
-                },
-            );
+            .subscribe({
+                next: (taskID: string) => this.pollResultsAvailable(taskID),
+                error: (err) =>
+                    this.showError('Error creating analysis task', err),
+            });
     }
 
     /**
@@ -261,135 +263,73 @@ export class TranscriptComponent implements OnInit, OnDestroy {
         this.analysisService
             .pollAnalysisTask(taskID)
             .pipe(takeUntil(this.onDestroy$))
-            .subscribe(
-                () => {
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Analysis success',
-                        detail: `Annotation completed for ${this.transcript.name}`,
-                    });
+            .subscribe({
+                next: () => {
+                    this.showSuccess(
+                        'Analysis success',
+                        `Annotation completed for ${this.transcript.name}`,
+                    );
                     this.loadData();
                 },
-                (err) => {
-                    console.error(err);
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error analysing transcript',
-                        detail: err.message,
-                        sticky: true,
-                    });
-                },
-            );
+                error: (err) =>
+                    this.showError('Error analysing transcript', err),
+            });
     }
 
     annotateTranscript(outputFormat: AnnotationOutputFormat): void {
-        this.querying = true;
-        this.analysisService
-            .annotate(this.id, this.currentTam.id.toString(), outputFormat)
-            .pipe(takeUntil(this.onDestroy$))
-            .subscribe(
-                (response) => {
-                    switch (outputFormat) {
-                        case 'xlsx':
-                            this.downloadFile(
-                                response.body,
-                                `${this.transcript.name}_SAF.xlsx`,
-                                XLSX_MIME,
-                            );
-                            break;
-                        case 'cha':
-                            this.downloadFile(
-                                response.body,
-                                `${this.transcript.name}_annotated.cha`,
-                                TXT_MIME,
-                            );
-                            break;
-                        default:
-                            break;
-                    }
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Annotation success',
-                        detail: '',
-                    });
-                    this.querying = false;
-                    this.loadData();
-                },
-                (err) => {
-                    console.error(err);
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error querying',
-                        detail: err.message,
-                        sticky: true,
-                    });
-                    this.querying = false;
-                },
-            );
+        const configMap: Record<
+            string,
+            { filename: string; mime: string; successMsg: string }
+        > = {
+            xlsx: {
+                filename: `${this.transcript.name}_SAF.xlsx`,
+                mime: XLSX_MIME,
+                successMsg: 'Annotation success',
+            },
+            cha: {
+                filename: `${this.transcript.name}_annotated.cha`,
+                mime: TXT_MIME,
+                successMsg: 'Annotation success',
+            },
+        };
+        const config = configMap[outputFormat];
+        if (!config) return;
+        this.performQueryAction(
+            this.analysisService.annotate(
+                this.id,
+                this.currentTam.id.toString(),
+                outputFormat,
+            ),
+            config,
+            'Error querying',
+        );
     }
 
     queryTranscript(): void {
-        this.querying = true;
-        this.analysisService
-            .query(this.id, this.currentTam.id.toString())
-            .pipe(takeUntil(this.onDestroy$))
-            .subscribe(
-                (response) => {
-                    this.downloadFile(
-                        response.body,
-                        `${this.transcript.name}_matches.xlsx`,
-                        XLSX_MIME,
-                    );
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Querying success',
-                        detail: '',
-                    });
-                    this.querying = false;
-                },
-                (err) => {
-                    console.error(err);
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error querying',
-                        detail: err.message,
-                        sticky: true,
-                    });
-                    this.querying = false;
-                },
-            );
+        this.performQueryAction(
+            this.analysisService.query(this.id, this.currentTam.id.toString()),
+            {
+                filename: `${this.transcript.name}_matches.xlsx`,
+                mime: XLSX_MIME,
+                successMsg: 'Querying success',
+            },
+            'Error querying',
+        );
     }
 
     generateForm(): void {
-        this.querying = true;
-        this.analysisService
-            .generateForm(this.id, this.currentTam.id.toString())
-            .pipe(takeUntil(this.onDestroy$))
-            .subscribe(
-                (response) => {
-                    this.downloadFile(
-                        response.body,
-                        `${this.transcript.name}_${this.currentTam.category.name}_form.xlsx`,
-                        XLSX_MIME,
-                    );
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Generated form',
-                        detail: '',
-                    });
-                    this.querying = false;
-                },
-                (err) => {
-                    console.error(err);
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error generating form',
-                        detail: err.message,
-                        sticky: true,
-                    });
-                    this.querying = false;
-                },
-            );
+        this.performQueryAction(
+            this.analysisService.generateForm(
+                this.id,
+                this.currentTam.id.toString(),
+            ),
+            {
+                filename: `${this.transcript.name}_${this.currentTam.category.name}_form.xlsx`,
+                mime: XLSX_MIME,
+                successMsg: 'Generated form',
+            },
+            'Error generating form',
+        );
     }
 
     deleteTranscript(): void {
@@ -397,25 +337,14 @@ export class TranscriptComponent implements OnInit, OnDestroy {
         this.transcriptService
             .delete(this.id)
             .pipe(takeUntil(this.onDestroy$))
-            .subscribe(
-                () => {
+            .subscribe({
+                next: () => {
                     this.router.navigate([`/corpora/${corpusId}`]);
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Removed transcript',
-                        detail: '',
-                    });
+                    this.showSuccess('Removed transcript');
                 },
-                (err) => {
-                    console.error(err);
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error removing transcript',
-                        detail: err.message,
-                        sticky: true,
-                    });
-                },
-            );
+                error: (err) =>
+                    this.showError('Error removing transcript', err),
+            });
     }
 
     chatFileAvailable(transcript: Transcript): boolean {
