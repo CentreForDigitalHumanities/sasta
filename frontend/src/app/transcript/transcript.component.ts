@@ -77,9 +77,9 @@ export class TranscriptComponent implements OnInit, OnDestroy {
         private messageService: MessageService,
         public authService: AuthService,
     ) {
-        this.route.paramMap.subscribe(
-            (params) => (this.id = +params.get('id')),
-        );
+        this.route.paramMap
+            .pipe(takeUntil(this.onDestroy$))
+            .subscribe((params) => (this.id = +params.get('id')));
     }
 
     hasLatestRun(): boolean {

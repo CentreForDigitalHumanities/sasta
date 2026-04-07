@@ -76,7 +76,6 @@ export class AnalysisService {
     pollAnalysisTask(taskID: string): Observable<TaskResult> {
         return timer(0, 1000).pipe(
             switchMap((_) => this.getAnalysisTask(taskID)),
-            tap((res) => console.log(res)),
             filter(this.taskSuccess),
             take(1),
         );
