@@ -308,7 +308,8 @@ class TranscriptViewSet(viewsets.ModelViewSet):
             return _xlsx_response(filename, content=run.annotation_file)
 
         if output_format == 'cha':
-            allresults = allresults_from_json(run.allresults)
+            # allresults = allresults_from_json(run.allresults)
+            allresults = read_saf(run.annotation_file.path, method.to_sastadev())
             filename = f'{transcript.name}_{method.category.name}_annotated.cha'
             return _cha_response(transcript, allresults, method, filename)
 
@@ -316,7 +317,8 @@ class TranscriptViewSet(viewsets.ModelViewSet):
             form_func = method.category.get_form_function()
             if not form_func:
                 raise ParseError(detail='No form definition for this method.')
-            allresults = allresults_from_json(run.allresults)
+            # allresults = allresults_from_json(run.allresults)
+            allresults = read_saf(run.annotation_file.path, method.to_sastadev())
             form = form_func(allresults, None, in_memory=True)
             form.seek(0)
             content = _apply_stap_workaround(form, method)
