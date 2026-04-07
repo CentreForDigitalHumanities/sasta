@@ -363,7 +363,9 @@ class AnalysisRun(models.Model):
         AssessmentMethod, related_name='analysisruns',
         on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
-    query_file = models.FileField(upload_to=upload_path, max_length=500)
+    query_file = models.FileField(
+        upload_to=upload_path, max_length=500, blank=True, null=True
+    )
     annotation_file = models.FileField(upload_to=upload_path, max_length=500)
     allresults = models.JSONField(blank=True, null=True)
     is_manual_correction = models.BooleanField(
