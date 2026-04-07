@@ -4,18 +4,18 @@ from results.serializers import allresults_from_dict, allresults_to_dict
 
 
 def test_serializer(example_allresults):
-    input = example_allresults
-    d = allresults_to_dict(input)
+    allresults_in = example_allresults
+    d = allresults_to_dict(allresults_in)
     output = allresults_from_dict(d)
-    assert input.uttcount == output.uttcount
-    assert input.filename == output.filename
-    assert input.annotationinput == output.annotationinput
-    assert input.allutts == output.allutts
-    assert input.postresults == output.postresults
-    assert input.coreresults == output.coreresults
-    assert input.exactresults == output.exactresults
-    assert input.allmatches == output.allmatches
+    assert allresults_in.uttcount == output.uttcount
+    assert allresults_in.filename == output.filename
+    assert allresults_in.annotationinput == output.annotationinput
+    assert allresults_in.allutts == output.allutts
+    assert allresults_in.postresults == output.postresults
+    assert allresults_in.coreresults == output.coreresults
+    assert allresults_in.exactresults == output.exactresults
+    assert allresults_in.allmatches == output.allmatches
     # TODO: reinstate this
-    # assert input.analysedtrees.keys() == output.analysedtrees.keys()
-    # for k in input.analysedtrees.keys():
-    #     assert etree.tostring(input.analysedtrees[k]) == etree.tostring(output.analysedtrees[k])
+    # assert allresults_in.analysedtrees.keys() == output.analysedtrees.keys()
+    # for k in allresults_in.analysedtrees.keys():
+    #     assert etree.tostring(allresults_in.analysedtrees[k]) == etree.tostring(output.analysedtrees[k])
