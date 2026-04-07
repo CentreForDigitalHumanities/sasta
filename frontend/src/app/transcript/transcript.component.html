@@ -43,12 +43,14 @@
         <p-panel header="Scoring" [ngSwitch]="transcript.status">
             <ng-container *ngSwitchCase="TranscriptStatus.PARSED">
                 <form>
-                    div class="field">
-                        <div class="control" *ngIf="(authService.currentUser$ | async).isAdmin">
+                    <div class="field" *ngIf="(authService.currentUser$ | async).isAdmin">
+                        <div class="control">
                             <p-dropdown [options]="groupedTams" [(ngModel)]="currentTam" placeholder="Select a method"
                                 name="tam-dropdown" [group]="true" showClear="true" appendTo="body"
                                 [disabled]="!(groupedTams?.length > 0)">
                             </p-dropdown>
+                        </div>
+                    </div>
                     <div *ngIf="!(authService.currentUser$ | async).isAdmin">
                         analysis in progress: {{ analysisInProgress$ | async
                         }}<br />
