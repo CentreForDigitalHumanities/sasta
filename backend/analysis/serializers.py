@@ -12,7 +12,7 @@ class UploadFileSerializer(serializers.ModelSerializer):
 
 
 class AnalysisRunSerializer(serializers.ModelSerializer):
-    task_status = serializers.CharField()
+    task_status = serializers.CharField(source='task_status')
     results_available = serializers.BooleanField(source='allresults_available')
 
     class Meta:
