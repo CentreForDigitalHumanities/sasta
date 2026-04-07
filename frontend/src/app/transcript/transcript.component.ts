@@ -12,7 +12,7 @@ import { Corpus, Method, Transcript, TranscriptStatus } from '@models';
 import { saveAs } from 'file-saver';
 import { MessageService, SelectItemGroup } from 'primeng/api';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { switchMap, takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 import {
     AnalysisService,
     AnnotationOutputFormat,
@@ -65,6 +65,7 @@ export class TranscriptComponent implements OnInit, OnDestroy {
     // Checking for analysis in progress
     analysisInProgress$ = new BehaviorSubject<boolean>(false);
     resultsAvailable$ = new BehaviorSubject<boolean>(false);
+    private readonly pollTask$ = new Subject<string>();
 
     constructor(
         private transcriptService: TranscriptService,
@@ -108,6 +109,25 @@ export class TranscriptComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.pollTask$
+            .pipe(
+                distinctUntilChanged(),
+                switchMap((taskID) =>
+                    this.analysisService.pollAnalysisTask(taskID),
+                ),
+                takeUntil(this.onDestroy$),
+            )
+            .subscribe({
+                next: () => {
+                    this.showSuccess(
+                        'Analysis success',
+                        `Annotation completed for ${this.transcript.name}`,
+                    );
+                    this.loadData();
+                },
+                error: (err) =>
+                    this.showError('Error analysing transcript', err),
+            });
         this.loadData();
     }
 
@@ -255,6 +275,7 @@ export class TranscriptComponent implements OnInit, OnDestroy {
         this.analysisInProgress$.next(true);
         this.analysisService
             .createAnalysisTask(this.id, this.currentTam.id.toString())
+            .pipe(takeUntil(this.onDestroy$))
             .subscribe({
                 next: (taskID: string) => this.pollResultsAvailable(taskID),
                 error: (err) =>
@@ -264,22 +285,11 @@ export class TranscriptComponent implements OnInit, OnDestroy {
 
     /**
      * Wait for async results to be available.
+     * Emits to pollTask$ — switchMap in ngOnInit ensures only one
+     * active poll subscription exists at a time.
      */
     pollResultsAvailable(taskID: string): void {
-        this.analysisService
-            .pollAnalysisTask(taskID)
-            .pipe(takeUntil(this.onDestroy$))
-            .subscribe({
-                next: () => {
-                    this.showSuccess(
-                        'Analysis success',
-                        `Annotation completed for ${this.transcript.name}`,
-                    );
-                    this.loadData();
-                },
-                error: (err) =>
-                    this.showError('Error analysing transcript', err),
-            });
+        this.pollTask$.next(taskID);
     }
 
     annotateTranscript(outputFormat: AnnotationOutputFormat): void {
