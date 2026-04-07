@@ -6,8 +6,8 @@ export interface AnalysisRun {
     annotation_file: string;
     method: number;
     is_manual_correction: boolean;
-    task_id: string;
-    task_status: TaskStatus;
+    task_id?: string | null;
+    task_status?: TaskStatus | null;
     results_available: boolean;
 }
 
