@@ -13,6 +13,9 @@ exclude = [
     "sastadev",
     ".env",
     ".env37",
+    "glue.py",
+    "bootstrap.py",
+    "collect.py"
 ]
 
 [tool.ruff.lint]

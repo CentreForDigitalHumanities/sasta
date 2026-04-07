@@ -1,4 +1,3 @@
-from unittest import result
 
 from rest_framework import serializers
 from .models import (AnalysisRun, AssessmentMethod, AssessmentQuery, Corpus,

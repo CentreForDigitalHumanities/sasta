@@ -3,7 +3,6 @@ from xml.etree import ElementTree as etree
 
 from sastadev.allresults import AllResults
 import pytest
-from django.conf import settings
 from os import path as op
 
 HERE = op.dirname(op.abspath(__file__))
