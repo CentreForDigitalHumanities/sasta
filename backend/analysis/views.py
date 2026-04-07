@@ -173,6 +173,8 @@ class TranscriptViewSet(viewsets.ModelViewSet):
         task = analyse_transcript_task.s(
             transcript_id, method_id, run.pk, existing_annotations
         ).delay()
+        run.task_id = task.id
+        run.save(update_fields=['task_id'])
 
         # return task_id
         return Response(task.id)
