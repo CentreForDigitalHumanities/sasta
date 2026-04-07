@@ -1,3 +1,5 @@
+from typing import Optional
+
 from celery import shared_task
 
 from analysis.models import AnalysisRun, AssessmentMethod, Transcript
@@ -8,7 +10,13 @@ from results.serializers import allresults_to_json
 
 
 @shared_task(bind=True)
-def analyse_transcript_task(self, transcript_id: int, method_id: int, run_id: int, use_existing=False) -> str:
+def analyse_transcript_task(
+    self,
+    transcript_id: int,
+    method_id: int,
+    run_id: int,
+    existing_annotations: Optional[str] = None,
+) -> str:
     '''For a transcript and method, perform analysis and save results to an AnalysisRun'''
     # Retrieve objects
     transcript = Transcript.objects.get(pk=transcript_id)
@@ -23,7 +31,12 @@ def analyse_transcript_task(self, transcript_id: int, method_id: int, run_id: in
     time.sleep(10)
 
     # Perform querying
-    allresults = annotate_transcript(transcript, method)
+    if existing_annotations:
+        allresults = annotate_transcript(
+            transcript, method, existing_annotations=existing_annotations
+        )
+    else:
+        allresults = annotate_transcript(transcript, method)
 
     # Serialize results to JSON for storage in the AnalysisRun
     # Make analysedtrees and allmatches empty to save space

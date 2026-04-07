@@ -154,13 +154,25 @@ class TranscriptViewSet(viewsets.ModelViewSet):
         method_id = request.data.get('method')
         method = AssessmentMethod.objects.get(pk=method_id)
 
+        latest_run = transcript.latest_run
+        if (
+            latest_run
+            and latest_run.is_manual_correction
+            and latest_run.annotation_file
+        ):
+            existing_annotations = latest_run.annotation_file.path
+        else:
+            existing_annotations = None
+
         # create an AnalysisRun without annotations file to attach the task id to
         run = AnalysisRun.objects.create(
             transcript=transcript, method=method, is_manual_correction=False
         )
 
         # create the async task
-        task = analyse_transcript_task.s(transcript_id, method_id, run.pk).delay()
+        task = analyse_transcript_task.s(
+            transcript_id, method_id, run.pk, existing_annotations
+        ).delay()
 
         # return task_id
         return Response(task.id)
@@ -213,15 +225,12 @@ class TranscriptViewSet(viewsets.ModelViewSet):
         try:
             read_saf(new_run.annotation_file.path, latest_run.method.to_sastadev())
             # create the async task to analyse the new annotations and update the AnalysisRun
-            task = analyse_transcript_task.s(
-                obj.pk, latest_run.method.pk, new_run.pk
-            ).delay()
         except Exception as e:
             new_run.delete()
             logger.exception(e)
             return Response(str(e), status.HTTP_400_BAD_REQUEST)
 
-        return Response(task.id, status.HTTP_200_OK)
+        return Response('Corrections uploaded', status.HTTP_200_OK)
 
     @action(detail=True, methods=['POST'], name='Generate form')
     def generateform(self, request, *args, **kwargs):

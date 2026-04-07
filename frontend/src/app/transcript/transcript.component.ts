@@ -29,6 +29,10 @@ const XLSX_MIME =
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 const TXT_MIME = 'text/plain';
 
+const strNilOrEmpty = (s: string | undefined): boolean =>
+    _.isNil(s) || s === '';
+
+
 @Component({
     selector: 'sas-transcript',
     templateUrl: './transcript.component.html',
@@ -97,7 +101,7 @@ export class TranscriptComponent implements OnInit, OnDestroy {
         return (
             (_.isNil(this.transcript.latest_run) ||
                 this.transcript.latest_run?.task_status === 'FAILURE' ||
-                _.isNil(this.transcript.latest_run?.task_id)) &&
+                strNilOrEmpty(this.transcript.latest_run?.task_id)) &&
             this.transcript.latest_run?.task_status !== 'PENDING'
         );
     }
