@@ -366,7 +366,9 @@ class AnalysisRun(models.Model):
     query_file = models.FileField(
         upload_to=upload_path, max_length=500, blank=True, null=True
     )
-    annotation_file = models.FileField(upload_to=upload_path, max_length=500)
+    annotation_file = models.FileField(
+        upload_to=upload_path, max_length=500, blank=True, null=True
+    )
     allresults = models.JSONField(blank=True, null=True)
     is_manual_correction = models.BooleanField(
         default=False,
