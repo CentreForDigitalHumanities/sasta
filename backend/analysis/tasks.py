@@ -27,8 +27,8 @@ def analyse_transcript_task(
     run.save(update_fields=['task_id'])
 
     # for testing purposes, wait to simulate a long-running task
-    import time
-    time.sleep(10)
+    # import time
+    # time.sleep(10)
 
     # Perform querying
     if existing_annotations:
