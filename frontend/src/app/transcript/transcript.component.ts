@@ -123,7 +123,8 @@ export class TranscriptComponent implements OnInit, OnDestroy {
                 // get transcript
                 switchMap((t: Transcript) => {
                     this.transcript = t;
-                    if (t.latest_run?.task_status === 'PENDING') {
+                    const inProgressStatuses = ['PENDING', 'STARTED', 'RETRY'];
+                    if (inProgressStatuses.includes(t.latest_run?.task_status)) {
                         this.analysisInProgress$.next(true);
                         this.pollResultsAvailable(t.latest_run.task_id);
                     } else {
