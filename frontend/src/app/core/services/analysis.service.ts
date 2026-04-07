@@ -2,7 +2,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TaskResult } from '@shared/models';
 import { Observable, timer } from 'rxjs';
-import { filter, switchMap, take, tap } from 'rxjs/operators';
+import { filter, switchMap, take } from 'rxjs/operators';
 
 export type AnnotationOutputFormat = 'xlsx' | 'cha' | 'form';
 
