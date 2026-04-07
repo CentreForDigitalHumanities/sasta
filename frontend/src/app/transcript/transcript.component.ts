@@ -102,7 +102,8 @@ export class TranscriptComponent implements OnInit, OnDestroy {
             (_.isNil(this.transcript.latest_run) ||
                 this.transcript.latest_run?.task_status === 'FAILURE' ||
                 strNilOrEmpty(this.transcript.latest_run?.task_id)) &&
-            this.transcript.latest_run?.task_status !== 'PENDING'
+            this.transcript.latest_run?.task_status !== 'PENDING' &&
+            this.transcript.status === TranscriptStatus.PARSED
         );
     }
 
