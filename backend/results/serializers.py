@@ -6,6 +6,9 @@ from lxml import etree
 from sastadev.allresults import AllResults, reskeystr2reskey, showreskey
 
 _ALLMATCHES_KEY_SEP = '|'
+_POSTRESULTS_COUNTER_KIND = '__counter__'
+_POSTRESULTS_KEY_KIND = '__kind__'
+_POSTRESULTS_KEY_VALUE = 'value'
 
 
 def _encode_results_key(key):
@@ -36,6 +39,41 @@ def _decode_syntree(xml_str):
     return etree.fromstring(xml_str)
 
 
+def _encode_postresult_counter_key(key):
+    if isinstance(key, tuple):
+        return {_POSTRESULTS_KEY_KIND: 'tuple', _POSTRESULTS_KEY_VALUE: list(key)}
+    return {_POSTRESULTS_KEY_KIND: 'raw', _POSTRESULTS_KEY_VALUE: key}
+
+
+def _decode_postresult_counter_key(data):
+    if isinstance(data, dict) and data.get(_POSTRESULTS_KEY_KIND) == 'tuple':
+        return tuple(data[_POSTRESULTS_KEY_VALUE])
+    if isinstance(data, dict) and data.get(_POSTRESULTS_KEY_KIND) == 'raw':
+        return data[_POSTRESULTS_KEY_VALUE]
+    return data
+
+
+def _encode_postresult_value(value):
+    if isinstance(value, Counter):
+        return {
+            _POSTRESULTS_COUNTER_KIND: [
+                [_encode_postresult_counter_key(k), v] for k, v in value.items()
+            ]
+        }
+    return value
+
+
+def _decode_postresult_value(value):
+    if isinstance(value, dict) and _POSTRESULTS_COUNTER_KIND in value:
+        return Counter(
+            {
+                _decode_postresult_counter_key(k): v
+                for k, v in value[_POSTRESULTS_COUNTER_KIND]
+            }
+        )
+    return value
+
+
 def allresults_to_dict(allresults):
     coreresults = {
         _encode_results_key(k): dict(v) for k, v in allresults.coreresults.items()
@@ -49,16 +87,20 @@ def allresults_to_dict(allresults):
         ]
         for k, matches in allresults.allmatches.items()
     }
-    analysedtrees = {
-        utt_id: _encode_syntree(tree)
-        for utt_id, tree in allresults.analysedtrees.items()
-    }
+    trees = allresults.analysedtrees
+    analysedtrees = [
+        [utt_id, _encode_syntree(tree)]
+        for utt_id, tree in (trees.items() if isinstance(trees, dict) else trees)
+    ]
     return {
         'uttcount': allresults.uttcount,
         'filename': allresults.filename,
         'annotationinput': allresults.annotationinput,
         'allutts': allresults.allutts,
-        'postresults': allresults.postresults,
+        'postresults': {
+            query_id: _encode_postresult_value(result)
+            for query_id, result in allresults.postresults.items()
+        },
         'coreresults': coreresults,
         'exactresults': exactresults,
         'allmatches': allmatches,
@@ -80,16 +122,20 @@ def allresults_from_dict(d):
         ]
         for k, matches in d['allmatches'].items()
     }
-    analysedtrees = {
-        utt_id: _decode_syntree(xml_str)
-        for utt_id, xml_str in d['analysedtrees'].items()
+    analysedtrees = [
+        (utt_id, _decode_syntree(xml_str))
+        for utt_id, xml_str in d['analysedtrees']
+    ]
+    postresults = {
+        query_id: _decode_postresult_value(result)
+        for query_id, result in d['postresults'].items()
     }
     return AllResults(
         uttcount=d['uttcount'],
         filename=d['filename'],
         annotationinput=d['annotationinput'],
         allutts=d['allutts'],
-        postresults=d['postresults'],
+        postresults=postresults,
         coreresults=coreresults,
         exactresults=exactresults,
         allmatches=allmatches,

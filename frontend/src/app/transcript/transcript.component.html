@@ -30,7 +30,7 @@
             </p>
             <p class="level-item" *ngIf="!(authService.currentUser$ | async).isAdmin">
                 <strong>Method: </strong>
-                {{ currentTam?.name}}
+                {{ currentTam?.name }}
             </p>
             <p class="level-item">
                 <strong>Created on: </strong>
@@ -43,29 +43,45 @@
         <p-panel header="Scoring" [ngSwitch]="transcript.status">
             <ng-container *ngSwitchCase="TranscriptStatus.PARSED">
                 <form>
-                    <div class="field">
-                        <div class="control" *ngIf="(authService.currentUser$ | async).isAdmin">
+                    <div class="field" *ngIf="(authService.currentUser$ | async).isAdmin">
+                        <div class="control">
                             <p-dropdown [options]="groupedTams" [(ngModel)]="currentTam" placeholder="Select a method"
                                 name="tam-dropdown" [group]="true" showClear="true" appendTo="body"
                                 [disabled]="!(groupedTams?.length > 0)">
                             </p-dropdown>
                         </div>
                     </div>
-
+                    <div *ngIf="(authService.currentUser$ | async).isAdmin">
+                        analysis in progress: {{ analysisInProgress$ | async
+                        }}<br />
+                        results available: {{ resultsAvailable$ | async }}
+                    </div>
+                    <div *ngIf="analysisInProgress$ | async" class="field">
+                        <div class="control">
+                            <label class="label">analysing transcript..</label>
+                            <progress class="progress is-primary"></progress>
+                        </div>
+                    </div>
                     <div class="field is-grouped">
                         <ng-container *ngIf="(authService.currentUser$ | async).isAdmin">
-                            <div class="control">
-                                <button class="button is-primary" [disabled]="!currentTam" (click)="queryTranscript()"
-                                    [ngClass]="{ 'is-loading': querying }">
-                                    Query
-                                </button>
+                            <div class="field">
+                                <div class="control">
+                                    <button class="button is-primary" [disabled]="!currentTam" (click)="analyseAsync()">
+                                        start async annotations
+                                    </button>
+                                </div>
                             </div>
                             <div class="divider is-vertical">or</div>
                         </ng-container>
                         <div class="field">
                             <div class="control">
-                                <button class="button is-primary" [disabled]="!currentTam"
-                                    (click)="annotateTranscript('xlsx')" [ngClass]="{ 'is-loading': querying }">
+                                <button class="button is-primary" [disabled]="
+                                        (resultsAvailable$ | async) === false
+                                    " (click)="getResults('xlsx')" [ngClass]="{
+                                        'is-loading':
+                                            (analysisInProgress$ | async) ===
+                                            true,
+                                    }">
                                     Annotate (xlsx)
                                 </button>
                             </div>
@@ -73,8 +89,13 @@
                         <div class="divider is-vertical">or</div>
                         <div class="field">
                             <div class="control">
-                                <button class="button is-primary" [disabled]="!currentTam"
-                                    (click)="annotateTranscript('cha')" [ngClass]="{ 'is-loading': querying }">
+                                <button class="button is-primary" [disabled]="
+                                        (resultsAvailable$ | async) === false
+                                    " (click)="getResults('cha')" [ngClass]="{
+                                        'is-loading':
+                                            (analysisInProgress$ | async) ===
+                                            true,
+                                    }">
                                     Annotate (CHAT)
                                 </button>
                             </div>
@@ -82,8 +103,11 @@
                         <div class="divider is-vertical">or</div>
                         <div class="control">
                             <button class="button is-primary" [disabled]="
-                                !currentTam || !currentTam?.category.has_form
-                            " (click)="generateForm()" [ngClass]="{ 'is-loading': querying }">
+                                    (resultsAvailable$ | async) === false
+                                " (click)="getResults('form')" [ngClass]="{
+                                    'is-loading':
+                                        (analysisInProgress$ | async) === true,
+                                }">
                                 Generate form
                             </button>
                         </div>
@@ -93,11 +117,10 @@
 
             <ng-container *ngSwitchCase="TranscriptStatus.PARSING">
                 <div class="message is-warning">
-                    <div class="message-header">
-                        Parsing in progress.
-                    </div>
+                    <div class="message-header">Parsing in progress.</div>
                     <div class="message-body">
-                        Please wait for parsing to finish and refresh the page before analysing.
+                        Please wait for parsing to finish and refresh the page
+                        before analysing.
                     </div>
                 </div>
             </ng-container>
@@ -109,12 +132,14 @@
                             No utterances were marked for analysis.
                         </div>
                         <div class="message-body">
-                            Please check your input file and reupload. <br>
-                            For CHAT files provide a <strong>Target_Child,
-                                Target_Adult</strong> or <strong>Participant</strong> participant, or
-                            <strong>%xsid</strong>-tiers. <br>
-                            For Word input, provide numbered sentences. <br>
-                            If the problem persists, please contact the developers by using the
+                            Please check your input file and reupload. <br />
+                            For CHAT files provide a
+                            <strong>Target_Child, Target_Adult</strong> or
+                            <strong>Participant</strong> participant, or
+                            <strong>%xsid</strong>-tiers. <br />
+                            For Word input, provide numbered sentences. <br />
+                            If the problem persists, please contact the
+                            developers by using the
                             <i><strong>Send feedback</strong></i>
                             button on the bottom of the page.
                         </div>
@@ -123,47 +148,26 @@
 
                 <ng-template #unknownError>
                     <div class="message is-danger">
-                        <div class="message-header">
-                            Something went wrong.
-                        </div>
+                        <div class="message-header">Something went wrong.</div>
                         <div class="message-body">
-                            SASTA was unable to process your file. <br>
-                            Please try again by navigating to <a [routerLink]="['/process/', transcript.corpus]">corpus
-                                processing</a>. <br>
-                            If the problem persists, please contact the developers by using the
+                            SASTA was unable to process your file. <br />
+                            Please try again by navigating to
+                            <a [routerLink]="['/process/', transcript.corpus]">corpus processing</a>. <br />
+                            If the problem persists, please contact the
+                            developers by using the
                             <i><strong>Send feedback</strong></i>
                             button on the bottom of the page.
                         </div>
                     </div>
                 </ng-template>
             </ng-container>
-            <ng-container>
-
-            </ng-container>
-
-
+            <ng-container> </ng-container>
         </p-panel>
     </div>
 
     <div class="block">
         <p-panel header="Annotations">
             <div class="field is-grouped">
-                <div class="control">
-                    <button class="button is-primary" pTooltip="Download the latest generated annotations file"
-                        [disabled]="!transcript.latest_run" (click)="downloadLatestAnnotations()">
-                        <span class="icon is-small">
-                            <fa-icon [icon]="faDownload"></fa-icon>
-                        </span>
-                        <span>Download annotations</span>
-                    </button>
-                    <p class="help" *ngIf="transcript.latest_run">
-                        Latest annotations:
-                        <span>{{
-                            transcript.latest_run.created
-                            | date: "dd/MM/yyyy, HH:mm"
-                            }}</span>
-                    </p>
-                </div>
                 <div class="control">
                     <button class="button is-primary" pTooltip="Provide a manually corrected annotations file"
                         [disabled]="!allowCorrectionUpload()" (click)="showCorrectionsUpload()">
@@ -225,6 +229,7 @@
         </p-fieldset>
     </div>
     <sas-upload-saf *ngIf="displayCorrUpload" [display]="displayCorrUpload"
-        (displayChange)="onCorrectionsUploadClose($event)" [transcript]="transcript">
+        (displayChange)="onCorrectionsUploadClose($event)" (annotationsUploaded)="onAnnotationsUploaded()"
+        [transcript]="transcript">
     </sas-upload-saf>
 </ng-container>

@@ -1,6 +1,5 @@
 import os
-# flake8: noqa: F403
-from sasta.common_settings import *
+from sasta.common_settings import *  # noqa: F403
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -26,13 +25,13 @@ CORPUS2ALPINO_LOG_DIR = '.logs'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),
-        "NAME": os.environ.get("SQL_DATABASE", "sasta"),
-        "USER": os.environ.get("SQL_USER", "sasta"),
-        "PASSWORD": os.environ.get("SQL_PASSWORD", "sasta"),
-        "HOST": os.environ.get("SQL_HOST", "localhost"),
-        "PORT": os.environ.get("SQL_PORT", "5432"),
+    'default': {
+        'ENGINE': os.environ.get('SQL_ENGINE', 'django.db.backends.postgresql'),
+        'NAME': os.environ.get('SQL_DATABASE', 'sasta'),
+        'USER': os.environ.get('SQL_USER', 'sasta'),
+        'PASSWORD': os.environ.get('SQL_PASSWORD', 'sasta'),
+        'HOST': os.environ.get('SQL_HOST', 'localhost'),
+        'PORT': os.environ.get('SQL_PORT', '5432'),
     },
 }
 
@@ -51,7 +50,9 @@ CSRF_TRUSTED_ORIGINS = ['http://localhost:8000']
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Celery
-CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'amqp://guest:guest@localhost:5672')
+CELERY_BROKER_URL = os.environ.get(
+    'CELERY_BROKER_URL', 'amqp://guest:guest@localhost:5672'
+)
 
 # Logging
 LOGGING = {
@@ -64,27 +65,23 @@ LOGGING = {
             'filename': os.path.join(BASE_DIR, 'django.log'),
             'when': 'd',
             'interval': 1,
-            'backupCount': 0
+            'backupCount': 0,
         },
         'sasta_file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': os.path.join(BASE_DIR, 'sasta.log'),
-            'formatter': 'standard'
+            'formatter': 'standard',
         },
         'console': {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
-            'formatter': 'simple'
-        }
+            'formatter': 'simple',
+        },
     },
     'formatters': {
-        'standard': {
-            'format': '[%(asctime)s] %(levelname)s\t%(message)s'
-        },
-        'simple': {
-            'format': '%(levelname)s %(message)s'
-        },
+        'standard': {'format': '[%(asctime)s] %(levelname)s\t%(message)s'},
+        'simple': {'format': '%(levelname)s %(message)s'},
     },
     'loggers': {
         'django': {
@@ -95,17 +92,13 @@ LOGGING = {
         'django.server': {
             'handlers': ['django_file'],
             'level': 'INFO',
-            'propagate': False
+            'propagate': False,
         },
         'sasta': {
             'handlers': ['sasta_file', 'console'],
             'level': 'INFO',
-            'propagate': True
+            'propagate': True,
         },
-        'sastadev': {
-            'handlers': ['console'],
-            'level': 'ERROR',
-            'propagate': False
-        }
+        'sastadev': {'handlers': ['console'], 'level': 'ERROR', 'propagate': False},
     },
 }

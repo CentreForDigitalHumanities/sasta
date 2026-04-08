@@ -1,17 +1,25 @@
-import logging
+from typing import Optional
 
-from analysis.models import (AssessmentMethod, Transcript)
-from analysis.query.query_transcript import run_sastacore
 from sastadev.allresults import AllResults
 
-logger = logging.getLogger('sasta')
+from analysis.models import AssessmentMethod, Transcript
+from analysis.query.query_transcript import run_sastacore
 
 
-def annotate_transcript(transcript: Transcript, method: AssessmentMethod, ignore_existing: bool = False) -> AllResults:
-    if transcript.latest_run and not ignore_existing:
-        # run sastacore with pre-exising SAF file
-        allresults, _samplesize = run_sastacore(transcript, method, True)
+def annotate_transcript(
+    transcript: Transcript,
+    method: AssessmentMethod,
+    ignore_existing: bool = False,
+    existing_annotations: Optional[str] = None,
+) -> AllResults:
+    if not ignore_existing and existing_annotations:
+        existing_annotations_file = existing_annotations
     else:
-        # run sastacore normally
-        allresults, _samplesize = run_sastacore(transcript, method, False)
+        existing_annotations_file = None
+
+    allresults, _samplesize = run_sastacore(
+        transcript=transcript,
+        method=method,
+        manual_annotations_file=existing_annotations_file,
+    )
     return allresults

@@ -11,8 +11,8 @@ import {
 import { Corpus, Method, Transcript, TranscriptStatus } from '@models';
 import { saveAs } from 'file-saver';
 import { MessageService, SelectItemGroup } from 'primeng/api';
-import { Subject } from 'rxjs';
-import { switchMap, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 import {
     AnalysisService,
     AnnotationOutputFormat,
@@ -28,6 +28,10 @@ import _ from 'lodash';
 const XLSX_MIME =
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 const TXT_MIME = 'text/plain';
+
+const strNilOrEmpty = (s: string | undefined): boolean =>
+    _.isNil(s) || s === '';
+
 
 @Component({
     selector: 'sas-transcript',
@@ -58,6 +62,11 @@ export class TranscriptComponent implements OnInit, OnDestroy {
 
     readonly TranscriptStatus = TranscriptStatus;
 
+    // Checking for analysis in progress
+    analysisInProgress$ = new BehaviorSubject<boolean>(false);
+    resultsAvailable$ = new BehaviorSubject<boolean>(false);
+    private readonly pollTask$ = new Subject<string>();
+
     constructor(
         private transcriptService: TranscriptService,
         private corpusService: CorpusService,
@@ -67,11 +76,11 @@ export class TranscriptComponent implements OnInit, OnDestroy {
         private router: Router,
         private route: ActivatedRoute,
         private messageService: MessageService,
-        public authService: AuthService
+        public authService: AuthService,
     ) {
-        this.route.paramMap.subscribe(
-            (params) => (this.id = +params.get('id'))
-        );
+        this.route.paramMap
+            .pipe(takeUntil(this.onDestroy$))
+            .subscribe((params) => (this.id = +params.get('id')));
     }
 
     hasLatestRun(): boolean {
@@ -89,16 +98,45 @@ export class TranscriptComponent implements OnInit, OnDestroy {
         return this.hasLatestRun();
     }
 
-    allowScoring(): boolean {
-        return this.transcript.status === TranscriptStatus.PARSED;
+    shouldAnalyse(): boolean {
+        return (
+            (_.isNil(this.transcript.latest_run) ||
+                this.transcript.latest_run?.task_status === 'FAILURE' ||
+                strNilOrEmpty(this.transcript.latest_run?.task_id)) &&
+            this.transcript.latest_run?.task_status !== 'PENDING' &&
+            this.transcript.status === TranscriptStatus.PARSED
+        );
     }
 
     ngOnInit() {
+        this.pollTask$
+            .pipe(
+                distinctUntilChanged(),
+                switchMap((taskID) =>
+                    this.analysisService.pollAnalysisTask(taskID),
+                ),
+                takeUntil(this.onDestroy$),
+            )
+            .subscribe({
+                next: () => {
+                    this.showSuccess(
+                        'Analysis success',
+                        `Annotation completed for ${this.transcript.name}`,
+                    );
+                    this.loadData();
+                },
+                error: (err) => {
+                    this.analysisInProgress$.next(false);
+                    this.showError('Error analysing transcript', err);
+                    this.loadData();
+                },
+            });
         this.loadData();
     }
 
     ngOnDestroy() {
         this.onDestroy$.next();
+        this.onDestroy$.complete();
     }
 
     loadData(): void {
@@ -109,6 +147,17 @@ export class TranscriptComponent implements OnInit, OnDestroy {
                 // get transcript
                 switchMap((t: Transcript) => {
                     this.transcript = t;
+                    const inProgressStatuses = ['PENDING', 'STARTED', 'RETRY'];
+                    if (inProgressStatuses.includes(t.latest_run?.task_status)) {
+                        this.analysisInProgress$.next(true);
+                        this.pollResultsAvailable(t.latest_run.task_id);
+                    } else {
+                        this.analysisInProgress$.next(false);
+                    }
+
+                    this.resultsAvailable$.next(
+                        t.latest_run?.results_available === true,
+                    );
                     return this.corpusService.getByID(t.corpus); // get corpus
                 }),
                 switchMap((c: Corpus) => {
@@ -118,14 +167,18 @@ export class TranscriptComponent implements OnInit, OnDestroy {
                 switchMap((m: Method) => {
                     this.currentTam = m;
                     return this.methodService.getMethods(); // get all methods
-                })
+                }),
             )
             .subscribe((tams: Method[]) => {
                 this.tams = tams;
                 this.groupedTams = this.methodService.groupMethods(
                     tams,
-                    this.corpus.method_category
+                    this.corpus.method_category,
                 ); // group methods
+
+                if (this.shouldAnalyse()) {
+                    this.analyseAsync();
+                }
             });
     }
 
@@ -133,6 +186,72 @@ export class TranscriptComponent implements OnInit, OnDestroy {
     downloadFile(data: any, filename: string, mimetype: string): void {
         const blob = new Blob([data], { type: mimetype });
         saveAs(blob, filename);
+    }
+
+    private showSuccess(summary: string, detail = ''): void {
+        this.messageService.add({ severity: 'success', summary, detail });
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private showError(summary: string, err: any): void {
+        console.error(err);
+        this.messageService.add({
+            severity: 'error',
+            summary,
+            detail: err.message,
+            sticky: true,
+        });
+    }
+
+    private performQueryAction(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        obs$: Observable<any>,
+        config: { filename: string; mime: string; successMsg: string },
+        errorMsg: string,
+    ): void {
+        this.querying = true;
+        obs$.pipe(takeUntil(this.onDestroy$)).subscribe({
+            next: (response) => {
+                this.downloadFile(response.body, config.filename, config.mime);
+                this.showSuccess(config.successMsg);
+                this.querying = false;
+                this.loadData();
+            },
+            error: (err) => {
+                this.showError(errorMsg, err);
+                this.querying = false;
+            },
+        });
+    }
+
+    getResults(format: AnnotationOutputFormat): void {
+        const configMap: Record<
+            string,
+            { filename: string; mime: string; successMsg: string }
+        > = {
+            xlsx: {
+                filename: `${this.transcript.name}_SAF.xlsx`,
+                mime: XLSX_MIME,
+                successMsg: 'Annotation success',
+            },
+            cha: {
+                filename: `${this.transcript.name}_annotated.cha`,
+                mime: TXT_MIME,
+                successMsg: 'Annotation success',
+            },
+            form: {
+                filename: `${this.transcript.name}_${this.currentTam.category.name}_form.xlsx`,
+                mime: XLSX_MIME,
+                successMsg: 'Generated form',
+            },
+        };
+        const config = configMap[format];
+        if (!config) return;
+        this.performQueryAction(
+            this.analysisService.getResults(this.id, format),
+            config,
+            'Error generating results',
+        );
     }
 
     downloadLatestAnnotations(): void {
@@ -143,7 +262,7 @@ export class TranscriptComponent implements OnInit, OnDestroy {
                 this.downloadFile(
                     res.body,
                     `${this.transcript.name}_latest_SAF.xlsx`,
-                    XLSX_MIME
+                    XLSX_MIME,
                 );
             });
     }
@@ -155,114 +274,81 @@ export class TranscriptComponent implements OnInit, OnDestroy {
             .subscribe(() => this.loadData());
     }
 
-    annotateTranscript(outputFormat: AnnotationOutputFormat): void {
-        this.querying = true;
+    analyseAsync(): void {
+        this.analysisInProgress$.next(true);
         this.analysisService
-            .annotate(this.id, this.currentTam.id.toString(), outputFormat)
+            .createAnalysisTask(this.id, this.currentTam.id.toString())
             .pipe(takeUntil(this.onDestroy$))
-            .subscribe(
-                (response) => {
-                    switch (outputFormat) {
-                        case 'xlsx':
-                            this.downloadFile(
-                                response.body,
-                                `${this.transcript.name}_SAF.xlsx`,
-                                XLSX_MIME
-                            );
-                            break;
-                        case 'cha':
-                            this.downloadFile(
-                                response.body,
-                                `${this.transcript.name}_annotated.cha`,
-                                TXT_MIME
-                            );
-                            break;
-                        default:
-                            break;
-                    }
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Annotation success',
-                        detail: '',
-                    });
-                    this.querying = false;
-                    this.loadData();
-                },
-                (err) => {
-                    console.error(err);
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error querying',
-                        detail: err.message,
-                        sticky: true,
-                    });
-                    this.querying = false;
-                }
-            );
+            .subscribe({
+                next: (taskID: string) => this.pollResultsAvailable(taskID),
+                error: (err) =>
+                    this.showError('Error creating analysis task', err),
+            });
+    }
+
+    /**
+     * Wait for async results to be available.
+     * Emits to pollTask$ — switchMap in ngOnInit ensures only one
+     * active poll subscription exists at a time.
+     */
+    pollResultsAvailable(taskID: string): void {
+        this.pollTask$.next(taskID);
+    }
+
+    annotateTranscript(outputFormat: AnnotationOutputFormat): void {
+        const configMap: Record<
+            string,
+            { filename: string; mime: string; successMsg: string }
+        > = {
+            xlsx: {
+                filename: `${this.transcript.name}_SAF.xlsx`,
+                mime: XLSX_MIME,
+                successMsg: 'Annotation success',
+            },
+            cha: {
+                filename: `${this.transcript.name}_annotated.cha`,
+                mime: TXT_MIME,
+                successMsg: 'Annotation success',
+            },
+        };
+        const config = configMap[outputFormat];
+        if (!config) return;
+        this.performQueryAction(
+            this.analysisService.annotate(
+                this.id,
+                this.currentTam.id.toString(),
+                outputFormat,
+            ),
+            config,
+            'Error querying',
+        );
     }
 
     queryTranscript(): void {
-        this.querying = true;
-        this.analysisService
-            .query(this.id, this.currentTam.id.toString())
-            .pipe(takeUntil(this.onDestroy$))
-            .subscribe(
-                (response) => {
-                    this.downloadFile(
-                        response.body,
-                        `${this.transcript.name}_matches.xlsx`,
-                        XLSX_MIME
-                    );
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Querying success',
-                        detail: '',
-                    });
-                    this.querying = false;
-                },
-                (err) => {
-                    console.error(err);
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error querying',
-                        detail: err.message,
-                        sticky: true,
-                    });
-                    this.querying = false;
-                }
-            );
+        this.performQueryAction(
+            this.analysisService.query(this.id, this.currentTam.id.toString()),
+            {
+                filename: `${this.transcript.name}_matches.xlsx`,
+                mime: XLSX_MIME,
+                successMsg: 'Querying success',
+            },
+            'Error querying',
+        );
     }
 
     generateForm(): void {
-        this.querying = true;
-        this.analysisService
-            .generateForm(this.id, this.currentTam.id.toString())
-            .pipe(takeUntil(this.onDestroy$))
-            .subscribe(
-                (response) => {
-                    this.downloadFile(
-                        response.body,
-                        `${this.transcript.name}_${this.currentTam.category.name}_form.xlsx`,
-                        XLSX_MIME
-                    );
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Generated form',
-                        detail: '',
-                    });
-                    this.querying = false;
-                },
-                (err) => {
-                    console.error(err);
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error generating form',
-                        detail: err.message,
-                        sticky: true,
-                    });
-                    this.querying = false;
-                }
-            );
+        this.performQueryAction(
+            this.analysisService.generateForm(
+                this.id,
+                this.currentTam.id.toString(),
+            ),
+            {
+                filename: `${this.transcript.name}_${this.currentTam.category.name}_form.xlsx`,
+                mime: XLSX_MIME,
+                successMsg: 'Generated form',
+            },
+            'Error generating form',
+        );
     }
 
     deleteTranscript(): void {
@@ -270,30 +356,19 @@ export class TranscriptComponent implements OnInit, OnDestroy {
         this.transcriptService
             .delete(this.id)
             .pipe(takeUntil(this.onDestroy$))
-            .subscribe(
-                () => {
+            .subscribe({
+                next: () => {
                     this.router.navigate([`/corpora/${corpusId}`]);
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Removed transcript',
-                        detail: '',
-                    });
+                    this.showSuccess('Removed transcript');
                 },
-                (err) => {
-                    console.error(err);
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error removing transcript',
-                        detail: err.message,
-                        sticky: true,
-                    });
-                }
-            );
+                error: (err) =>
+                    this.showError('Error removing transcript', err),
+            });
     }
 
     chatFileAvailable(transcript: Transcript): boolean {
         return [TranscriptStatus.CONVERTED, TranscriptStatus.PARSED].includes(
-            transcript.status
+            transcript.status,
         );
     }
 
@@ -319,6 +394,9 @@ export class TranscriptComponent implements OnInit, OnDestroy {
 
     onCorrectionsUploadClose(event: boolean): void {
         this.displayCorrUpload = event;
+    }
+
+    onAnnotationsUploaded(): void {
         this.loadData();
     }
 
@@ -327,7 +405,7 @@ export class TranscriptComponent implements OnInit, OnDestroy {
         // Uses reduce to efficiently find the number
         return this.transcript.utterances.reduce(
             (total, utt) => (utt.for_analysis ? ++total : total),
-            0
+            0,
         );
     }
 }

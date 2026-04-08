@@ -1,8 +1,12 @@
-# flake8: noqa: E501
 import json
 import pathlib
 
-ANON_FP = pathlib.Path(__file__).parent.parent.parent.resolve() / 'backend' / 'anonymization.json'
+ANON_FP = (
+    pathlib.Path(__file__).parent.parent.parent.resolve()
+    / 'backend'
+    / 'anonymization.json'
+)
+
 
 def format_anons(anons):
     for spec in anons:
