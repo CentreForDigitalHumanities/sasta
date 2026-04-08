@@ -175,7 +175,7 @@ export class TranscriptComponent implements OnInit, OnDestroy {
                     tams,
                     this.corpus.method_category,
                 ); // group methods
-
+                console.log(this.transcript);
                 if (this.shouldAnalyse()) {
                     this.analyseAsync();
                 }
