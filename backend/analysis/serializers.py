@@ -13,6 +13,8 @@ class UploadFileSerializer(serializers.ModelSerializer):
 class AnalysisRunSerializer(serializers.ModelSerializer):
     task_status = serializers.CharField()
     results_available = serializers.BooleanField()
+    cha_results_available = serializers.BooleanField()
+    form_results_available = serializers.BooleanField()
 
     class Meta:
         model = AnalysisRun
@@ -20,13 +22,13 @@ class AnalysisRunSerializer(serializers.ModelSerializer):
             'id',
             'created',
             'annotation_file',
-            'form_file',
-            'annotated_chat_file',
             'method',
             'is_manual_correction',
             'task_id',
             'task_status',
-            'results_available',
+            'xlsx_results_available',
+            'cha_results_available',
+            'form_results_available',
         )
 
 

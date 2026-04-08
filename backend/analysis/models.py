@@ -399,5 +399,11 @@ class AnalysisRun(models.Model):
             return result.status
         return None
 
-    def results_available(self):
+    def xlsx_results_available(self):
         return (self.annotation_file is not None) and self.task_success()
+
+    def cha_results_available(self):
+        return (self.annotated_chat_file is not None) and self.task_success()
+
+    def form_results_available(self):
+        return (self.form_file is not None) and self.task_success()

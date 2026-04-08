@@ -156,7 +156,7 @@ export class TranscriptComponent implements OnInit, OnDestroy {
                     }
 
                     this.resultsAvailable$.next(
-                        t.latest_run?.results_available === true,
+                        t.latest_run?.xlsx_results_available === true,
                     );
                     return this.corpusService.getByID(t.corpus); // get corpus
                 }),

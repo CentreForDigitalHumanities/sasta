@@ -4,13 +4,13 @@ export interface AnalysisRun {
     id: number;
     created: Date;
     annotation_file: string;
-    annotated_chat_file: string;
-    form_file: string;
     method: number;
     is_manual_correction: boolean;
     task_id?: string | null;
     task_status?: TaskStatus | null;
-    results_available: boolean;
+    xlsx_results_available: boolean;
+    cha_results_available: boolean;
+    form_results_available: boolean;
 }
 
 export interface Utterance {
