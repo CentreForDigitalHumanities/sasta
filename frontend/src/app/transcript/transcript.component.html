@@ -89,9 +89,7 @@
                         <div class="divider is-vertical">or</div>
                         <div class="field">
                             <div class="control">
-                                <button class="button is-primary" [disabled]="
-                                        ((resultsAvailable$ | async) === false) && (!this.transcript.latest_run?.cha_results_available)
-                                    " (click)="getResults('cha')" [ngClass]="{
+                                <button class="button is-primary" [disabled]="!this.transcript.latest_run?.cha_results_available" (click)="getResults('cha')" [ngClass]="{
                                         'is-loading':
                                             (analysisInProgress$ | async) ===
                                             true,
