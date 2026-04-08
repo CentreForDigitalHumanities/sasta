@@ -12,7 +12,7 @@ class UploadFileSerializer(serializers.ModelSerializer):
 
 class AnalysisRunSerializer(serializers.ModelSerializer):
     task_status = serializers.CharField()
-    results_available = serializers.BooleanField()
+    xlsx_results_available = serializers.BooleanField()
     cha_results_available = serializers.BooleanField()
     form_results_available = serializers.BooleanField()
 
