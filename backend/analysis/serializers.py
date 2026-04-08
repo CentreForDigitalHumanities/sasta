@@ -16,8 +16,18 @@ class AnalysisRunSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AnalysisRun
-        fields = ('id', 'created', 'annotation_file', 'method',
-                  'is_manual_correction', 'task_id', 'task_status', 'results_available')
+        fields = (
+            'id',
+            'created',
+            'annotation_file',
+            'form_file',
+            'annotated_chat_file',
+            'method',
+            'is_manual_correction',
+            'task_id',
+            'task_status',
+            'results_available',
+        )
 
 
 class UtteranceSerializer(serializers.ModelSerializer):
