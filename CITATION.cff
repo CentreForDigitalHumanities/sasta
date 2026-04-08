@@ -41,5 +41,5 @@ abstract: >-
   transcripts, to aid clinical linguists and research into
   language development and language disorders.
 license: BSD-3-Clause
-version: 0.10.5
-date-released: '2026-03-17'
+version: 0.11.0
+date-released: '2026-04-08'
