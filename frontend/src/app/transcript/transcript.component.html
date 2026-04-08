@@ -90,7 +90,7 @@
                         <div class="field">
                             <div class="control">
                                 <button class="button is-primary" [disabled]="
-                                        ((resultsAvailable$ | async) === false) && (!this.transcript.latest_run.annotated_chat_file)
+                                        ((resultsAvailable$ | async) === false) && (!this.transcript.latest_run?.annotated_chat_file)
                                     " (click)="getResults('cha')" [ngClass]="{
                                         'is-loading':
                                             (analysisInProgress$ | async) ===
