@@ -369,6 +369,13 @@ class AnalysisRun(models.Model):
     annotation_file = models.FileField(
         upload_to=upload_path, max_length=500, blank=True, null=True
     )
+    form_file = models.FileField(
+        upload_to=upload_path, max_length=500, blank=True, null=True
+    )
+    annotated_chat_file = models.FileField(
+        upload_to=upload_path, max_length=500, blank=True, null=True
+    )
+
     allresults = models.JSONField(blank=True, null=True)
     is_manual_correction = models.BooleanField(
         default=False,
@@ -392,5 +399,5 @@ class AnalysisRun(models.Model):
             return result.status
         return None
 
-    def allresults_available(self):
-        return (self.allresults is not None) and self.task_success()
+    def results_available(self):
+        return (self.annotation_file is not None) and self.task_success()

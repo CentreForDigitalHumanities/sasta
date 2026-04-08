@@ -78,6 +78,8 @@ def delete_annotation_files(sender, instance, **kwargs):
     try:
         instance.annotation_file.delete(False)
         instance.query_file.delete(False)
+        instance.form_file.delete(False)
+        instance.annotated_chat_file.delete(False)
     except FileNotFoundError:
         pass
 
