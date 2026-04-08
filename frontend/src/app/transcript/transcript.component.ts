@@ -125,8 +125,11 @@ export class TranscriptComponent implements OnInit, OnDestroy {
                     );
                     this.loadData();
                 },
-                error: (err) =>
-                    this.showError('Error analysing transcript', err),
+                error: (err) => {
+                    this.analysisInProgress$.next(false);
+                    this.showError('Error analysing transcript', err);
+                    this.loadData();
+                },
             });
         this.loadData();
     }

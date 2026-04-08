@@ -134,7 +134,10 @@ class TranscriptViewSet(viewsets.ModelViewSet):
             return _xlsx_response('saf_output.xlsx', workbook=spreadsheet)
 
         if output_format == 'cha':
-            return _cha_response(transcript, allresults, method, 'annotated.cha')
+            enriched_chat = enrich_chat(transcript, allresults, method)
+            chat_buffer = StringIO()
+            ChatWriter(enriched_chat).write(chat_buffer)
+            return _cha_response('annotated.cha', chat_buffer.getvalue())
 
         return Response(
             f'Unsupported format: {output_format}',
@@ -182,7 +185,15 @@ class TranscriptViewSet(viewsets.ModelViewSet):
     )
     def latest_annotations(self, request, *args, **kwargs):
         obj = self.get_object()
-        run = AnalysisRun.objects.filter(transcript=obj).latest()
+        try:
+            run = AnalysisRun.objects.filter(
+                transcript=obj, annotation_file__isnull=False
+            ).latest()
+        except AnalysisRun.DoesNotExist:
+            return Response(
+                'No downloadable annotations file is available yet.',
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
         filename = run.annotation_file.name.split('/')[-1]
         return _xlsx_response(filename, content=run.annotation_file)
@@ -299,14 +310,29 @@ class TranscriptViewSet(viewsets.ModelViewSet):
         output_format = request.data.get('format', 'xlsx')
 
         if output_format == 'xlsx':
+            if not run.annotation_file:
+                return Response(
+                    'Analysis results are not available yet for format: xlsx.',
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             filename = run.annotation_file.name.split('/')[-1]
             return _xlsx_response(filename, content=run.annotation_file)
 
         if output_format == 'cha':
+            if not run.annotated_chat_file:
+                return Response(
+                    'Analysis results are not available yet for format: cha.',
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             filename = f'{transcript.name}_{method.category.name}_annotated.cha'
             return _cha_response(filename, run.annotated_chat_file)
 
         if output_format == 'form':
+            if not run.form_file:
+                return Response(
+                    'Analysis results are not available yet for format: form.',
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             filename = f'{transcript.name}_{method.category.name}_form.xlsx'
             return _xlsx_response(filename, content=run.form_file)
 
