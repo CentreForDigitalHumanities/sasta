@@ -400,10 +400,10 @@ class AnalysisRun(models.Model):
         return None
 
     def xlsx_results_available(self):
-        return (self.annotation_file is not None) and self.task_success()
+        return bool(self.annotation_file) and self.task_success()
 
     def cha_results_available(self):
-        return (self.annotated_chat_file is not None) and self.task_success()
+        return bool(self.annotated_chat_file) and self.task_success()
 
     def form_results_available(self):
-        return (self.form_file is not None) and self.task_success()
+        return bool(self.form_file) and self.task_success()
