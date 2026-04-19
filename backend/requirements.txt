@@ -68,7 +68,7 @@ cymem==2.0.6
     #   thinc
 defusedxml==0.7.1
     # via python3-openid
-django==3.1.14
+django==3.2.24
     # via
     #   -r requirements.in
     #   django-allauth
@@ -171,7 +171,9 @@ pydantic==1.9.1
     #   spacy
     #   thinc
 pyjwt[crypto]==2.4.0
-    # via django-allauth
+    # via
+    #   django-allauth
+    #   pyjwt
 pyparsing==3.0.9
     # via
     #   packaging
