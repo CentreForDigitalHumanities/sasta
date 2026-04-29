@@ -60,17 +60,19 @@ def analyse_transcript_task(
     # Save annotated chat file
     from annotations.writers.saf_chat import enrich_chat
 
-    enriched = enrich_chat(transcript, allresults, method)
-    output = StringIO()
-    writer = ChatWriter(enriched, target=output)
-    writer.write()
-    output.seek(0)
-    run.annotated_chat_file.save(
-        f'{transcript.name}_{method.category.name}_annotated.cha',
-        File(output),
-        save=True,
-    )
-
+    try:
+        enriched = enrich_chat(transcript, allresults, method)
+        output = StringIO()
+        writer = ChatWriter(enriched, target=output)
+        writer.write()
+        output.seek(0)
+        run.annotated_chat_file.save(
+            f'{transcript.name}_{method.category.name}_annotated.cha',
+            File(output),
+            save=True,
+        )
+    except Exception as e:
+        pass
     run.save()
 
     return 'Transcript analysed successfully'

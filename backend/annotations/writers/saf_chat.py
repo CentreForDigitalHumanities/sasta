@@ -72,6 +72,7 @@ def enrich_chat(transcript: Transcript,
 
         annotation_str = ', '.join(utt_hits)
         doc_line.tiers['xsyn'] = ChatTier(id='xsyn', text=annotation_str)
+
         # id_headers = [h for h in doc.headers if h.line.startswith('@ID')]
         # last_id_header = max(id_headers, key=attrgetter('linestartno'))
         # doc.headers.append(ChatHeader(
