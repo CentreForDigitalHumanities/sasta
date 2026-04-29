@@ -1,11 +1,17 @@
 <div class="columns is-centered">
     <div class="column is-5-tablet is-4-desktop is-3-widescreen">
-        <form (submit)=login() class="box">
+        <form (submit)="login()" class="box">
             <div class="field">
                 <label for="" class="label">Username</label>
                 <div class="control has-icons-left">
-                    <input type="username" placeholder="*******" class="input" [(ngModel)]="username" name="username"
-                        required>
+                    <input
+                        type="username"
+                        placeholder="*******"
+                        class="input"
+                        [(ngModel)]="username"
+                        name="username"
+                        required
+                    />
                     <span class="icon is-small is-left">
                         <fa-icon [icon]="faUser"></fa-icon>
                     </span>
@@ -14,23 +20,51 @@
             <div class="field">
                 <label for="" class="label">Password</label>
                 <div class="control has-icons-left">
-                    <input type="password" placeholder="*******" class="input" [(ngModel)]="password" name="password"
-                        required>
+                    <input
+                        type="password"
+                        placeholder="*******"
+                        class="input"
+                        [(ngModel)]="password"
+                        name="password"
+                        required
+                    />
                     <span class="icon is-small is-left">
                         <fa-icon [icon]="faLock"></fa-icon>
                     </span>
                 </div>
             </div>
-            <div *ngIf="errors$| async as errors" class="notification is-danger">
-                <p *ngFor="let error of errors">{{error}}</p>
+            <div
+                *ngIf="errors$ | async as errors"
+                class="notification is-danger"
+            >
+                <p *ngFor="let error of errors">{{ error }}</p>
             </div>
             <p-messages [(value)]="messages" [closable]="false"></p-messages>
-            <div class="field is-grouped">
-                <div class="control">
-                    <button class="button is-primary" [ngClass]=" {'is-loading': processing}"
-                        [disabled]="!username || !password">Login</button>
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <p class="control">
+                                <button
+                                    class="button is-primary"
+                                    [ngClass]="{ 'is-loading': processing }"
+                                    [disabled]="!username || !password"
+                                >
+                                    Login
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <a
+                                [routerLinkActive]="'is-active'"
+                                [routerLink]="['/reset']"
+                            >
+                                Forgot password?
+                            </a>
+                        </div>
+                    </div>
                 </div>
-            </div>
         </form>
     </div>
 </div>

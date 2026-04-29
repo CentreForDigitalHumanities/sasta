@@ -20,5 +20,6 @@ python-docx
 openpyxl
 xlrd>=1.2,<2
 xlsxwriter
+ruff
 sastadev
 sentry-sdk[django]

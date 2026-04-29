@@ -32,7 +32,7 @@ export class AuthService {
             () => {
                 this.isAuthenticated$.next(false);
                 this.currentUser$.next(null);
-            }
+            },
         );
     }
 
@@ -52,7 +52,7 @@ export class AuthService {
                 tap(() => {
                     this.currentUser$.next(null);
                     this.isAuthenticated$.next(false);
-                })
+                }),
             );
     }
 
@@ -60,7 +60,7 @@ export class AuthService {
         username: string,
         password1: string,
         password2: string,
-        email: string
+        email: string,
     ): Observable<DetailResponse> {
         return this.httpClient.post<DetailResponse>(
             `${this.authAPI}/registration/`,
@@ -69,7 +69,7 @@ export class AuthService {
                 password1,
                 password2,
                 email,
-            }
+            },
         );
     }
 
@@ -80,34 +80,58 @@ export class AuthService {
                     map((adminStatus) => {
                         user.isAdmin = adminStatus;
                         return user;
-                    })
-                )
-            )
+                    }),
+                ),
+            ),
         );
     }
 
     isAdmin(): Observable<boolean> {
         return this.httpClient
-            .get<{ has_admin_access: boolean }>(
-                `${this.authAPI}/has_admin_access/`
-            )
+            .get<{
+                has_admin_access: boolean;
+            }>(`${this.authAPI}/has_admin_access/`)
             .pipe(map((response) => response.has_admin_access as boolean));
     }
 
     infoFromConfirmKey(key: string): Observable<UserInfoResponse> {
         return this.httpClient.get<UserInfoResponse>(
-            `${this.authAPI}/infofromkey/${key}/`
+            `${this.authAPI}/infofromkey/${key}/`,
         );
     }
 
     confirmEmail(key: string): Observable<DetailResponse> {
         return this.httpClient.post<DetailResponse>(
             `${this.authAPI}/registration/verify-email/`,
-            { key }
+            { key },
         );
     }
 
     getDocumentation(): Observable<HttpResponse<unknown>> {
         return this.httpClient.get(environment.docs, { observe: 'response' });
+    }
+
+    requestResetPassword(email: string): Observable<{ detail: string }> {
+        return this.httpClient.post<{ detail: string }>(
+            `${this.authAPI}/password/reset/`,
+            { email },
+        );
+    }
+
+    public resetPassword(
+        uid: string,
+        token: string,
+        newPassword1: string,
+        newPassword2: string,
+    ): Observable<{ detail: string }> {
+        return this.httpClient.post<{ detail: string }>(
+            `${this.authAPI}/password/reset/confirm/`,
+            {
+                uid,
+                token,
+                new_password1: newPassword1,
+                new_password2: newPassword2,
+            },
+        );
     }
 }

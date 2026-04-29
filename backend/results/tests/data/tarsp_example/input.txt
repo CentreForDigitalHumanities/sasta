@@ -1,0 +1,16 @@
+%SASTA
+%Transcript in Word / Tarsp_01
+
+##META text title = Tarsp_01
+##META text gender = Jongen 
+##META text age = 4;6
+
+##TARGET UTTIDS
+
+1 | CHI:	allemaal varkens zit erin. 
+2 | CHI:	<die kan je> [/] die kan je de varken doen.
+3 | CHI:	dit is een touw.
+4 | CHI:	naar boven gaat.
+5 | CHI:	al bijna.
+6 | CHI:	hij wil naar boven. 
+7 | CHI:	is helemaal veilig in [: bij] die varken.

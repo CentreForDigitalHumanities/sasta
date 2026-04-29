@@ -1,4 +1,5 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -11,6 +12,7 @@ describe('ListCorpusComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
+            schemas: [NO_ERRORS_SCHEMA],
             declarations: [ListCorpusComponent],
             imports: [RouterTestingModule, HttpClientTestingModule],
             providers: [ConfirmationService, MessageService],

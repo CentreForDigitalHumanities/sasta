@@ -1,4 +1,6 @@
+import datetime
 import errno
+from io import BytesIO
 import logging
 import os
 from shutil import copyfile
@@ -75,6 +77,40 @@ def create_transcript(file, content_path):
     transcript.content.save(filename, File(file_content))
     file_content.close()
     return transcript
+
+
+def create_analysis_run(transcript, method, saf, is_manual=False) -> sasta_models.AnalysisRun:
+    if not isinstance(saf, BytesIO):
+        stream = BytesIO()
+        saf.save(stream)
+    else:
+        stream = saf
+    run = sasta_models.AnalysisRun(
+        transcript=transcript, method=method, is_manual_correction=is_manual)
+
+    now = datetime.datetime.now()
+    stamp = now.strftime('%Y%m%d_%H%M')
+
+    filename = f'{transcript.name}_{stamp}_saf.xlsx'
+    run.annotation_file.save(filename, StreamFile(stream))
+    run.save()
+    return run
+
+
+def update_analysis_run(run: sasta_models.AnalysisRun, transcript, saf) -> sasta_models.AnalysisRun:
+    if not isinstance(saf, BytesIO):
+        stream = BytesIO()
+        saf.save(stream)
+    else:
+        stream = saf
+
+    now = datetime.datetime.now()
+    stamp = now.strftime('%Y%m%d_%H%M')
+
+    filename = f'{transcript.name}_{stamp}_saf.xlsx'
+    run.annotation_file.save(filename, StreamFile(stream))
+    run.save()
+    return run
 
 
 def iter_paragraphs(parent, recursive=True):

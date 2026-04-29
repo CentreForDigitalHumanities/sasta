@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Optional, Tuple
 from analysis.models import AssessmentMethod, Transcript
 from sastadev.sastacore import SastaCoreParameters, sastacore
 from sastadev.targets import get_targets
@@ -36,7 +36,11 @@ def prepare_treebanks(transcript: Transcript) -> Tuple[Tuple[str, etree.ElementT
     )
 
 
-def run_sastacore(transcript: Transcript, method: AssessmentMethod, annotation_input: bool = False) -> Tuple[AllResults, SampleSizeTuple]:
+def run_sastacore(
+    transcript: Transcript,
+    method: AssessmentMethod,
+    manual_annotations_file: Optional[str] = None,
+) -> Tuple[AllResults, SampleSizeTuple]:
     # get treebanks
     orig_tb, corr_tb = prepare_treebanks(transcript)
     # Convert method to sastadev version
@@ -44,12 +48,9 @@ def run_sastacore(transcript: Transcript, method: AssessmentMethod, annotation_i
     # Retrieve targets from corrected treebank
     targets = get_targets(corr_tb[1], sdmethod.name)
 
-    if annotation_input:
-        existing_results = read_saf(
-            transcript.latest_run.annotation_file.path, sdmethod)
-        params = prepare_parameters(
-            transcript.latest_run.annotation_file.path,
-            sdmethod, targets, annotation_input)
+    if manual_annotations_file:
+        existing_results = read_saf(manual_annotations_file, sdmethod)
+        params = prepare_parameters(manual_annotations_file, sdmethod, targets, True)
         res = sastacore(
             origtreebank=None,
             correctedtreebank=corr_tb[1],
@@ -57,8 +58,7 @@ def run_sastacore(transcript: Transcript, method: AssessmentMethod, annotation_i
             scp=params
         )
     else:
-        params = prepare_parameters(
-            corr_tb[0], sdmethod, targets, annotation_input)
+        params = prepare_parameters(corr_tb[0], sdmethod, targets, False)
         res = sastacore(
             origtreebank=orig_tb[1],
             correctedtreebank=corr_tb[1],

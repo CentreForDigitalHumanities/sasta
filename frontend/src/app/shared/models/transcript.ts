@@ -1,9 +1,16 @@
+import { TaskStatus } from './task';
+
 export interface AnalysisRun {
     id: number;
     created: Date;
     annotation_file: string;
     method: number;
     is_manual_correction: boolean;
+    task_id?: string | null;
+    task_status?: TaskStatus | null;
+    xlsx_results_available: boolean;
+    cha_results_available: boolean;
+    form_results_available: boolean;
 }
 
 export interface Utterance {

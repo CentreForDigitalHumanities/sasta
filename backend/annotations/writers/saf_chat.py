@@ -60,10 +60,11 @@ def enrich_chat(transcript: Transcript,
         allresults.exactresults, items_mapping)
 
     for utt_id, words in results_by_word.items():
-        if target_ids:
-            doc_line = find_doc_line_xsid(doc.lines, int(utt_id))
-        else:
-            doc_line = _find_doc_line(doc.lines, int(utt_id))
+        doc_line = find_doc_line_xsid(doc.lines, int(utt_id))
+        # if target_ids:
+        #     doc_line = find_doc_line_xsid(doc.lines, int(utt_id))
+        # else:
+        #     doc_line = _find_doc_line(doc.lines, int(utt_id))
 
         utt_hits = []
         for w in natsorted(words.keys()):
@@ -71,6 +72,7 @@ def enrich_chat(transcript: Transcript,
 
         annotation_str = ', '.join(utt_hits)
         doc_line.tiers['xsyn'] = ChatTier(id='xsyn', text=annotation_str)
+
         # id_headers = [h for h in doc.headers if h.line.startswith('@ID')]
         # last_id_header = max(id_headers, key=attrgetter('linestartno'))
         # doc.headers.append(ChatHeader(
