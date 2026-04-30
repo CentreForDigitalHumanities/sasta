@@ -1,3 +1,41 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sasta-backend"
+version = "0.11.0"
+requires-python = ">3.10"
+dependencies = [
+    "corpus2alpino",
+    "celery",
+    "chamd",
+    "django<4",
+    "django_celery_results",
+    "djangorestframework",
+    "django-livereload-server",
+    "django-rest-auth[with_social]",
+    "django-revproxy",
+    "lxml",
+    "natsort",
+    "numpy",
+    "pandas",
+    "psycopg2",
+    "python-docx",
+    "openpyxl",
+    "xlsxwriter",
+    "sastadev",
+    "sentry-sdk[django]",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-django",
+    "pytest-lazy-fixture",
+    "ruff",
+]
+
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "sasta.settings"
 python_files = ["tests.py", "test_*.py", "*_tests.py", "*_test.py"]
