@@ -10,10 +10,9 @@ dependencies = [
     "corpus2alpino",
     "celery",
     "chamd",
-    "django<4",
+    "django<6",
     "django_celery_results",
     "djangorestframework",
-    "django-livereload-server",
     "django-rest-auth[with_social]",
     "django-revproxy",
     "lxml",
@@ -30,6 +29,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "django-livereload-server",
     "pytest",
     "pytest-django",
     "pytest-lazy-fixture",
@@ -50,7 +50,7 @@ ignore_missing_imports = true
 exclude = [
     "sastadev",
     ".env",
-    ".env37",
+    ".env13",
     "glue.py",
     "bootstrap.py",
     "collect.py"
