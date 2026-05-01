@@ -23,7 +23,7 @@ import {
     faSearchPlus,
     faTimes,
 } from '@fortawesome/free-solid-svg-icons';
-import * as $ from 'jquery';
+import $ from 'jquery';
 import { XmlParseService } from '@services';
 import './tree-visualizer';
 
