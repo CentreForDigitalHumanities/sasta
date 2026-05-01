@@ -41,6 +41,11 @@
               "assets": ["src/assets"],
               "styles": ["src/styles.scss"],
               "scripts": [],
+              "stylePreprocessorOptions": {
+                "sass": {
+                  "silenceDeprecations": ["import"]
+                }
+              },
               "extractLicenses": false,
               "sourceMap": true,
               "optimization": false,
