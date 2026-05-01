@@ -34,6 +34,7 @@ const strNilOrEmpty = (s: string | undefined): boolean =>
 
 
 @Component({
+    standalone: false,
     selector: 'sas-transcript',
     templateUrl: './transcript.component.html',
     styleUrls: ['./transcript.component.scss'],

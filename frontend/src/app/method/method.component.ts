@@ -8,6 +8,7 @@ import _ from 'lodash';
 import { Observable } from 'rxjs';
 
 @Component({
+    standalone: false,
     selector: 'sas-method',
     templateUrl: './method.component.html',
     styleUrls: ['./method.component.scss'],

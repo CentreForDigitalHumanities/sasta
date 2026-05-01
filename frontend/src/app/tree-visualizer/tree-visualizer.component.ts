@@ -38,6 +38,7 @@ interface Metadata {
 }
 
 @Component({
+    standalone: false,
     selector: 'sas-tree-visualizer',
     templateUrl: './tree-visualizer.component.html',
     styleUrls: ['./tree-visualizer.component.scss'],

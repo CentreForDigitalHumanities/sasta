@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+    standalone: false,
     selector: 'sas-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],

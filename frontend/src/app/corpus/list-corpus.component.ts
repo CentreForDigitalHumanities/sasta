@@ -10,6 +10,7 @@ import { ListedCorpus } from '../shared/models/corpus';
 const UPDATE_INTERVAL = 10000;
 
 @Component({
+    standalone: false,
     selector: 'sas-list-corpus',
     templateUrl: './list-corpus.component.html',
     styleUrls: ['./list-corpus.component.scss'],

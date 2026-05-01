@@ -4,6 +4,7 @@ import { AuthService } from '../services/auth.service';
 import { environment } from '@envs/environment';
 
 @Component({
+    standalone: false,
     selector: 'sas-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],

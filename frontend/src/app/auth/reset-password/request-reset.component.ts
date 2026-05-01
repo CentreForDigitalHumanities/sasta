@@ -7,6 +7,7 @@ import * as _ from 'lodash';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
+    standalone: false,
     selector: 'sas-request-reset',
     templateUrl: './request-reset.component.html',
     styleUrls: ['./request-reset.component.scss'],

@@ -8,6 +8,7 @@ import { interval, Observable, of, Subscription } from 'rxjs';
 import { catchError, concatMap, startWith } from 'rxjs/operators';
 
 @Component({
+    standalone: false,
     selector: 'sas-process',
     templateUrl: './process.component.html',
     styleUrls: ['./process.component.scss'],

@@ -8,6 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
+    standalone: false,
     selector: 'sas-register',
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.scss'],
