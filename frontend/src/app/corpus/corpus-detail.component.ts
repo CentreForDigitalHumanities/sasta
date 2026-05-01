@@ -37,7 +37,7 @@ export class CorpusComponent implements OnInit, OnDestroy {
     faPlus = faPlus;
 
     interval$: Observable<number> = interval(5000);
-    onDestroy$ = new Subject<boolean>();
+    onDestroy$ = new Subject<void>();
 
     constructor(
         private corpusService: CorpusService,

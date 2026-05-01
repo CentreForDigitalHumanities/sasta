@@ -158,24 +158,24 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "sasta:build"
+            "buildTarget": "sasta:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "sasta:build:production"
+              "buildTarget": "sasta:build:production"
             },
             "en": {
-              "browserTarget": "sasta:build:production-en"
+              "buildTarget": "sasta:build:production-en"
             },
             "nl": {
-              "browserTarget": "sasta:build:production-nl"
+              "buildTarget": "sasta:build:production-nl"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "sasta:build"
+            "buildTarget": "sasta:build"
           }
         },
         "test": {

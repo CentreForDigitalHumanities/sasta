@@ -23,7 +23,7 @@ export class LoginComponent implements OnDestroy {
 
     messages: { severity: string; summary: string; detail: string }[] = [];
 
-    onDestroy$: Subject<boolean> = new Subject<boolean>();
+    onDestroy$: Subject<void> = new Subject<void>();
 
     errors$ = new Subject<string[]>();
 

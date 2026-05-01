@@ -58,7 +58,7 @@ export class TranscriptComponent implements OnInit, OnDestroy {
 
     displayCorrUpload = false;
 
-    onDestroy$ = new Subject<boolean>();
+    onDestroy$ = new Subject<void>();
 
     readonly TranscriptStatus = TranscriptStatus;
 
