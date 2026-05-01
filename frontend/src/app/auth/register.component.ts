@@ -9,6 +9,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from '@envs/environment';
 
 @Component({
+    standalone: false,
     selector: 'sas-register',
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.scss'],

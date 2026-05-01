@@ -19,6 +19,7 @@ import { interval, Observable, Subject } from 'rxjs';
 import { startWith, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
+    standalone: false,
     selector: 'sas-corpus',
     templateUrl: './corpus-detail.component.html',
     styleUrls: ['./corpus-detail.component.scss'],

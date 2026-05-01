@@ -8,6 +8,7 @@ import { AuthService } from '@services';
 import * as _ from 'lodash';
 
 @Component({
+    standalone: false,
     selector: 'sas-reset-password',
     templateUrl: './reset-password.component.html',
     styleUrls: ['./reset-password.component.scss'],
