@@ -46,8 +46,6 @@ def enrich_chat(transcript: Transcript,
     doc = ChatDocument.from_chatfile(
         transcript.content.path, transcript.corpus.method_category)
 
-    target_ids = transcript.target_ids
-
     # construct a mapping of uttno to uttid
     # because uttid is unknown to CHAT
     # marked_utts = (x for x in transcript.utterances.all() if x.for_analysis)
