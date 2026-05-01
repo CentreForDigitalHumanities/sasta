@@ -38,7 +38,7 @@
         "@fortawesome/fontawesome-svg-core": "~6.5.0",
         "@fortawesome/free-solid-svg-icons": "~6.5.0",
         "bulma": "~0.9.0",
-        "fast-xml-parser": "~4.3.2",
+        "fast-xml-parser": "~5.7.2",
         "file-saver": "~2.0.0",
         "jquery": "~3.7.0",
         "lassy-xpath": "~0.15.0",
