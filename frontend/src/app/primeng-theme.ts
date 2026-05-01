@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { definePreset } from '@primeng/themes';
 import Nora from '@primeng/themes/nora';
 
@@ -13,7 +14,7 @@ const bulmaPrimaryScheme = {
     800: 'var(--bulma-primary-20)',
     900: 'var(--bulma-primary-10)',
     950: 'var(--bulma-primary-05)',
-}
+};
 
 const graySurfaceScheme = {
     950: 'var(--bulma-black)',
@@ -28,7 +29,7 @@ const graySurfaceScheme = {
     100: 'var(--bulma-white-ter)',
     50: 'var(--bulma-white-bis)',
     0: 'var(--bulma-white)',
-}
+};
 
 /***
  * Color palette based on bulma variables
@@ -39,7 +40,7 @@ export const stylePreset = definePreset(Nora, {
         colorScheme: {
             light: {
                 surface: graySurfaceScheme,
-                text: {color:'var(--bulma-text)'},
+                text: { color: 'var(--bulma-text)' },
                 formField: {
                     background: 'var(--bulma-scheme-main)',
                     borderColor: 'var(--bulma-border)',
@@ -52,13 +53,12 @@ export const stylePreset = definePreset(Nora, {
                 overlay: {
                     modal: {
                         color: 'var(--bulma-text)',
-                    }
-                }
-
+                    },
+                },
             },
             dark: {
                 surface: graySurfaceScheme,
-                text: {color:'var(--bulma-text)'},
+                text: { color: 'var(--bulma-text)' },
                 formField: {
                     background: 'var(--bulma-scheme-main)',
                     borderColor: 'var(--bulma-border)',
@@ -71,9 +71,9 @@ export const stylePreset = definePreset(Nora, {
                 overlay: {
                     modal: {
                         color: 'var(--bulma-text)',
-                    }
-                }
-            }
+                    },
+                },
+            },
         },
         formField: {
             borderRadius: 'var(--bulma-radius)',
@@ -88,7 +88,7 @@ export const stylePreset = definePreset(Nora, {
             },
             modal: {
                 borderRadius: 'var(--bulma-radius)',
-            }
-        }
-    }
+            },
+        },
+    },
 });
