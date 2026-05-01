@@ -1,5 +1,10 @@
+$theme-font: "Open Sans", sans-serif;
+
+@use 'bulma/sass' with ($primary: #3f51b5,
+    $dark: #002984,
+    $link: #3f51b5,
+    $family-sans-serif: $theme-font);
 @import 'variables';
-@import 'bulma/bulma';
 @import "@creativebulma/bulma-divider";
 @import 'primeicons/primeicons.css';
 
@@ -42,4 +47,15 @@ tbody.p-element>tr:hover {
 
 .p-datatable {
     @extend .table
+}
+
+@font-face {
+    font-family: "Open Sans";
+    src: url('/assets/fonts/Open_Sans/OpenSans-VariableFont_wdth,wght.ttf');
+}
+
+@font-face {
+    font-family: "Open Sans";
+    src: url('/assets/fonts/Open_Sans/OpenSans-Italic-VariableFont_wdth,wght.ttf');
+    font-style: italic;
 }

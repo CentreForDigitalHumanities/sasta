@@ -7,7 +7,8 @@ import { XmlParseService } from '@services';
 import { LassyXPathModule } from 'lassy-xpath';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
-import Lara from '@primeng/themes/lara';
+import { stylePreset } from './primeng-theme';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
@@ -59,7 +60,11 @@ import { APP_BASE_HREF } from '@angular/common';
         MessageService,
         XmlParseService,
         { provide: APP_BASE_HREF, useValue: '/' },
-        providePrimeNG({ theme: { preset: Lara } }),
+        providePrimeNG({
+            theme: {
+                preset: stylePreset,
+            },
+        }),
     ],
     bootstrap: [AppComponent],
 })
