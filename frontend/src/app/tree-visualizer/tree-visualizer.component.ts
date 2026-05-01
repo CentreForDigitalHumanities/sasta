@@ -82,7 +82,7 @@ implements OnInit, OnChanges, AfterViewChecked
     public displayChange = new EventEmitter<TreeVisualizerDisplay>();
 
     @Output()
-    public closeTree = new EventEmitter();
+    public closeTree = new EventEmitter<void>();
 
     public metadata: Metadata[] | undefined;
     public showLoader: boolean;

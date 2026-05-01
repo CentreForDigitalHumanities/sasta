@@ -24,7 +24,7 @@ export class RegisterComponent implements OnDestroy {
 
     processing = false;
 
-    onDestroy$: Subject<boolean> = new Subject<boolean>();
+    onDestroy$: Subject<void> = new Subject<void>();
 
     constructor(
         private authService: AuthService,
