@@ -33,6 +33,7 @@ dev = [
     "pytest",
     "pytest-django",
     "ruff",
+    "pip-audit"
 ]
 
 [tool.pytest.ini_options]
