@@ -4,7 +4,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MessageService } from 'primeng/api';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 
 import { TranscriptComponent } from './transcript.component';
 
@@ -15,11 +15,14 @@ describe('TranscriptComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [TranscriptComponent],
-            imports: [RouterTestingModule, HttpClientTestingModule, DropdownModule],
+            imports: [
+                RouterTestingModule,
+                HttpClientTestingModule,
+                SelectModule,
+            ],
             providers: [MessageService],
-            schemas: [NO_ERRORS_SCHEMA]
-        })
-            .compileComponents();
+            schemas: [NO_ERRORS_SCHEMA],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

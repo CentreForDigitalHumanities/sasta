@@ -45,10 +45,10 @@
                 <form>
                     <div class="field" *ngIf="(authService.currentUser$ | async).isAdmin">
                         <div class="control">
-                            <p-dropdown [options]="groupedTams" [(ngModel)]="currentTam" placeholder="Select a method"
+                            <p-select [options]="groupedTams" [(ngModel)]="currentTam" placeholder="Select a method"
                                 name="tam-dropdown" [group]="true" showClear="true" appendTo="body"
                                 [disabled]="!(groupedTams?.length > 0)">
-                            </p-dropdown>
+                            </p-select>
                         </div>
                     </div>
                     <div *ngIf="(authService.currentUser$ | async).isAdmin">
