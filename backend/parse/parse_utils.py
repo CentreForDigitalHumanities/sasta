@@ -85,7 +85,7 @@ def initial_parse(in_path: str, out_path: str,
         writer=LassyWriter(merge_treebanks=True),
     )
     # actual parsing
-    next(converter.convert())
+    _parses = list(converter.convert())
     return None if in_memory else out_path
 
 
