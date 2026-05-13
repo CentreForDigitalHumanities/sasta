@@ -2,6 +2,11 @@
 Common settings between development and production environments.
 Values here should be imported in settings.py
 '''
+from sastadev.conf import settings as sdsettings
+from sastadev.sentence_parser import parse
+
+sdsettings.PARSE_FUNC = parse
+
 # Application settings
 INSTALLED_APPS = [
     'django.contrib.admin',
