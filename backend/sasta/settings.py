@@ -7,6 +7,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'kxreeb3bds$oibo7ex#f3bi5r+d(1x5zljo-#ms=i2%ih-!pvn'
 DEBUG = True
 ROOT_URLCONF = 'sasta.urls'
+INSTALLED_APPS = INSTALLED_APPS + ['livereload']
+
 
 # Connectivity
 WSGI_APPLICATION = 'sasta.wsgi.application'
