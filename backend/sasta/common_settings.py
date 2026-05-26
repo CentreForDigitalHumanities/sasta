@@ -15,7 +15,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.sites',
-    'livereload',
     'django.contrib.staticfiles',
     'django_celery_results',
     'rest_framework',
