@@ -31,7 +31,8 @@
           "options": {
               "baseHref": "/",
               "outputPath": {
-                "base": "dist"
+                  "base": "dist",
+                  "browser": ""
               },
               "index": "src/index.html",
               "polyfills": [
@@ -86,7 +87,8 @@
                       }
                   ],
                   "outputPath": {
-                    "base": "dist"
+                      "base": "dist",
+                      "browser": ""
                   }
               },
               "production-en": {
@@ -115,7 +117,8 @@
                       }
                   ],
                   "outputPath": {
-                    "base": "dist"
+                      "base": "dist",
+                      "browser": ""
                   },
                   "i18nMissingTranslation": "error"
               },
@@ -145,7 +148,8 @@
                       }
                   ],
                   "outputPath": {
-                    "base": "dist"
+                      "base": "dist",
+                      "browser": ""
                   },
                   "i18nMissingTranslation": "error"
               },
