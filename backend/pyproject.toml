@@ -25,6 +25,7 @@ dependencies = [
     "xlsxwriter",
     "sastadev",
     "sentry-sdk[django]",
+    "redis"
 ]
 
 [project.optional-dependencies]

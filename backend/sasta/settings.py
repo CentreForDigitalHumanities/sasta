@@ -52,9 +52,7 @@ CSRF_TRUSTED_ORIGINS = ['http://localhost:8000']
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Celery
-CELERY_BROKER_URL = os.environ.get(
-    'CELERY_BROKER_URL', 'amqp://guest:guest@localhost:5672'
-)
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379/0')
 
 # Logging
 LOGGING = {
