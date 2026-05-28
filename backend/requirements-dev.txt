@@ -255,6 +255,8 @@ rapidfuzz==3.14.5
     # via levenshtein
 rdflib==7.6.0
     # via folia
+redis==7.4.0
+    # via sasta-backend (pyproject.toml)
 requests==2.33.1
     # via
     #   cachecontrol
