@@ -62,15 +62,15 @@ LOGGING = {
         'django_file': {
             'level': 'INFO',
             'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, 'django.log'),
+            'filename': os.path.join(BASE_DIR, 'log', 'django.log'),
             'when': 'd',
             'interval': 1,
-            'backupCount': 0,
+            'backupCount': 1,
         },
         'sasta_file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'sasta.log'),
+            'filename': os.path.join(BASE_DIR, 'log', 'sasta.log'),
             'formatter': 'standard',
         },
         'console': {
@@ -85,7 +85,7 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['django_file', 'console'],
+            'handlers': ['console'],
             'level': 'INFO',
             'propagate': True,
         },
