@@ -54,7 +54,9 @@ exclude = [
     ".env13",
     "glue.py",
     "bootstrap.py",
-    "collect.py"
+    "collect.py",
+    "manage.py",
+    "**/migrations/*.py",
 ]
 
 [tool.ruff.lint]
