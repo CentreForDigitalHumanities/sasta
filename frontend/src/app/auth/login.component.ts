@@ -3,11 +3,12 @@ import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { faLock, faUser } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '@services';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+    standalone: false,
     selector: 'sas-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],
@@ -23,7 +24,7 @@ export class LoginComponent implements OnDestroy {
 
     messages: { severity: string; summary: string; detail: string }[] = [];
 
-    onDestroy$: Subject<boolean> = new Subject<boolean>();
+    onDestroy$: Subject<void> = new Subject<void>();
 
     errors$ = new Subject<string[]>();
 

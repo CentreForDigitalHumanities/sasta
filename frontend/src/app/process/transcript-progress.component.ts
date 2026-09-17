@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Transcript, TranscriptStatus } from '@models';
 
 @Component({
+    standalone: false,
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'tr[sas-transcript-progress]',
     templateUrl: './transcript-progress.component.html',

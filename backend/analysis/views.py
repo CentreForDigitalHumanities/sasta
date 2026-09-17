@@ -22,7 +22,6 @@ from convert.chat_writer import ChatWriter
 from parse.parse_utils import parse_and_create
 from parse.tasks import parse_transcript_task
 from parse.views import CeleryTaskView
-from results.serializers import allresults_from_json
 
 from .convert.convert import convert
 from .models import (

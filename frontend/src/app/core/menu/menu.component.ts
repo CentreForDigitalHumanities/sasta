@@ -14,6 +14,7 @@ import { AuthService } from '@services';
 import { ShowState, animations } from '@shared/animations';
 
 @Component({
+    standalone: false,
     animations,
     selector: 'sas-menu',
     templateUrl: './menu.component.html',

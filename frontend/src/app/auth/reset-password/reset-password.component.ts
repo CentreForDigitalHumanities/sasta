@@ -5,9 +5,10 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '@services';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 @Component({
+    standalone: false,
     selector: 'sas-reset-password',
     templateUrl: './reset-password.component.html',
     styleUrls: ['./reset-password.component.scss'],

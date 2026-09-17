@@ -12,6 +12,7 @@ import { AnnotationsService } from '@services';
 import { MessageService } from 'primeng/api';
 
 @Component({
+    standalone: false,
     selector: 'sas-upload-saf',
     templateUrl: './upload-saf.component.html',
     styleUrls: ['./upload-saf.component.scss'],

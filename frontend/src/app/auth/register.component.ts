@@ -8,6 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
+    standalone: false,
     selector: 'sas-register',
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.scss'],
@@ -24,7 +25,7 @@ export class RegisterComponent implements OnDestroy {
 
     processing = false;
 
-    onDestroy$: Subject<boolean> = new Subject<boolean>();
+    onDestroy$: Subject<void> = new Subject<void>();
 
     constructor(
         private authService: AuthService,

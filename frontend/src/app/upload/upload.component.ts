@@ -9,6 +9,7 @@ import { forkJoin, Observable } from 'rxjs';
 import { concatMap, switchMap } from 'rxjs/operators';
 
 @Component({
+    standalone: false,
     selector: 'sas-upload',
     templateUrl: './upload.component.html',
     styleUrls: ['./upload.component.scss'],

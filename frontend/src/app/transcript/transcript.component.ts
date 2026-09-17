@@ -34,6 +34,7 @@ const strNilOrEmpty = (s: string | undefined): boolean =>
 
 
 @Component({
+    standalone: false,
     selector: 'sas-transcript',
     templateUrl: './transcript.component.html',
     styleUrls: ['./transcript.component.scss'],
@@ -58,7 +59,7 @@ export class TranscriptComponent implements OnInit, OnDestroy {
 
     displayCorrUpload = false;
 
-    onDestroy$ = new Subject<boolean>();
+    onDestroy$ = new Subject<void>();
 
     readonly TranscriptStatus = TranscriptStatus;
 

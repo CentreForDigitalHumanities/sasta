@@ -4,11 +4,10 @@ import { AccordionModule } from 'primeng/accordion';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { FieldsetModule } from 'primeng/fieldset';
 import { FileUploadModule } from 'primeng/fileupload';
 import { MessageModule } from 'primeng/message';
-import { MessagesModule } from 'primeng/messages';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
@@ -25,11 +24,10 @@ const primeNGModules = [
     CheckboxModule,
     ConfirmDialogModule,
     DialogModule,
-    DropdownModule,
+    SelectModule,
     FieldsetModule,
     FileUploadModule,
     MessageModule,
-    MessagesModule,
     TableModule,
     ToastModule,
     TooltipModule,

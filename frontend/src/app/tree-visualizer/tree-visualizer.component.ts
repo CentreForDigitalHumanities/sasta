@@ -23,7 +23,7 @@ import {
     faSearchPlus,
     faTimes,
 } from '@fortawesome/free-solid-svg-icons';
-import * as $ from 'jquery';
+import $ from 'jquery';
 import { XmlParseService } from '@services';
 import './tree-visualizer';
 
@@ -38,6 +38,7 @@ interface Metadata {
 }
 
 @Component({
+    standalone: false,
     selector: 'sas-tree-visualizer',
     templateUrl: './tree-visualizer.component.html',
     styleUrls: ['./tree-visualizer.component.scss'],
@@ -82,7 +83,7 @@ implements OnInit, OnChanges, AfterViewChecked
     public displayChange = new EventEmitter<TreeVisualizerDisplay>();
 
     @Output()
-    public closeTree = new EventEmitter();
+    public closeTree = new EventEmitter<void>();
 
     public metadata: Metadata[] | undefined;
     public showLoader: boolean;

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { LoginComponent } from './login.component';
 import { RegisterComponent } from './register.component';
 import { VerifyComponent } from './verify.component';
@@ -15,7 +16,7 @@ import { ResetPasswordComponent } from './reset-password//reset-password.compone
         RequestResetComponent,
         ResetPasswordComponent,
     ],
-    imports: [CommonModule, SharedModule],
+    imports: [CommonModule, RouterModule, SharedModule],
     exports: [LoginComponent, RegisterComponent, VerifyComponent],
 })
 export class AuthModule {}

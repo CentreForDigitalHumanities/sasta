@@ -19,6 +19,7 @@ import { interval, Observable, Subject } from 'rxjs';
 import { startWith, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
+    standalone: false,
     selector: 'sas-corpus',
     templateUrl: './corpus-detail.component.html',
     styleUrls: ['./corpus-detail.component.scss'],
@@ -37,7 +38,7 @@ export class CorpusComponent implements OnInit, OnDestroy {
     faPlus = faPlus;
 
     interval$: Observable<number> = interval(5000);
-    onDestroy$ = new Subject<boolean>();
+    onDestroy$ = new Subject<void>();
 
     constructor(
         private corpusService: CorpusService,

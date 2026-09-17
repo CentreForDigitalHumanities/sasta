@@ -10,6 +10,7 @@ import _ from 'lodash';
 import { Transcript, Utterance } from '@models';
 
 @Component({
+    standalone: false,
     selector: 'sas-utterances-list',
     templateUrl: './utterances-list.component.html',
     styleUrls: ['./utterances-list.component.scss'],

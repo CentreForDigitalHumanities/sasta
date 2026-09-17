@@ -4,6 +4,7 @@ import { MessageService } from 'primeng/api';
 import { AuthService } from '@services';
 
 @Component({
+    standalone: false,
     selector: 'sas-verify',
     templateUrl: './verify.component.html',
     styleUrls: ['./verify.component.scss'],

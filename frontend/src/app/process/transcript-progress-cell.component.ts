@@ -7,6 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
+    standalone: false,
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'td[sas-transcript-progress-cell]',
     templateUrl: './transcript-progress-cell.component.html',

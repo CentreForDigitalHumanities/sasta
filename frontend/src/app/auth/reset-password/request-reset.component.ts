@@ -3,10 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from '@services';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
+    standalone: false,
     selector: 'sas-request-reset',
     templateUrl: './request-reset.component.html',
     styleUrls: ['./request-reset.component.scss'],
