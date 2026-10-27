@@ -1,0 +1,33 @@
+##META text samplenaam = ASTA-00
+##TARGET SPEAKERS = PMA
+
+INV:
+1 | PMA:
+INV:
+2 | PMA:
+INV:
+3 | PMA:
+INV:
+4 | PMA:
+INV:
+5 | PMA:
+INV:
+6 | PMA:
+INV:
+7 | PMA:
+INV:
+8 | PMA:
+INV:
+9 | PMA:
+INV:
+10 | PMA:
+INV:
+11 | PMA:
+INV:
+12 | PMA:
+INV:
+13 | PMA:
+INV:
+14 | PMA:
+INV:
+15 | PMA:
