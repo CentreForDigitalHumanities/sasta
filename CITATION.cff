@@ -21,13 +21,13 @@ authors:
     email: cdh@uu.nl
     website: >-
       https://cdh.uu.nl/centre-for-digital-humanities/research-software-lab/
-  - given-names: Odijk
-    family-names: Jan
+  - given-names: Jan
+    family-names: Odijk
     email: j.odijk@uu.nl
     affiliation: Utrecht University
     orcid: 'https://orcid.org/0000-0003-3331-1182'
-  - given-names: Kroon
-    family-names: Martin S.
+  - given-names: Martin S.
+    family-names: Kroon
     email: m.s.kroon@uu.nl
     affiliation: Utrecht University
     orcid: 'https://orcid.org/0000-0003-3059-6872'
@@ -41,5 +41,5 @@ abstract: >-
   transcripts, to aid clinical linguists and research into
   language development and language disorders.
 license: BSD-3-Clause
-version: 0.11.1
-date-released: '2026-05-13'
+version: 0.11.2
+date-released: '2026-10-27'
