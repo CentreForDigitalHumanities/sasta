@@ -51,6 +51,10 @@
                 </div>
                 <p *ngIf="!passwordSame() && password2" class="help is-danger">Passwords don't match</p>
             </div>
+            <p class="help">
+                Read the <a [href]="privacyUrl" target="_blank">privacy statement</a> (in Dutch) to learn how SASTA
+                handles your account data and uploaded transcripts.
+            </p>
             <div class="field is-grouped">
                 <div class="control">
                     <button class="button is-primary" [ngClass]=" {'is-loading': processing}"

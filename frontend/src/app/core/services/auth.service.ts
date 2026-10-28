@@ -108,7 +108,7 @@ export class AuthService {
     }
 
     getDocumentation(): Observable<HttpResponse<unknown>> {
-        return this.httpClient.get(environment.docs, { observe: 'response' });
+        return this.httpClient.get(`${environment.docs}/`, { observe: 'response' });
     }
 
     requestResetPassword(email: string): Observable<{ detail: string }> {

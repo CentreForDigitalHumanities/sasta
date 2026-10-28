@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { FileUpload, FileUploadHandlerEvent } from 'primeng/fileupload';
 import { forkJoin, Observable } from 'rxjs';
 import { concatMap, switchMap } from 'rxjs/operators';
+import { environment } from '@envs/environment';
 
 @Component({
     selector: 'sas-upload',
@@ -34,6 +35,9 @@ export class UploadComponent implements OnInit {
     faUpload = faUpload;
 
     uploading: boolean;
+
+    privacyUrl = `${environment.docs}/privacy/`;
+    anonymisationUrl = `${environment.docs}/input-formats/anonimisatie/`;
 
     corpora: Corpus[];
     selectedCorpus: Corpus;

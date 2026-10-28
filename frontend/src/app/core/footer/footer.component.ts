@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { environment } from '@envs/environment';
 
 @Component({
     selector: 'sas-footer',
@@ -6,5 +7,7 @@ import { Component } from '@angular/core';
     styleUrls: ['./footer.component.scss'],
 })
 export class FooterComponent {
+    privacyUrl = `${environment.docs}/privacy/`;
+
     constructor() {}
 }

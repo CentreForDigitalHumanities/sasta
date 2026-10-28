@@ -3,7 +3,7 @@
     <h1>Getting started</h1>
     <ng-container *ngIf="(isAuthenticated$ | async); else notAuthenticated">
         <ul>
-            <li>Read the <a (click)="navigateToDocs()">documentation</a> to learn about using SASTA.</li>
+            <li>Read the <a (click)="navigateToDocs()">documentation</a> (in Dutch) to learn about using SASTA.</li>
             <li>Navigate to <a [routerLink]="['/corpora']">your corpora</a> to analyse transcripts.</li>
         </ul>
     </ng-container>
