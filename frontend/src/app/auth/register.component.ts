@@ -6,6 +6,7 @@ import { MessageService } from 'primeng/api';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
+import { environment } from '@envs/environment';
 
 @Component({
     standalone: false,
@@ -24,6 +25,7 @@ export class RegisterComponent implements OnDestroy {
     password2: string;
 
     processing = false;
+    privacyUrl = `${environment.docs}/privacy/`;
 
     onDestroy$: Subject<void> = new Subject<void>();
 

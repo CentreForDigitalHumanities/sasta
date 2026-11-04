@@ -1,5 +1,7 @@
 # Uploaden van transcripten
 
+Transcripten kunnen gevoelige informatie over sprekers bevatten. Wij raden u met klem aan uw transcripten te [anonimiseren](input-formats/anonimisatie.md) voordat u ze uploadt. Lees in de [Privacy- en gegevensverklaring](privacy.md) hoe SASTA met uw geüploade bestanden omgaat.
+
 ## Invoerformaat
 SASTA accepteert drie invoerformaten:
 

@@ -24,6 +24,7 @@ nav:
         - Voorbeeldbestanden: 'input-formats/voorbeelden.md'
     - Uitvoerformaten:
         - SASTA Output Formaat (SAF): 'annotaties/saf.md'
+    - Privacy- en gegevensverklaring: 'privacy.md'
 
 dev_addr: 'localhost:8888'
 

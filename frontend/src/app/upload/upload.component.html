@@ -1,4 +1,10 @@
 <h1 class="title">Upload</h1>
+<div class="notification is-info is-light">
+    Transcripts may contain sensitive information about speakers. We strongly advise you to
+    <a [href]="anonymisationUrl" target="_blank">anonymise</a> your transcripts, including file and corpus names,
+    before uploading. Read the <a [href]="privacyUrl" target="_blank">privacy statement</a> to learn how SASTA handles
+    your uploaded files. Both pages are in Dutch.
+</div>
 <form (submit)="startUpload()">
     <div class="field is-grouped">
         <div class="field">

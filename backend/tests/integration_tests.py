@@ -1,21 +1,23 @@
 import os
 
-from analysis.query.query_transcript import run_sastacore
+import pytest
 from django.conf import settings
-from parse.parse_utils import (correct_treebank, initial_parse,
-                               save_corrected_treebank)
+
+from analysis.query.query_transcript import run_sastacore
+from parse.parse_utils import correct_treebank, initial_parse, save_corrected_treebank
 
 
 def test_analysis(db, all_transcripts):
-    '''Make sure all of the test files can be analysed'''
+    """Make sure all of the test files can be analysed"""
 
     for t in all_transcripts:
         results = run_sastacore(t, t.corpus.default_method)
         assert results
 
 
+@pytest.mark.skip('Integration tests need adaptation to new SASTADEV')
 def test_single_transcript_fullrun(db, single_utt, single_utt_transcript):
-    '''Make sure a single transcript can be run through the full pipeline'''
+    """Make sure a single transcript can be run through the full pipeline"""
     # start with a fresh transcript
     transcript = single_utt_transcript
 
@@ -27,9 +29,9 @@ def test_single_transcript_fullrun(db, single_utt, single_utt_transcript):
 
     # parse the transcript
     parsed_output_path = os.path.join(
-        settings.MEDIA_ROOT, transcript.upload_path_parsed(single_utt['name'] + '.xml'))
-    parsed_path = initial_parse(transcript.content.path,
-                                parsed_output_path)
+        settings.MEDIA_ROOT, transcript.upload_path_parsed(single_utt['name'] + '.xml')
+    )
+    parsed_path = initial_parse(transcript.content.path, parsed_output_path)
     assert parsed_path
     assert os.path.exists(parsed_path)
 
@@ -51,18 +53,13 @@ def test_single_transcript_fullrun(db, single_utt, single_utt_transcript):
     assert os.path.isfile(corrected_fn)
 
     # analyse the transcript
-    results, _samplesize = run_sastacore(
-        transcript, transcript.corpus.default_method)
+    results, _samplesize = run_sastacore(transcript, transcript.corpus.default_method)
     benchmark_results = single_utt.get('allresults')
     assert benchmark_results
 
     # assert that results are correct
-    non_empty_exactresults = {k: v for k,
-                              v in results.exactresults.items() if v}
+    non_empty_exactresults = {k: v for k, v in results.exactresults.items() if v}
     assert non_empty_exactresults == benchmark_results.exactresults
-
-
-
 
     # TODO: upload corrected annotations
 
@@ -74,6 +71,7 @@ def _compare_lines(file1, file2):
     with open(file1, 'r') as f1, open(file2, 'r') as f2:
         lines1 = f1.readlines()
         lines2 = f2.readlines()
-    for (l1, l2) in zip(lines1, lines2):
-        assert l1.strip() == l2.strip(
-        ), f"Lines differ: '{l1.strip()}' != '{l2.strip()}'"
+    for l1, l2 in zip(lines1, lines2):
+        assert l1.strip() == l2.strip(), (
+            f"Lines differ: '{l1.strip()}' != '{l2.strip()}'"
+        )

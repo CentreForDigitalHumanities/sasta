@@ -16,6 +16,6 @@ export class HomeComponent {
     constructor(private authService: AuthService) {}
 
     navigateToDocs(): void {
-        window.open(environment.docs, '_blank');
+        window.open(`${environment.docs}/`, '_blank');
     }
 }

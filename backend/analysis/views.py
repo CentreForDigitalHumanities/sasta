@@ -9,6 +9,7 @@ from openpyxl import load_workbook
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ParseError
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from analysis.query.run import annotate_transcript
@@ -80,7 +81,7 @@ def _apply_stap_workaround(form, method):
 class UploadFileViewSet(viewsets.ModelViewSet):
     queryset = UploadFile.objects.all()
     serializer_class = UploadFileSerializer
-    permission_classes = (IsCorpusChildOwner,)
+    permission_classes = (IsAuthenticated, IsCorpusChildOwner)
 
     def get_queryset(self):
         return self.queryset.filter(corpus__user=self.request.user)
@@ -88,7 +89,7 @@ class UploadFileViewSet(viewsets.ModelViewSet):
 
 class TranscriptViewSet(viewsets.ModelViewSet):
     queryset = Transcript.objects.all()
-    permission_classes = (IsCorpusChildOwner,)
+    permission_classes = (IsAuthenticated, IsCorpusChildOwner)
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -343,7 +344,7 @@ class TranscriptViewSet(viewsets.ModelViewSet):
 
 class CorpusViewSet(viewsets.ModelViewSet):
     queryset = Corpus.objects.all()
-    permission_classes = (IsCorpusOwner,)
+    permission_classes = (IsAuthenticated, IsCorpusOwner)
 
     def get_serializer_class(self):
         if self.action == 'list':
