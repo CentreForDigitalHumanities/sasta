@@ -4,6 +4,7 @@ import { Method } from '@models';
 import { Observable } from 'rxjs';
 
 @Component({
+    standalone: false,
     selector: 'sas-list-method',
     templateUrl: './list-method.component.html',
     styleUrls: ['./list-method.component.scss'],

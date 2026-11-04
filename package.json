@@ -13,6 +13,7 @@
         "fyarn": "yarn front yarn",
         "preinstall": "pip install pip-tools",
         "install-back": "yarn back -- pip install -r requirements.txt",
+        "install-back-dev": "yarn back -- pip install -r requirements-dev.txt",
         "install-func": "yarn func -- pip install -r requirements.txt",
         "postinstall": "yarn fyarn && yarn install-back && yarn install-func",
         "django": "yarn back python manage.py",
@@ -37,9 +38,9 @@
         "watch-front-p": "yarn front yarn watch",
         "start-back-p": "cd backend && python manage.py runserver --settings production --insecure --pythonpath ..",
         "start-p": "yarn static-p && yarn watch-front-p & yarn start-back-p",
-        "patch": "yarn version --patch --no-commit-hooks --no-git-tag-version && yarn update-citation && yarn fyarn prebuild",
-        "minor": "yarn version --minor --no-commit-hooks --no-git-tag-version && yarn update-citation && yarn fyarn prebuild",
-        "major": "yarn version --major --no-commit-hooks --no-git-tag-version && yarn update-citation && yarn fyarn prebuild",
-        "update-citation": "$PWD/update-citation.sh"
+        "patch": "yarn version --patch --no-commit-hooks --no-git-tag-version && yarn update-version && yarn fyarn prebuild",
+        "minor": "yarn version --minor --no-commit-hooks --no-git-tag-version && yarn update-version && yarn fyarn prebuild",
+        "major": "yarn version --major --no-commit-hooks --no-git-tag-version && yarn update-version && yarn fyarn prebuild",
+        "update-version": "$PWD/update-version.sh"
     }
 }

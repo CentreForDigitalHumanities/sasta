@@ -56,8 +56,12 @@ def parse_transcript(transcript, output_path):
         transcript.save()
 
         # Saving parsed file
+        # upload_path_parsed expects a bare filename; parsed_filename is the
+        # absolute output path, so only its basename must be passed in,
+        # otherwise the absolute path is stored as-is (os.path.join discards
+        # the relative prefix when given an absolute final component).
         transcript.parsed_content.name = transcript.upload_path_parsed(
-            parsed_filename)
+            os.path.basename(parsed_filename))
         transcript.save()
 
         # Correcting and reparsing
@@ -85,7 +89,7 @@ def initial_parse(in_path: str, out_path: str,
         writer=LassyWriter(merge_treebanks=True),
     )
     # actual parsing
-    next(converter.convert())
+    _parses = list(converter.convert())
     return None if in_memory else out_path
 
 
