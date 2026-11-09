@@ -7,7 +7,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'kxreeb3bds$oibo7ex#f3bi5r+d(1x5zljo-#ms=i2%ih-!pvn'
 DEBUG = True
 ROOT_URLCONF = 'sasta.urls'
-INSTALLED_APPS = INSTALLED_APPS + ['livereload']
+INSTALLED_APPS = INSTALLED_APPS + ['livereload']  # noqa: F405
 
 
 # Connectivity
@@ -21,7 +21,6 @@ ALLOWED_HOSTS += ['localhost', '127.0.0.1']
 # Alpino
 ALPINO_HOST = os.environ.get('ALPINO_HOST', 'localhost')
 ALPINO_PORT = 7001
-CORPUS2ALPINO_LOG_DIR = '.log'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
