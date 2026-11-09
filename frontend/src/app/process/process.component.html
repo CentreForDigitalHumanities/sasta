@@ -1,4 +1,4 @@
-<ng-container *ngIf="corpus">
+@if (corpus) {
     <h1 class="title">{{corpus.name}}</h1>
     <h2 class="subtitle">{{corpus.transcripts.length}} transcripts</h2>
     <!-- <p-steps [model]="stepsItems" [activeIndex]="stepsIndex"></p-steps> -->
@@ -24,10 +24,9 @@
                 <th>Convert</th>
                 <th>Parse</th>
             </tr>
-            <ng-container *ngFor="let transcript of corpus.transcripts">
+            @for (transcript of corpus.transcripts; track transcript) {
                 <tr sas-transcript-progress [transcript]="transcript"></tr>
-            </ng-container>
+            }
         </tbody>
     </table>
-
-</ng-container>
+}

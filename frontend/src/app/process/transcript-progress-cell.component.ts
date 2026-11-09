@@ -14,7 +14,7 @@ import {
     styleUrls: ['./transcript-progress-cell.component.scss'],
 })
 export class TranscriptProgressCellComponent {
-    @Input() evalProgress: () => number;
+    @Input() evalProgress: number;
     faQuestion = faQuestion;
     faExclamation = faExclamationTriangle;
     faCheck = faCheck;

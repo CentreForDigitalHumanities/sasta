@@ -10,7 +10,9 @@
                     <span class="icon is-small is-left">
                         <fa-icon [icon]="faUser"></fa-icon>
                     </span>
-                    <p *ngIf="username && !usernameValid()" class="help is-danger">Username can not contain spaces</p>
+                    @if (username && !usernameValid()) {
+                        <p class="help is-danger">Username can not contain spaces</p>
+                    }
                 </div>
             </div>
             <div class="field">
@@ -22,7 +24,9 @@
                     <span class="icon is-small is-left">
                         <fa-icon [icon]="faEnvelope"></fa-icon>
                     </span>
-                    <p *ngIf="email.dirty && email.invalid" class="help is-danger">This email is invalid</p>
+                    @if (email.dirty && email.invalid) {
+                        <p class="help is-danger">This email is invalid</p>
+                    }
                 </div>
             </div>
             <div class="field">
@@ -36,8 +40,10 @@
                         <fa-icon [icon]="faLock"></fa-icon>
                     </span>
                 </div>
-                <p *ngIf="!passwordMinLength() && password1" class="help is-danger">Passwords must be at least 8
-                    characters long.</p>
+                @if (!passwordMinLength() && password1) {
+                    <p class="help is-danger">Passwords must be at least 8
+                        characters long.</p>
+                }
             </div>
             <div class="field">
                 <label for="" class="label">Confirm password</label>
@@ -49,7 +55,9 @@
                         <fa-icon [icon]="faLock"></fa-icon>
                     </span>
                 </div>
-                <p *ngIf="!passwordSame() && password2" class="help is-danger">Passwords don't match</p>
+                @if (!passwordSame() && password2) {
+                    <p class="help is-danger">Passwords don't match</p>
+                }
             </div>
             <p class="help">
                 Read the <a [href]="privacyUrl" target="_blank">privacy statement</a> (in Dutch) to learn how SASTA

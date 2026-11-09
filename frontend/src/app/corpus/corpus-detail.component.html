@@ -1,4 +1,4 @@
-<ng-container *ngIf="corpus">
+@if (corpus) {
     <h3 class="title is-4"><span class="tag is-primary is-light">{{defaultTam?.category.name}}</span> {{ corpus.name }}
     </h3>
     <div class="buttons">
@@ -22,15 +22,17 @@
         </button>
     </div>
 
-    <div class="field" *ngIf="(authService.currentUser$ | async).isAdmin">
-        <label class="label"> Default method </label>
-        <div class="control">
-            <p-select [options]="groupedTams" [(ngModel)]="defaultTam" placeholder="No default"
-                name="default-tam-dropdown" [group]="true" showClear="true" appendTo="body"
-                (onChange)="changeDefaultMethod()" [disabled]="!(groupedTams?.length > 0)">
-            </p-select>
+    @if ((authService.currentUser$ | async).isAdmin) {
+        <div class="field">
+            <label class="label"> Default method </label>
+            <div class="control">
+                <p-select [options]="groupedTams" [(ngModel)]="defaultTam" placeholder="No default"
+                    name="default-tam-dropdown" [group]="true" showClear="true" appendTo="body"
+                    (onChange)="changeDefaultMethod()" [disabled]="!(groupedTams?.length > 0)">
+                </p-select>
+            </div>
         </div>
-    </div>
+    }
 
     <p-table [value]="corpus.transcripts" [rowHover]="true" sortField="date_added" [sortOrder]="-1">
         <ng-template pTemplate="header">
@@ -71,5 +73,4 @@
         </ng-template>
 
     </p-table>
-
-</ng-container>
+}

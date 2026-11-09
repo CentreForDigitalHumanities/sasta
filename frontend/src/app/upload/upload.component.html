@@ -37,10 +37,12 @@
                     [disabled]="selectedCorpus"
                 />
             </div>
-            <p *ngIf="corpusNameInUse()" class="help is-danger">
-                Corpus name in use, provide a unique name or pick one from the
-                list
-            </p>
+            @if (corpusNameInUse()) {
+                <p class="help is-danger">
+                    Corpus name in use, provide a unique name or pick one from the
+                    list
+                </p>
+            }
         </div>
     </div>
 

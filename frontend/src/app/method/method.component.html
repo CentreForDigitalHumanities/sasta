@@ -1,4 +1,4 @@
-<ng-container *ngIf="(method$ | async) as method">
+@if ((method$ | async); as method) {
     <h1 class="title">{{method.name}}</h1>
     <h2 class="subtitle">{{method.date_added}} | {{method.queries?.length}} queries</h2>
 
@@ -13,33 +13,37 @@
         </thead>
 
         <tbody>
-            <tr *ngFor="let query of method.queries">
-                <td>{{query.query_id}}</td>
-                <td>{{query.level}}</td>
-                <td>{{query.item}}</td>
-                <td class="has-text-right">
-                    <div class="buttons is-right">
-                        <button class="button is-primary" pTooltip="view query details" (click)="showQuery(query)">
-                            <span class="icon is-small">
-                                <fa-icon [icon]="faSearch"></fa-icon>
-                            </span>
-                        </button>
-                    </div>
-                </td>
-            </tr>
+            @for (query of method.queries; track query) {
+                <tr>
+                    <td>{{query.query_id}}</td>
+                    <td>{{query.level}}</td>
+                    <td>{{query.item}}</td>
+                    <td class="has-text-right">
+                        <div class="buttons is-right">
+                            <button class="button is-primary" pTooltip="view query details" (click)="showQuery(query)">
+                                <span class="icon is-small">
+                                    <fa-icon [icon]="faSearch"></fa-icon>
+                                </span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 
     <p-dialog header="{{selectedQuery?.query_id}}" [(visible)]="showDialog">
         <p-accordion [multiple]="true">
-            <ng-container *ngFor="let key of _.keys(selectedQuery)">
-                <p-accordion-panel *ngIf="(key !== 'id' && key !== 'query_id' && key !== 'method')" [value]="key" [disabled]="!selectedQuery[key] && selectedQuery[key] !== 0">
-                    <p-accordion-header>{{ key }}</p-accordion-header>
-                    <p-accordion-content>
-                        {{selectedQuery[key] | renderStringArray}}
-                    </p-accordion-content>
-                </p-accordion-panel>
-            </ng-container>
+            @for (key of _.keys(selectedQuery); track key) {
+                @if ((key !== 'id' && key !== 'query_id' && key !== 'method')) {
+                    <p-accordion-panel [value]="key" [disabled]="!selectedQuery[key] && selectedQuery[key] !== 0">
+                        <p-accordion-header>{{ key }}</p-accordion-header>
+                        <p-accordion-content>
+                            {{selectedQuery[key] | renderStringArray}}
+                        </p-accordion-content>
+                    </p-accordion-panel>
+                }
+            }
         </p-accordion>
     </p-dialog>
-</ng-container>
+}
