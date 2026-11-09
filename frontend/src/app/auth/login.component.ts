@@ -22,8 +22,6 @@ export class LoginComponent implements OnDestroy {
 
     processing = false;
 
-    messages: { severity: string; summary: string; detail: string }[] = [];
-
     onDestroy$: Subject<void> = new Subject<void>();
 
     errors$ = new Subject<string[]>();
@@ -36,7 +34,6 @@ export class LoginComponent implements OnDestroy {
 
     login(): void {
         this.processing = true;
-        this.messages = [];
         this.authService
             .login(this.username, this.password)
             .pipe(takeUntil(this.onDestroy$))
