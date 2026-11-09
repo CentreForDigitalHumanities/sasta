@@ -55,6 +55,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379/0')
 
 # Logging
+LOG_DIR = os.path.join(BASE_DIR, 'log')
+os.makedirs(LOG_DIR, exist_ok=True)
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -62,7 +65,7 @@ LOGGING = {
         'django_file': {
             'level': 'INFO',
             'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, 'log', 'django.log'),
+            'filename': os.path.join(LOG_DIR, 'django.log'),
             'when': 'd',
             'interval': 1,
             'backupCount': 1,
@@ -70,7 +73,7 @@ LOGGING = {
         'sasta_file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'log', 'sasta.log'),
+            'filename': os.path.join(LOG_DIR, 'sasta.log'),
             'formatter': 'standard',
         },
         'console': {

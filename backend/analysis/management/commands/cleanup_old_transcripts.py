@@ -40,7 +40,7 @@ class Command(BaseCommand):
                     f'No transcripts older than {months} month(s) found.'
                 )
             )
-            self._remove_empty_corpora()
+            self._remove_empty_corpora(options['remove'])
             return
 
         # Group by user
@@ -75,13 +75,24 @@ class Command(BaseCommand):
                 )
             )
 
-        self._remove_empty_corpora()
+        self._remove_empty_corpora(options['remove'])
 
-    def _remove_empty_corpora(self) -> int:
-        """Delete corpora left without any transcripts. Returns rows removed."""
+    def _remove_empty_corpora(self, remove: bool) -> int:
+        """Delete corpora left without any transcripts, or only report them
+        when `remove` is False. Returns rows removed."""
         empty_corpora = Corpus.objects.exclude(
             pk__in=Transcript.objects.values('corpus_id')
         )
+        if not remove:
+            empty_count = empty_corpora.count()
+            if empty_count:
+                self.stdout.write(
+                    self.style.NOTICE(
+                        f'{empty_count} empty corpus/corpora found. '
+                        'Run with --remove to delete them.'
+                    )
+                )
+            return 0
         deleted_count, _ = empty_corpora.delete()
         if deleted_count:
             self.stdout.write(
