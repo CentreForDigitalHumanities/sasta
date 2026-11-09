@@ -1,8 +1,10 @@
+@use 'colors';
+
 $theme-font: "Open Sans", sans-serif;
 
-@use 'bulma/sass' with ($primary: #3f51b5,
-    $dark: #002984,
-    $link: #3f51b5,
+@use 'bulma/sass' with ($primary: colors.$primary,
+    $dark: colors.$dark,
+    $link: colors.$link,
     $family-sans-serif: $theme-font);
 @import 'variables';
 @import "@creativebulma/bulma-divider";
