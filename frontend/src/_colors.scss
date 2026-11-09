@@ -1,0 +1,7 @@
+// Shared theme colours. Used to configure Bulma (styles.scss) and exposed to
+// component styles through variables.scss.
+$lab-color: linear-gradient(to bottom right, #1693ed, #007ad9);
+$primary: #3f51b5;
+$dark: #002984;
+$link: $primary;
+$secondary: #B5A33F;

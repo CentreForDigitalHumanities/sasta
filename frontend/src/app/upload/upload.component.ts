@@ -10,6 +10,7 @@ import { concatMap, switchMap } from 'rxjs/operators';
 import { environment } from '@envs/environment';
 
 @Component({
+    standalone: false,
     selector: 'sas-upload',
     templateUrl: './upload.component.html',
     styleUrls: ['./upload.component.scss'],

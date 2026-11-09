@@ -7,6 +7,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'kxreeb3bds$oibo7ex#f3bi5r+d(1x5zljo-#ms=i2%ih-!pvn'
 DEBUG = True
 ROOT_URLCONF = 'sasta.urls'
+INSTALLED_APPS = INSTALLED_APPS + ['livereload']  # noqa: F405
+
 
 # Connectivity
 WSGI_APPLICATION = 'sasta.wsgi.application'
@@ -19,7 +21,6 @@ ALLOWED_HOSTS += ['localhost', '127.0.0.1']
 # Alpino
 ALPINO_HOST = os.environ.get('ALPINO_HOST', 'localhost')
 ALPINO_PORT = 7001
-CORPUS2ALPINO_LOG_DIR = '.logs'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -50,11 +51,12 @@ CSRF_TRUSTED_ORIGINS = ['http://localhost:8000']
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Celery
-CELERY_BROKER_URL = os.environ.get(
-    'CELERY_BROKER_URL', 'amqp://guest:guest@localhost:5672'
-)
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379/0')
 
 # Logging
+LOG_DIR = os.path.join(BASE_DIR, 'log')
+os.makedirs(LOG_DIR, exist_ok=True)
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -62,15 +64,15 @@ LOGGING = {
         'django_file': {
             'level': 'INFO',
             'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, 'django.log'),
+            'filename': os.path.join(LOG_DIR, 'django.log'),
             'when': 'd',
             'interval': 1,
-            'backupCount': 0,
+            'backupCount': 1,
         },
         'sasta_file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'sasta.log'),
+            'filename': os.path.join(LOG_DIR, 'sasta.log'),
             'formatter': 'standard',
         },
         'console': {
@@ -85,7 +87,7 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['django_file', 'console'],
+            'handlers': ['console'],
             'level': 'INFO',
             'propagate': True,
         },

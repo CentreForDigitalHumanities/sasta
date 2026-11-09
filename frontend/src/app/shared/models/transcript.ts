@@ -24,7 +24,6 @@ export interface Utterance {
     parse_tree: string;
 }
 
-// eslint-disable-next-line no-shadow
 export enum TranscriptStatus {
     UNKNOWN,
     CREATED,
