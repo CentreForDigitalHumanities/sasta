@@ -25,7 +25,7 @@ class Command(BaseCommand):
     help = (
         'Fix stale absolute file paths after the media root has moved. Scans '
         'Transcript, UploadFile, AssessmentMethod, AnalysisRun, and CompoundFile '
-        'records for any stored path containing `--old-media-root` and replaces '
+        'records for any stored path starting with `--old-media-root` and replaces '
         'that prefix with `--new-media-root`. Runs as a dry run unless --execute '
         'is given.'
     )
@@ -140,8 +140,9 @@ class Command(BaseCommand):
 
     @staticmethod
     def _replace_root(value: Optional[str], old_root: str, new_root: str) -> Optional[str]:
-        '''Return `value` with `old_root` replaced by `new_root`, or None if
-        `value` is empty or does not contain `old_root`.'''
-        if not value or old_root not in value:
+        '''Return `value` with its leading `old_root` replaced by `new_root`,
+        or None if `value` is empty or does not start with `old_root` as a
+        whole path component (so /data/media does not match /data/media2).'''
+        if not value or not value.startswith(old_root + '/'):
             return None
-        return value.replace(old_root, new_root)
+        return new_root + value[len(old_root):]
