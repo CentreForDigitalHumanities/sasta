@@ -79,20 +79,5 @@
         "karma-jasmine-html-reporter": "^2.1.0",
         "ts-node": "~7.0.0",
         "typescript": "~5.9.3"
-    },
-    "resolutions": {
-        "loader-utils": ">=2.0.3",
-        "braces": "3.0.3",
-        "cross-spawn": "7.0.6",
-        "flatted": "3.4.2",
-        "follow-redirects": "1.16.0",
-        "qs": "6.15.1",
-        "socket.io": "4.8.3",
-        "socket.io-parser": "4.2.6",
-        "engine.io": "6.6.7",
-        "ws": "8.20.0",
-        "@babel/helpers": "7.29.2",
-        "js-yaml": "4.1.1",
-        "micromatch": "4.0.8"
     }
 }
