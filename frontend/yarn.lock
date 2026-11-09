@@ -1225,32 +1225,32 @@
     "@eslint/core" "^0.17.0"
     levn "^0.4.1"
 
-"@fortawesome/angular-fontawesome@~2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@fortawesome/angular-fontawesome/-/angular-fontawesome-2.0.1.tgz#69824761a0f4d5c9849de26519b89719459b82a1"
-  integrity sha512-IdklZkuw+WS2GQWhFnr1EX/tOALnrKaj4YGnUmPaUg2Uf+Amj8Xi+M/qDrr915YJ5MaDxd9tZ1kqOHRcvQqq2A==
+"@fortawesome/angular-fontawesome@~4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@fortawesome/angular-fontawesome/-/angular-fontawesome-4.0.0.tgz#b0f144e562c1e0b8c0226d8473256284ca96b98a"
+  integrity sha512-TCqHqT5ovFY1A4RgMpoBUgS+RX3OVs39+CzHFgzDhbCPAopOa26J748TZJcuZwJAvGAk9tbWeVEmWuLByINAeg==
   dependencies:
-    "@fortawesome/fontawesome-svg-core" "^6.7.2"
+    "@fortawesome/fontawesome-svg-core" "^7.1.0"
     tslib "^2.8.1"
 
-"@fortawesome/fontawesome-common-types@6.7.2":
-  version "6.7.2"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-6.7.2.tgz#7123d74b0c1e726794aed1184795dbce12186470"
-  integrity sha512-Zs+YeHUC5fkt7Mg1l6XTniei3k4bwG/yo3iFUtZWd/pMx9g3fdvkSK9E0FOC+++phXOka78uJcYb8JaFkW52Xg==
+"@fortawesome/fontawesome-common-types@7.3.1":
+  version "7.3.1"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-7.3.1.tgz#913fe0c0aed1184390efeec2546d78f9c4c8dc4a"
+  integrity sha512-k0C0sdHmZtAo6dRDtd1Z/qcpyHbL0CKsjV8seMY/21xGhY5Wsv0XRmiI/xEEH4y2c9b1+jvgNs/3EqhV27yUEA==
 
-"@fortawesome/fontawesome-svg-core@^6.7.2", "@fortawesome/fontawesome-svg-core@~6.7.2":
-  version "6.7.2"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-6.7.2.tgz#0ac6013724d5cc327c1eb81335b91300a4fce2f2"
-  integrity sha512-yxtOBWDrdi5DD5o1pmVdq3WMCvnobT0LU6R8RyyVXPvFRd2o79/0NCuQoCjNTeZz9EzA9xS3JxNWfv54RIHFEA==
+"@fortawesome/fontawesome-svg-core@^7.1.0", "@fortawesome/fontawesome-svg-core@~7.3.1":
+  version "7.3.1"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-7.3.1.tgz#eca344c1c8094598240c44d28e97ad53eb0c4537"
+  integrity sha512-BoxVN3PKnMbgStHhjoaky/oWdxHomDqmBVA24IA3KEmssFGeI7u9YT/BJceOjIum/t6TpPa/vcMKaVYQeIQ/3Q==
   dependencies:
-    "@fortawesome/fontawesome-common-types" "6.7.2"
+    "@fortawesome/fontawesome-common-types" "7.3.1"
 
-"@fortawesome/free-solid-svg-icons@~6.7.2":
-  version "6.7.2"
-  resolved "https://registry.yarnpkg.com/@fortawesome/free-solid-svg-icons/-/free-solid-svg-icons-6.7.2.tgz#fe25883b5eb8464a82918599950d283c465b57f6"
-  integrity sha512-GsBrnOzU8uj0LECDfD5zomZJIjrPhIlWU82AHwa2s40FKH+kcxQaBvBo3Z4TxyZHIyX8XTDxsyA33/Vx9eFuQA==
+"@fortawesome/free-solid-svg-icons@~7.3.1":
+  version "7.3.1"
+  resolved "https://registry.yarnpkg.com/@fortawesome/free-solid-svg-icons/-/free-solid-svg-icons-7.3.1.tgz#07d38cd0cffd759ae64c78e40a9a928ecf0cb19a"
+  integrity sha512-v0BLa0eqg7ubvVWeNSHVBs8fWH/GJicERZoJaxJ3FE/lj67VSqzoMg9pzfZVOfLMX10y0pGwQAuxoRVVH2patg==
   dependencies:
-    "@fortawesome/fontawesome-common-types" "6.7.2"
+    "@fortawesome/fontawesome-common-types" "7.3.1"
 
 "@gar/promise-retry@^1.0.0", "@gar/promise-retry@^1.0.2":
   version "1.0.3"
@@ -1916,39 +1916,43 @@
     "@parcel/watcher-win32-ia32" "2.5.6"
     "@parcel/watcher-win32-x64" "2.5.6"
 
-"@primeng/themes@~20.4.0":
-  version "20.4.0"
-  resolved "https://registry.yarnpkg.com/@primeng/themes/-/themes-20.4.0.tgz#6981d0a0f187f59b9287b75ee13a685fc66ac4b0"
-  integrity sha512-bh1yIRbCDAo+OLhQ+bm8sgwlZFRphwlR3/GXOdshJVurm5/Up+CWzoRqsZw/Q2RSrq0x3rDNA2pOTIYpcwgXbA==
+"@primeuix/motion@^0.0.10":
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/@primeuix/motion/-/motion-0.0.10.tgz#9af4238226042d80518dd343c6481d03582e374a"
+  integrity sha512-PsZwOPq79Scp7/ionshRcQ5xKVf9+zuLcyY5mf6onK8chHT5C9JGphmcIZ4CzcqxuGEpsm8AIbTGy+zS3RtzLA==
   dependencies:
-    "@primeuix/styled" "^0.7.4"
-    "@primeuix/themes" "^1.2.5"
+    "@primeuix/utils" "^0.6.3"
 
-"@primeuix/styled@^0.7.3", "@primeuix/styled@^0.7.4":
+"@primeuix/styled@^0.7.4":
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/@primeuix/styled/-/styled-0.7.4.tgz#d2108a7fad297dea60d549b2c10ed744dc0cbc0e"
   integrity sha512-QSO/NpOQg8e9BONWRBx9y8VGMCMYz0J/uKfNJEya/RGEu7ARx0oYW0ugI1N3/KB1AAvyGxzKBzGImbwg0KUiOQ==
   dependencies:
     "@primeuix/utils" "^0.6.1"
 
-"@primeuix/styles@^1.2.5":
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/@primeuix/styles/-/styles-1.2.5.tgz#97fe5b53d141f0dbd35c4f417f6a76db3eb1e244"
-  integrity sha512-nypFRct/oaaBZqP4jinT0puW8ZIfs4u+l/vqUFmJEPU332fl5ePj6DoOpQgTLzo3OfmvSmz5a5/5b4OJJmmi7Q==
+"@primeuix/styles@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@primeuix/styles/-/styles-2.0.3.tgz#e42d14c138fe092683228d65a3f6de17de70d6a0"
+  integrity sha512-2ykAB6BaHzR/6TwF8ShpJTsZrid6cVIEBVlookSdvOdmlWuevGu5vWOScgIwqWwlZcvkFYAGR/SUV3OHCTBMdw==
   dependencies:
-    "@primeuix/styled" "^0.7.3"
+    "@primeuix/styled" "^0.7.4"
 
-"@primeuix/themes@^1.2.5":
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/@primeuix/themes/-/themes-1.2.5.tgz#fa7f9c7004561c255b2c95bf2daeee41e16c0eef"
-  integrity sha512-n3YkwJrHQaEESc/D/A/iD815sxp8cKnmzscA6a8Tm8YvMtYU32eCahwLLe6h5rywghVwxASWuG36XBgISYOIjQ==
+"@primeuix/themes@~2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@primeuix/themes/-/themes-2.0.3.tgz#c3919d49e818b3bbac611ab8d89a52d4ffed6815"
+  integrity sha512-3fS1883mtCWhgUgNf/feiaaDSOND4EBIOu9tZnzJlJ8QtYyL6eFLcA6V3ymCWqLVXQ1+lTVEZv1gl47FIdXReg==
   dependencies:
-    "@primeuix/styled" "^0.7.3"
+    "@primeuix/styled" "^0.7.4"
 
-"@primeuix/utils@^0.6.1", "@primeuix/utils@^0.6.2":
+"@primeuix/utils@^0.6.1", "@primeuix/utils@^0.6.3":
   version "0.6.4"
   resolved "https://registry.yarnpkg.com/@primeuix/utils/-/utils-0.6.4.tgz#f436eae1be166662d424b8550a97ba0c150819e6"
   integrity sha512-pZ5f+vj7wSzRhC7KoEQRU5fvYAe+RP9+m39CTscZ3UywCD1Y2o6Fe1rRgklMPSkzUcty2jzkA0zMYkiJBD1hgg==
+
+"@primeuix/utils@^0.7.2":
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/@primeuix/utils/-/utils-0.7.2.tgz#0ded7f74bddf191f0e16aea34b593a7fcffa94b5"
+  integrity sha512-pmEbSfP0Phf9W9RweiM66zXnkn73ZeKyYINElbX3uZ2+stzzaba2svLAl3B1pHVcRw5t43O0VciaGe4ye2EXKw==
 
 "@rolldown/binding-android-arm64@1.0.0-rc.4":
   version "1.0.0-rc.4"
@@ -6084,14 +6088,15 @@ primeicons@~6.0.0:
   resolved "https://registry.yarnpkg.com/primeicons/-/primeicons-6.0.1.tgz#431fa7c79825934eefd62087d8e1faa6a9e376ad"
   integrity sha512-KDeO94CbWI4pKsPnYpA1FPjo79EsY9I+M8ywoPBSf9XMXoe/0crjbUK7jcQEDHuc0ZMRIZsxH3TYLv4TUtHmAA==
 
-primeng@~20.4.0:
-  version "20.4.0"
-  resolved "https://registry.yarnpkg.com/primeng/-/primeng-20.4.0.tgz#d40085f1b3cdf52bc20b9260de5f94f32236100c"
-  integrity sha512-vXUD1G4/uet4rDkPW8xx7yZWj7RmsmexEJ3+GhpQgsNaLtPFsTCVfQq8v4FQ4tIs7shoD0hz76d3jtjGWZ49QQ==
+primeng@~21.1.10:
+  version "21.1.10"
+  resolved "https://registry.yarnpkg.com/primeng/-/primeng-21.1.10.tgz#be71fd58003e1d3a0a6f55d930919a838c994cfe"
+  integrity sha512-1dNoVrrmdif95iuPwcSyzS0MwBy4yrbB/44s4gp+UeoZU11G9+SNFd6P/3tiiun7bAh2vbe4Uf0juy7DMtnRbA==
   dependencies:
+    "@primeuix/motion" "^0.0.10"
     "@primeuix/styled" "^0.7.4"
-    "@primeuix/styles" "^1.2.5"
-    "@primeuix/utils" "^0.6.2"
+    "@primeuix/styles" "^2.0.3"
+    "@primeuix/utils" "^0.7.2"
     tslib "^2.3.0"
 
 proc-log@^6.0.0, proc-log@^6.1.0:
