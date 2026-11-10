@@ -14,6 +14,7 @@ import { AuthService } from '@services';
 import { ShowState, animations } from '@shared/animations';
 
 @Component({
+    standalone: false,
     animations,
     selector: 'sas-menu',
     templateUrl: './menu.component.html',
@@ -80,6 +81,6 @@ export class MenuComponent implements OnInit {
     }
 
     navigateToDocs(): void {
-        window.open(environment.docs, '_blank');
+        window.open(`${environment.docs}/`, '_blank');
     }
 }

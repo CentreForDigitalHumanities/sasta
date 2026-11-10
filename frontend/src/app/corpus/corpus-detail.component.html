@@ -25,10 +25,10 @@
     <div class="field" *ngIf="(authService.currentUser$ | async).isAdmin">
         <label class="label"> Default method </label>
         <div class="control">
-            <p-dropdown [options]="groupedTams" [(ngModel)]="defaultTam" placeholder="No default"
+            <p-select [options]="groupedTams" [(ngModel)]="defaultTam" placeholder="No default"
                 name="default-tam-dropdown" [group]="true" showClear="true" appendTo="body"
                 (onChange)="changeDefaultMethod()" [disabled]="!(groupedTams?.length > 0)">
-            </p-dropdown>
+            </p-select>
         </div>
     </div>
 

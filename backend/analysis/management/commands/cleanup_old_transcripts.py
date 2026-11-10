@@ -4,7 +4,7 @@ from dateutil.relativedelta import relativedelta
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand, CommandError
 
-from analysis.models import Transcript
+from analysis.models import Corpus, Transcript
 
 
 class Command(BaseCommand):
@@ -40,6 +40,7 @@ class Command(BaseCommand):
                     f'No transcripts older than {months} month(s) found.'
                 )
             )
+            self._remove_empty_corpora(options['remove'])
             return
 
         # Group by user
@@ -73,3 +74,30 @@ class Command(BaseCommand):
                     'Run with --remove to delete these transcripts and their analysis runs.'
                 )
             )
+
+        self._remove_empty_corpora(options['remove'])
+
+    def _remove_empty_corpora(self, remove: bool) -> int:
+        """Delete corpora left without any transcripts, or only report them
+        when `remove` is False. Returns rows removed."""
+        empty_corpora = Corpus.objects.exclude(
+            pk__in=Transcript.objects.values('corpus_id')
+        )
+        if not remove:
+            empty_count = empty_corpora.count()
+            if empty_count:
+                self.stdout.write(
+                    self.style.NOTICE(
+                        f'{empty_count} empty corpus/corpora found. '
+                        'Run with --remove to delete them.'
+                    )
+                )
+            return 0
+        deleted_count, _ = empty_corpora.delete()
+        if deleted_count:
+            self.stdout.write(
+                self.style.WARNING(
+                    f'Removed {deleted_count} empty corpus-related row(s).'
+                )
+            )
+        return deleted_count

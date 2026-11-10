@@ -1,10 +1,16 @@
 <h1 class="title">Upload</h1>
+<div class="notification is-info is-light">
+    Transcripts may contain sensitive information about speakers. We strongly advise you to
+    <a [href]="anonymisationUrl" target="_blank">anonymise</a> your transcripts, including file and corpus names,
+    before uploading. Read the <a [href]="privacyUrl" target="_blank">privacy statement</a> to learn how SASTA handles
+    your uploaded files. Both pages are in Dutch.
+</div>
 <form (submit)="startUpload()">
     <div class="field is-grouped">
         <div class="field">
             <label class="label">To corpus</label>
             <div class="control">
-                <p-dropdown
+                <p-select
                     [options]="corpora"
                     optionLabel="name"
                     name="corpus-dropdown"
@@ -14,7 +20,7 @@
                     [disabled]="!(corpora?.length > 0)"
                     (onChange)="onSelectCorpus()"
                 >
-                </p-dropdown>
+                </p-select>
             </div>
         </div>
         <div class="divider is-vertical">or</div>
@@ -58,7 +64,7 @@
     <div class="field">
         <label class="label">Method category</label>
         <div class="control">
-            <p-dropdown
+            <p-select
                 [options]="categories$ | async"
                 optionLabel="name"
                 name="category-dropdown"
@@ -66,7 +72,7 @@
                 [(ngModel)]="selectedCategory"
                 [disabled]="selectedCorpus"
             >
-            </p-dropdown>
+            </p-select>
         </div>
     </div>
     <div class="field">

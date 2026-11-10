@@ -33,11 +33,12 @@
     <p-dialog header="{{selectedQuery?.query_id}}" [(visible)]="showDialog">
         <p-accordion [multiple]="true">
             <ng-container *ngFor="let key of _.keys(selectedQuery)">
-                <div *ngIf="(key !== 'id' && key !== 'query_id' && key !== 'method')">
-                    <p-accordionTab header=" {{key}}" [disabled]="!selectedQuery[key] && selectedQuery[key] !== 0">
+                <p-accordion-panel *ngIf="(key !== 'id' && key !== 'query_id' && key !== 'method')" [value]="key" [disabled]="!selectedQuery[key] && selectedQuery[key] !== 0">
+                    <p-accordion-header>{{ key }}</p-accordion-header>
+                    <p-accordion-content>
                         {{selectedQuery[key] | renderStringArray}}
-                    </p-accordionTab>
-                </div>
+                    </p-accordion-content>
+                </p-accordion-panel>
             </ng-container>
         </p-accordion>
     </p-dialog>

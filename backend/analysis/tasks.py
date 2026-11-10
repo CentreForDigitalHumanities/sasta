@@ -71,7 +71,7 @@ def analyse_transcript_task(
             File(output),
             save=True,
         )
-    except Exception as e:
+    except Exception:
         pass
     run.save()
 
