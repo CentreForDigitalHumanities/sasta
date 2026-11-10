@@ -1,20 +1,21 @@
-FROM python:3.7
+FROM python:3.13-slim
 
-# git to be able to install requirements from git
-RUN apt-get update && apt-get install git && rm -rf /var/lib/apt/lists/*
-
-# dependencies
-RUN apt-get update && apt-get install -y libfolia-dev libxml2-dev
+# build dependencies for psycopg2 (built from source) and other native packages
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends build-essential libpq-dev git \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 # set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-RUN pip install --upgrade pip
-COPY requirements.txt /app/
-RUN pip3 install cython
-RUN pip3 install -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip
+COPY requirements.txt requirements-dev.txt /app/
+RUN pip install --no-cache-dir -r requirements-dev.txt
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
