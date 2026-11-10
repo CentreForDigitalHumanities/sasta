@@ -27,12 +27,7 @@ Choose a username, email and password. Email does not have to be real (but canno
 docker compose exec backend python manage.py createsuperuser
 ```
 
-Accounts created through the application need to verify their email address. This can be done through the admin interface:
-
-1. Go to [the email adress admin page](http://localhost/admin/account/emailaddress/)
-2. Add the admin user pk (usually 1)
-3. Add the e-mail you entered for the admin user
-4. Check both `verified` and `primary` and save the address
+The email address of a superuser is verified automatically, so you can log in to the application with this account right away.
 
 ## Add SASTADEV method definitions
 
