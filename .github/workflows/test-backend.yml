@@ -20,47 +20,69 @@ jobs:
         python-version: [3.13]
 
     services:
-      # Label used to access the service container
       postgres:
-        # Docker Hub image
-        image: postgres
-        # Provide the password for postgres
+        image: postgres:17
         env:
           POSTGRES_DB: sasta
           POSTGRES_USER: sasta
           POSTGRES_PASSWORD: sasta
-        # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
         ports:
-          # Maps tcp port 5432 on service container to the host
           - 5432:5432
 
     steps:
     - uses: actions/checkout@v4
+
+    # Alpino can't be a service container: the image's default command is a
+    # shell, and services don't allow overriding it. Start it manually instead,
+    # with the same command as docker-compose.yml. It is started early because
+    # loading the dictionaries takes a while.
+    - name: Start Alpino
+      run: |
+        docker run -d --name alpino -p 7001:7001 \
+          registry.webhosting.rug.nl/compling/alpino:latest \
+          Alpino -notk -veryfast user_max=600000 server_kind=parse server_port=7001 \
+          assume_input_is_tokenized=off end_hook=xml -init_dict_p batch_command=alpino_server
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+        cache: pip
+        cache-dependency-path: backend/requirements-dev.txt
+
     - name: Install Python dependencies
       run: |
         cd backend
         python -m pip install --upgrade pip
-        yarn install-back-dev
+        pip install -r requirements-dev.txt
+
+    - name: Wait for Alpino
+      run: |
+        for i in $(seq 1 60); do
+          if (exec 3<>/dev/tcp/localhost/7001) 2>/dev/null; then
+            echo "Alpino is up"
+            exit 0
+          fi
+          sleep 5
+        done
+        echo "Alpino did not start in time"
+        docker logs alpino
+        exit 1
+
     - name: Test with pytest
       env:
-        # Provide PostgreSQL environment variables in order to default to TCP connection
-        PGDATABASE: sasta
-        PGHOST: localhost
-        PGPORT: ${{ job.services.postgres.ports['5432'] }}
-        PGUSER: sasta
-        PGPASSWORD: sasta
+        SQL_HOST: localhost
+        SQL_PORT: ${{ job.services.postgres.ports['5432'] }}
+        ALPINO_HOST: localhost
       run: |
         cd backend
-        yarn django migrate
-        yarn install-back
         pytest
 
+    - name: Alpino logs
+      if: failure()
+      run: docker logs alpino
