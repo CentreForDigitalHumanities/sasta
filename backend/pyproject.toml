@@ -43,6 +43,9 @@ python_files = ["tests.py", "test_*.py", "*_tests.py", "*_test.py"]
 log_level = "WARNING"
 # Ignore sastadev tests
 addopts = "--ignore backend/sastadev -p no:warnings"
+markers = [
+    "alpino: test needs a running Alpino server",
+]
 
 [tool.mypy]
 ignore_missing_imports = true

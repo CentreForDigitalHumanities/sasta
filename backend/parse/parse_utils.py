@@ -1,6 +1,7 @@
 import io
 import logging
 import os
+from functools import cache
 from types import SimpleNamespace
 from typing import Optional
 
@@ -24,10 +25,9 @@ from sastadev.targets import get_targets
 logger = logging.getLogger('sasta')
 
 # Parser setup
-ALPINO = AlpinoAnnotator(
-    settings.ALPINO_HOST,
-    settings.ALPINO_PORT
-)
+@cache
+def get_alpino() -> AlpinoAnnotator:
+    return AlpinoAnnotator(settings.ALPINO_HOST, settings.ALPINO_PORT)
 
 
 def parse_and_create(transcript):
@@ -77,9 +77,13 @@ def parse_transcript(transcript, output_path):
         transcript.save()
 
 
-def initial_parse(in_path: str, out_path: str,
-                  annotator: AlpinoAnnotator = ALPINO,
-                  in_memory: bool = False) -> Optional[str]:
+def initial_parse(
+    in_path: str,
+    out_path: str,
+    annotator: Optional[AlpinoAnnotator] = None,
+    in_memory: bool = False,
+) -> Optional[str]:
+    annotator = annotator or get_alpino()
 
     target = MemoryTarget() if in_memory else FilesystemTarget(out_path, merge_files=True)
     converter = Converter(

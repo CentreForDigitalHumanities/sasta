@@ -62,5 +62,6 @@ jobs:
         cd backend
         yarn django migrate
         yarn install-back
-        pytest
+        # No Alpino server in CI: skip tests that need one
+        pytest -m "not alpino"
 
