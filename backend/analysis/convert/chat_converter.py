@@ -13,7 +13,7 @@ logger = logging.getLogger('sasta')
 # TODO move to config
 AGE_FIELD_NAMES = ['age', 'leeftijd']
 SEX_FIELD_NAMES = ['sex', 'gender', 'geslacht']
-TITLE_FIELD_NAMES = ['samplename', 'title', 'titel']
+TITLE_FIELD_NAMES = ['samplename', 'title', 'titel', 'samplenaam']
 MALE_CODES = ['jongen', 'man', 'boy', 'man']
 FEMALE_CODES = ['meisje', 'vrouw', 'girl', 'woman']
 
@@ -120,6 +120,7 @@ class Utterance:
                 else:
                     # no comment means we are done
                     # add all comments as a tier
+                    self.text = new_text if new_text else self.text
                     if len(all_comments) > 0:
                         tier_code = 'x' + code
                         value = ', '.join(all_comments)

@@ -1,17 +1,17 @@
 import os.path as op
-from filecmp import cmp
+from filecmp import cmp, clear_cache
 from os import remove as rm
 
 from analysis.convert.chat_converter import SifReader, Utterance
 from analysis.convert.replacements import (correct_punctuation, fill_name,
                                            replace_quotation_marks)
 from analysis.utils import docx_to_txt
-from convert.chat_reader import ChatDocument
 
 HERE = op.dirname(op.abspath(__file__))
 
 
 def test_docx_to_txt(testfiles):
+    clear_cache()
     for fn, docx in testfiles.items():
         txt = docx_to_txt(docx, delete_docx=False)
         txt_exp = txt.replace(fn, f'{fn}_exp')
@@ -21,7 +21,13 @@ def test_docx_to_txt(testfiles):
         cha = op.join(HERE, f'{fn}.cha')
         doc.write_chat(cha)
         cha_exp = cha.replace(fn, f'{fn}_exp')
-        assert cmp(cha, cha_exp, shallow=False)
+
+        with open(cha, 'r') as of:
+            with open(cha_exp) as ef:
+                orig = of.readlines()
+                exp = ef.readlines()
+                for i, orig_line in enumerate(orig):
+                    assert orig_line == exp[i]
 
         if op.exists(txt):
             rm(txt)
@@ -77,14 +83,3 @@ def test_quotemarks(quotemarks):
     expected = (quotemarks[-1], None)
     for line in quotemarks:
         assert replace_quotation_marks(line) == expected
-
-
-def test_chat_replacements(cha_testfiles_dir, tarsp_category):
-    '''Test if CHAT input handles replacements correctly'''
-    fn = op.join(cha_testfiles_dir, 'sample_1.cha')
-    doc = ChatDocument.from_chatfile(fn, tarsp_category)
-    line = doc.lines[1]
-
-    assert line.text == 'Jan fietst niet meer+...'
-    assert line.tiers['xano'].text == '0|NAAM1|Jan'
-    assert line.tiers['xpct'].text == '20|…|+...'

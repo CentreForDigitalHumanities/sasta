@@ -8,8 +8,8 @@ from rest_framework.views import APIView
 from .tasks import parse_corpus
 
 
-class ParseTaskView(APIView):
-    '''View for starting Alpino parse tasks and retrieving task status'''
+class CeleryTaskView(APIView):
+    '''Implements Celery task status view'''
     status_code_mapping = {
         "PENDING": HTTP_202_ACCEPTED,
         "STARTED": HTTP_202_ACCEPTED,
@@ -36,11 +36,12 @@ class ParseTaskView(APIView):
 
         return response
 
+
+class ParseTaskView(CeleryTaskView):
+    '''View for starting Alpino parse tasks'''
+
     def post(self, request, *args, **kwargs):
         '''Starts a parse task and returns task id'''
-        # TODO: start task
-        # transcript_id = request.data.get('transcript_id')
-        # res = test_model.apply_async([transcript_id], countdown=10)
         corpus_id = request.data.get('corpus_id')
         res = parse_corpus.delay(corpus_id)
 

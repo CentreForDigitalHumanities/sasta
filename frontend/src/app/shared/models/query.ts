@@ -7,8 +7,8 @@ export interface Query {
     subcat?: string;
     level?: string;
     item?: string;
-    altitems?: string;
-    implies?: string;
+    altitems?: string[];
+    implies?: string[];
     original?: boolean;
     pages?: string;
     fase?: string;
@@ -16,7 +16,10 @@ export interface Query {
     inform?: string;
     screening?: boolean;
     process?: number;
-    special1?: string;
-    special2?: string;
+    literal?: string;
+    stars?: string;
+    variants?: string[];
+    unused1?: string;
+    unused2?: string;
     comments?: string;
 }

@@ -8,11 +8,13 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let method of (methods$ | async)" [routerLink]="['/methods/', method.id]">
-            <td>{{method.category.name}}</td>
-            <td>{{method.name}}</td>
-            <td>{{method.date_added}}</td>
-            <td>{{method?.queries?.length || '0'}}</td>
-        </tr>
+        @for (method of (methods$ | async); track method) {
+            <tr [routerLink]="['/methods/', method.id]">
+                <td>{{method.category.name}}</td>
+                <td>{{method.name}}</td>
+                <td>{{method.date_added}}</td>
+                <td>{{method?.queries?.length || '0'}}</td>
+            </tr>
+        }
     </tbody>
 </table>

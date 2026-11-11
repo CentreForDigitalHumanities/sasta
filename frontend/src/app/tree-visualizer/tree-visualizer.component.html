@@ -1,37 +1,43 @@
 <div class="pageloader is-black" [ngClass]="{'is-active':showLoader}"><span class="title">Loading tree...</span></div>
 <div #output>
-    <div #inline class="tree-visualizer tv" *ngIf="display !== 'fullscreen'">
-        <div class="tv-error">
-            <p></p>
-        </div>
-        <div class="tv-content-wrapper">
-            <div class="tv-toolbar-wrapper" *ngIf="fullScreenButton || sentence">
-                <div class="tv-sentence-wrapper">
-                    <fa-icon [icon]="faCommentDots" aria-hidden="true"></fa-icon>
-                    <span></span>
+    @if (display !== 'fullscreen') {
+        <div #inline class="tree-visualizer tv">
+            <div class="tv-error">
+                <p></p>
+            </div>
+            <div class="tv-content-wrapper">
+                @if (fullScreenButton || sentence) {
+                    <div class="tv-toolbar-wrapper">
+                        <div class="tv-sentence-wrapper">
+                            <fa-icon [icon]="faCommentDots" aria-hidden="true"></fa-icon>
+                            <span></span>
+                        </div>
+                        @if (fullScreenButton) {
+                            <button class="tv-show-fs" grtBalloonPosition="left" grtBalloon="Open the tree in full screen mode"
+                                type="button">
+                                <fa-icon [icon]="faArrowsAlt" aria-hidden="true"></fa-icon>
+                                <span class="sr-only">Open in fullscreen</span>
+                            </button>
+                        }
+                    </div>
+                }
+                <ng-container *ngTemplateOutlet="metadataTemplate"></ng-container>
+                <div class="tv-tree" #tree>
                 </div>
-                <button class="tv-show-fs" grtBalloonPosition="left" grtBalloon="Open the tree in full screen mode"
-                    type="button" *ngIf="fullScreenButton">
-                    <fa-icon [icon]="faArrowsAlt" aria-hidden="true"></fa-icon>
-                    <span class="sr-only">Open in fullscreen</span>
-                </button>
+
+                <aside class="tv-tooltip" style="display: none">
+                    <ul></ul>
+                    <button grtBalloonPosition="up" grtBalloon="Close this tooltip" type="button">
+                        <fa-icon [icon]="faTimes" aria-hidden="true"></fa-icon>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <span class="arrow"></span>
+                </aside>
+
+
             </div>
-            <ng-container *ngTemplateOutlet="metadataTemplate"></ng-container>
-            <div class="tv-tree" #tree>
-            </div>
-
-            <aside class="tv-tooltip" style="display: none">
-                <ul></ul>
-                <button grtBalloonPosition="up" grtBalloon="Close this tooltip" type="button">
-                    <fa-icon [icon]="faTimes" aria-hidden="true"></fa-icon>
-                    <span class="sr-only">Close</span>
-                </button>
-                <span class="arrow"></span>
-            </aside>
-
-
         </div>
-    </div>
+    }
     <div class="tree-visualizer-fs tv tv-fs">
         <div class="tv-error">
             <p></p>
@@ -128,16 +134,18 @@
     </div>
 </div>
 <ng-template #metadataTemplate>
-    <ng-container *ngIf="metadata">
+    @if (metadata) {
         <div class="metadata">
             <div class="card" #metadataCard>
                 <table class="table">
-                    <tr *ngFor="let item of metadata">
-                        <th>{{item.name}}</th>
-                        <td [innerHTML]="item.value"></td>
-                    </tr>
+                    @for (item of metadata; track item) {
+                        <tr>
+                            <th>{{item.name}}</th>
+                            <td [innerHTML]="item.value"></td>
+                        </tr>
+                    }
                 </table>
             </div>
         </div>
-    </ng-container>
+    }
 </ng-template>

@@ -1,2 +1,44 @@
-<h1 class="title">Home</h1>
-<p>Welcome to SASTA!</p>
+<div class="content">
+
+    <h1>Getting started</h1>
+    @if ((isAuthenticated$ | async)) {
+        <ul>
+            <li>Read the <a (click)="navigateToDocs()">documentation</a> (in Dutch) to learn about using SASTA.</li>
+            <li>Navigate to <a [routerLink]="['/corpora']">your corpora</a> to analyse transcripts.</li>
+        </ul>
+    } @else {
+        <p>To begin, <a [routerLink]="['/login']">login</a> or <a [routerLink]="['/register']">create an account</a>.
+        </p>
+    }
+
+    <h1>About SASTA</h1>
+    <p>
+        SASTA is a tool for the analysis of spontaneous language transcripts, to aid clinical linguists and research
+        into language development and language disorders. SASTA analyzes a transcript grammatically using Alpino, an
+        automatic utterance parser for Dutch, and can recognize a significant number of forms of deviant language use
+        and analyze them correctly, following multiple assessment methods available for Dutch (<a
+            href="https://www.pearsonclinical.nl/tarsp" target="_blank">TARSP</a>, <a
+            href="https://www.hetwap.nl/wp-content/uploads/2018/04/2008-STAP-HANDLEIDING.pdf" target="_blank">STAP</a>
+        and <a href="https://klinischelinguistiek.nl/uploads/201307asta4eversie.pdf" target="_blank">ASTA</a>).
+    <p>Read more about SASTA on the <a href="https://sasta.sites.uu.nl/" target="_blank">project website</a>.</p>
+
+    <h1>Pipeline</h1>
+    <p>
+        In order to move toward implementation of SASTA in clinical practice and beyond, improving and extending the
+        application is ongoing. In collaboration with the Koninklijke Auris Groep and commercial partner ITSLanguage, a
+        pipeline is <a href="https://auris.nl/innovatie/treintje-drie-tools-op-de-rails/" target="_blank">actively being
+            developed</a>, consisting of the following tools:
+    <p>
+    <ul>
+        <li><a href="https://transcribe.itslanguage.nl/" target="_blank">ITS Transcription</a> (ITSLanguage): TT supports the
+            linguist in transcribing an uploaded audio or video fragment containing
+            spontaneous language in CHAT format using automatic speech recognition.</li>
+        <li>SASTA (Utrecht University): SASTA analyzes a transcript grammatically and can recognize a significant number
+            of forms of deviant language use and analyze them correctly, following multiple assessment methods available
+            for Dutch (TARSP, STAP and ASTA).</li>
+        <li><a href="https://grammatica.loudly.nl/" target="_blank">Stamper</a> (Anouk Scheffer, PhD candidate at Utrecht
+            University/Auris): Stamper analyzes SASTA's output, by
+            grouping various structures and making easy-to-use overviews.</li>
+    </ul>
+
+</div>

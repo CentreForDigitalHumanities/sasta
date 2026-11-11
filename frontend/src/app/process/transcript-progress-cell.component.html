@@ -1,20 +1,30 @@
-<ng-container [ngSwitch]="evalProgress">
-    <span *ngSwitchCase="-1" class="icon">
-        <fa-icon [icon]="faExclamation" class="error"></fa-icon>
-    </span>
+@switch (evalProgress) {
+    @case (-1) {
+        <span class="icon">
+            <fa-icon [icon]="faExclamation" class="error"></fa-icon>
+        </span>
+    }
     <!-- <span *ngSwitchCase="1" class="icon is-small">
         <fa-icon [icon]="faDownload"></fa-icon>
     </span> -->
-    <p-progressSpinner *ngSwitchCase="1" [style]="{width: '24px', height: '24px'}" animationDuration="1s"
-        strokeWidth="5">
-    </p-progressSpinner>
-    <span *ngSwitchCase="0" class="icon">
-        <fa-icon [icon]="faMinus" class="neutral"></fa-icon>
-    </span>
-    <span *ngSwitchCase="2" class="icon">
-        <fa-icon [icon]="faCheck" class="success"></fa-icon>
-    </span>
-    <span *ngSwitchDefault class="icon">
-        <fa-icon [icon]="faQuestion"></fa-icon>
-    </span>
-</ng-container>
+    @case (1) {
+        <p-progressSpinner [style]="{width: '24px', height: '24px'}" animationDuration="1s"
+            strokeWidth="5">
+        </p-progressSpinner>
+    }
+    @case (0) {
+        <span class="icon">
+            <fa-icon [icon]="faMinus" class="neutral"></fa-icon>
+        </span>
+    }
+    @case (2) {
+        <span class="icon">
+            <fa-icon [icon]="faCheck" class="success"></fa-icon>
+        </span>
+    }
+    @default {
+        <span class="icon">
+            <fa-icon [icon]="faQuestion"></fa-icon>
+        </span>
+    }
+}

@@ -8,7 +8,7 @@
  * @license MIT
  * @author Bram Vanroy (modified by Sheean Spoel)
  */
-var jQuery = require('jquery');
+import jQuery from 'jquery';
 
 (function ($) {
     $.fn.treeVisualizer = function (xml, options) {

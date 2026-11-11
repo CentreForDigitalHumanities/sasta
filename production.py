@@ -1,4 +1,3 @@
-import os
 import os.path as op
 from collect import *
 
@@ -8,7 +7,4 @@ STATICFILES_DIRS = [op.join(here, 'static')]
 STATIC_ROOT = None
 
 
-PROXY_FRONTEND = None # use statically compiled files
-
-if 'TRAVIS' in os.environ:
-    DEBUG = True
+PROXY_FRONTEND = None  # use statically compiled files

@@ -1,4 +1,4 @@
-<p-dialog [header]="header()" [(visible)]="display" modal="modal" [responsive]="true" (onHide)="onClose()"
+<p-dialog [header]="header()" [(visible)]="display" modal="modal" (onHide)="onClose()"
     [dismissableMask]="true">
 
     <form (submit)="upload()">
@@ -16,9 +16,11 @@
                                 Choose a file…
                             </span>
                         </span>
-                        <span class="file-name" *ngIf="fileName">
-                            {{fileName}}
-                        </span>
+                        @if (fileName) {
+                            <span class="file-name">
+                                {{fileName}}
+                            </span>
+                        }
                     </label>
                 </div>
             </div>
@@ -29,14 +31,18 @@
         </div>
     </form>
 
-    <div class="notification is-warning" *ngIf="parseErrors">
-        <div class="content">
-            <p class="title is-4">Errors reading SAF file</p>
-            <p class="subtitle is-6">Please resolve these and try again.</p>
-            <ul>
-                <li *ngFor="let error of parseErrors">{{error}}</li>
-            </ul>
+    @if (parseErrors) {
+        <div class="notification is-warning">
+            <div class="content">
+                <p class="title is-4">Errors reading SAF file</p>
+                <p class="subtitle is-6">Please resolve these and try again.</p>
+                <ul>
+                    @for (error of parseErrors; track error) {
+                        <li>{{error}}</li>
+                    }
+                </ul>
+            </div>
         </div>
-    </div>
+    }
 
 </p-dialog>

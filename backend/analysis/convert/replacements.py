@@ -2,11 +2,11 @@ import re
 from string import ascii_lowercase
 import os.path as op
 import json
-from django.conf import settings
+from sastadev.conf import settings as sdsettings
 
 
 def instantiate_anonymizations():
-    json_path = op.join(settings.BASE_DIR, 'anonymization.json')
+    json_path = op.join(sdsettings.SD_DIR, 'data', 'anonymization.json')
     with open(json_path, 'r') as f:
         return json.load(f)
 
@@ -35,7 +35,8 @@ def fill_name(string):
 
         def repl(match):
             raw_index = match.group(3) or '0'
-            index = int(raw_index) if raw_index.isnumeric() else letter_index(raw_index)
+            index = int(raw_index) if raw_index.isnumeric(
+            ) else letter_index(raw_index)
             repl = specs['common'][index]
             return match.group(1) + repl + match.group(4)
 

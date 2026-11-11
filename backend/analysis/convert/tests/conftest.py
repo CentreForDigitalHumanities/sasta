@@ -88,8 +88,8 @@ def example_utterances():
         },
         {
             'text': 'Ik ben BEROEP1 in het INSTELLING in LAND2.',
-            'exp_text': 'Ik ben chirurgh in het Diakonessenhuis in Japan.',
-            'exp_tiers': {'xano': '7|BEROEP1|chirurgh, 37|LAND2|Japan, 23|INSTELLING|Diakonessenhuis'},
+            'exp_text': 'Ik ben chirurg in het Diakonessenhuis in Japan.',
+            'exp_tiers': {'xano': '7|BEROEP1|chirurg, 36|LAND2|Japan, 22|INSTELLING|Diakonessenhuis'},
         },
         {
             'text': 'Ik heb STUDIE en STUDIE1 gestudeerd.',
@@ -130,5 +130,15 @@ def example_utterances():
             'text': 'Ik heet NAAM1 en hij heet NAAM2.',
             'exp_text': 'Ik heet Jan en hij heet Anna.',
             'exp_tiers': {'xano': '8|NAAM1|Jan, 24|NAAM2|Anna'},
+        },
+        {
+            'text': 'Ik zit op de SCHOOL1 en hij op de SCHOOL2.',
+            'exp_text': 'Ik zit op de Mariaschool en hij op de Calvijnschool.',
+            'exp_tiers': {'xano': '13|SCHOOL1|Mariaschool, 38|SCHOOL2|Calvijnschool'},
+        },
+        {
+            'text': '’s morgens sta ik op.',
+            'exp_text': "'s morgens sta ik op.",
+            'exp_tiers': {},
         },
     ]

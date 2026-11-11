@@ -1,6 +1,6 @@
-[sd-link]: https://github.com/UUDigitalHumanitieslab/sastadev/
+[sd-link]: https://github.com/CentreForDigitalHumanities/sastadev/
 [sasta-prod]: https://sasta.hum.uu.nl/
-[user-docs]: https://uudigitalhumanitieslab.github.io/sasta/
+[user-docs]: https://CentreForDigitalHumanities.github.io/sasta/
 [sd-docs]: https://sastadev.readthedocs.io/en/latest/introduction.html
 [sd-pypi]: https://pypi.org/project/sastadev/
 
@@ -46,7 +46,7 @@ SASTA is shared under a BSD-3 Clause licence See [LICENSE](./LICENSE) for more i
 If you wish to cite this repository, please use the metadata provided in our [CITATION.cff file](./CITATION.cff).
 
 ## Contact
-For questions, small feature suggestions, and bug reports, feel free to [create an issue](https://github.com/UUDigitalHumanitieslab/sasta/issues/new). You can also contact the [Centre for Digital Humanities](https://cdh.uu.nl/contact/).
+For questions, small feature suggestions, and bug reports, feel free to [create an issue](https://github.com/CentreForDigitalHumanities/sasta/issues/new). You can also contact the [Centre for Digital Humanities](https://cdh.uu.nl/contact/).
 
 ## Publications on SASTA
 

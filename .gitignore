@@ -41,5 +41,5 @@ node_modules/
 # mypy
 .mypy_cache/
 
-# docs
+# documentation
 site/

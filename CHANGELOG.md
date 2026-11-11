@@ -5,6 +5,36 @@ All notable changes (beginning at version 0.2.0) to this project will be documen
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.4] - 2024-06-11
+### Added
+-   Added outgoing links to homepage
+
+## [0.9.3] - 2024-06-04
+### Changed
+-   Upgraded SASTADEV to 0.2.2
+
+## [0.9.2] - 2024-05-28
+### Added
+-   Added a home page
+
+### Changed
+-   Locks first row and first two columns in SAF xlsx output
+
+## [0.9.1] - 2024-05-20
+### Fixed
+-   Resolved various bugs that surfaced in release 0.9.0
+
+## [0.9.0] - 2024-04-26
+### Changed
+Drastic changes to the way analysis is performed, replacing functionality by SASTADEV counterparts:
+- reading SAF files
+- performing analysis
+- changed the SAF writer
+
+## [0.8.2] - 2024-04-24
+### Changed
+Upgraded SASTADEV dependency
+
 ## [0.8.1] - 2024-01-31
 ### Added
 - Adhere to FAIR software principles
@@ -18,7 +48,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Split Angular frontend into core-, shared-, and feature- modules
 - Extended anonymization codes and moved to a centrally located JSON file
 
-## [0.6.2] - 2022-03-15
+### Added
+- First version of user documentation
+
+## [0.6.2] - 2022-02-15
 
 ### Changed
 - Various frontend refactors
@@ -33,7 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.6.1] - 2022-09-16
 
 ### Fixed
--   Resolves a bug where transcript paths were uncorrectly saved, leaving them unable to be downloaded
+-   Resolved a bug where transcript paths were uncorrectly saved, leaving them unable to be downloaded
 -   Resolved a bug where a dictionary was changed during iteration, preventing analysis
 
 ## [0.6.0] - 2022-07-27

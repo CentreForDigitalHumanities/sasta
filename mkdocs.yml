@@ -1,0 +1,32 @@
+site_name: SASTA Documentatie
+repo_url: https://github.com/CentreForDigitalHumanities/sasta/
+site_url: https://centrefordigitalhumanities.github.io/sasta/
+
+theme:
+    name: material
+    language: nl
+    logo: assets/uu.jpg
+    favicon: assets/favicon.svg
+    palette:
+        scheme: custom
+        primary: custom
+nav:
+    - Home: 'index.md'
+    - Gebruikersaccount: 'accounts.md'
+    - Uploaden van transcripten: 'upload.md'
+    - Voorbewerking (process): 'process.md'
+    - Corpus-overzicht: 'corpora.md'
+    - Transcript-overzicht: 'transcript.md'
+    - Methode-overzicht: 'methodes.md'
+    - Invoerformaten:
+        - Anonimisatie: 'input-formats/anonimisatie.md'
+        - SASTA Input Format (SIF): 'input-formats/sif.md'
+        - Voorbeeldbestanden: 'input-formats/voorbeelden.md'
+    - Uitvoerformaten:
+        - SASTA Output Formaat (SAF): 'annotaties/saf.md'
+    - Privacy- en gegevensverklaring: 'privacy.md'
+
+dev_addr: 'localhost:8888'
+
+extra_css:
+  - stylesheets/extra.css

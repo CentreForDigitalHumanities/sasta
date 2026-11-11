@@ -6,8 +6,10 @@ import { MessageService } from 'primeng/api';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
+import { environment } from '@envs/environment';
 
 @Component({
+    standalone: false,
     selector: 'sas-register',
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.scss'],
@@ -23,8 +25,9 @@ export class RegisterComponent implements OnDestroy {
     password2: string;
 
     processing = false;
+    privacyUrl = `${environment.docs}/privacy/`;
 
-    onDestroy$: Subject<boolean> = new Subject<boolean>();
+    onDestroy$: Subject<void> = new Subject<void>();
 
     constructor(
         private authService: AuthService,

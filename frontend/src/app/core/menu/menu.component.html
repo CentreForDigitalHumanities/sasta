@@ -16,41 +16,57 @@
         <div id="navbarBasicExample" class="navbar-menu" [ngClass]="{'is-active': burgerActive}"
             [@slideInOut]="burgerShow">
             <div class="navbar-start">
-                <a *ngIf="docsAvailable" class="navbar-item" (click)="navigateToDocs()">
+                <a class="navbar-item" [routerLink]=" ['./'] " routerLinkActive="is-active" [routerLinkActiveOptions]="{exact: true}">
                     <span class="icon-text">
                         <span class="icon">
-                            <fa-icon [icon]="faExternalLink"></fa-icon>
+                            <fa-icon [icon]="faHome"></fa-icon>
                         </span>
-                        <span>Documentation</span>
+                        <span>Home</span>
                     </span>
                 </a>
-                <a *ngIf="isAuthenticated()" [routerLink]="['/corpora']" routerLinkActive="is-active"
-                    class="navbar-item">
-                    <span class="icon-text">
-                        <span class="icon">
-                            <fa-icon [icon]="faFolder"></fa-icon>
+                @if (isAuthenticated()) {
+                    <a [routerLink]="['/corpora']" routerLinkActive="is-active"
+                        class="navbar-item">
+                        <span class="icon-text">
+                            <span class="icon">
+                                <fa-icon [icon]="faFolder"></fa-icon>
+                            </span>
+                            <span>Corpora</span>
                         </span>
-                        <span>Corpora</span>
-                    </span>
-                </a>
-                <a *ngIf="isAuthenticated()" [routerLink]="['/methods']" routerLinkActive="is-active"
-                    class="navbar-item">
-                    <span class="icon-text">
-                        <span class="icon">
-                            <fa-icon [icon]="faListAlt"></fa-icon>
+                    </a>
+                }
+                @if (isAuthenticated()) {
+                    <a [routerLink]="['/methods']" routerLinkActive="is-active"
+                        class="navbar-item">
+                        <span class="icon-text">
+                            <span class="icon">
+                                <fa-icon [icon]="faListAlt"></fa-icon>
+                            </span>
+                            <span>Methods</span>
                         </span>
-                        <span>Methods</span>
-                    </span>
-                </a>
-                <a *ngIf="isAuthenticated()" [routerLink]="['/upload']" routerLinkActive="is-active"
-                    class="navbar-item">
-                    <span class="icon-text">
-                        <span class="icon">
-                            <fa-icon [icon]="faFileUpload"></fa-icon>
+                    </a>
+                }
+                @if (isAuthenticated()) {
+                    <a [routerLink]="['/upload']" routerLinkActive="is-active"
+                        class="navbar-item">
+                        <span class="icon-text">
+                            <span class="icon">
+                                <fa-icon [icon]="faFileUpload"></fa-icon>
+                            </span>
+                            <span>Upload</span>
                         </span>
-                        <span>Upload</span>
-                    </span>
-                </a>
+                    </a>
+                }
+                @if (docsAvailable) {
+                    <a class="navbar-item" (click)="navigateToDocs()">
+                        <span class="icon-text">
+                            <span class="icon">
+                                <fa-icon [icon]="faExternalLink"></fa-icon>
+                            </span>
+                            <span>Documentation (NL)</span>
+                        </span>
+                    </a>
+                }
             </div>
         </div>
 
@@ -58,47 +74,53 @@
             <div class="navbar-item">
                 {{version}}
             </div>
-            <div class="navbar-item" *ngIf="(authService.currentUser$ | async) === null">
-                <div class="buttons">
-                    <a class="button is-light" [routerLink]="['/register']">
-                        <strong>Sign up</strong>
-                    </a>
-                    <a class="button is-light" [routerLink]="['/login']" routerLinkActive="is-active">
-                        <strong>Login</strong>
-                    </a>
-                </div>
-            </div>
-
-            <div class="navbar-item" *ngIf="(authService.currentUser$ | async)">
-                <div class="dropdown is-right is-hoverable">
-
-                    <div class="dropdown-trigger">
-                        <a class="button is-light">
-                            <span class="icon is-small">
-                                <fa-icon [icon]="faUser"></fa-icon>
-                            </span>
-                            <span>
-                                <strong>
-                                    {{(authService.currentUser$ | async).username}}
-                                </strong>
-                            </span>
+            @if ((authService.currentUser$ | async) === null) {
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-light" [routerLink]="['/register']">
+                            <strong>Sign up</strong>
+                        </a>
+                        <a class="button is-light" [routerLink]="['/login']" routerLinkActive="is-active">
+                            <strong>Login</strong>
                         </a>
                     </div>
+                </div>
+            }
 
-                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                        <div class="dropdown-content">
-                            <a *ngIf="(authService.currentUser$ | async)?.isAdmin" href="/admin" routerLinkActive="is-active" class="dropdown-item"
-                                (click)="logout()">
-                                Admin
-                            </a>
-                            <a class="dropdown-item" (click)="logout()">
-                                Logout
+            @if ((authService.currentUser$ | async)) {
+                <div class="navbar-item">
+                    <div class="dropdown is-right is-hoverable">
+
+                        <div class="dropdown-trigger">
+                            <a class="button is-light">
+                                <span class="icon is-small">
+                                    <fa-icon [icon]="faUser"></fa-icon>
+                                </span>
+                                <span>
+                                    <strong>
+                                        {{(authService.currentUser$ | async).username}}
+                                    </strong>
+                                </span>
                             </a>
                         </div>
-                    </div>
 
+                        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                            <div class="dropdown-content">
+                                @if ((authService.currentUser$ | async)?.isAdmin) {
+                                    <a href="/admin" routerLinkActive="is-active" class="dropdown-item"
+                                        (click)="logout()">
+                                        Admin
+                                    </a>
+                                }
+                                <a class="dropdown-item" (click)="logout()">
+                                    Logout
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-            </div>
+            }
         </div>
     </div>
 </nav>

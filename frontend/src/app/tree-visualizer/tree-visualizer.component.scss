@@ -2,11 +2,13 @@
  * (S)CSS file for the Tree Visualizer. You can change the colours of the
  * tree in _tv-variables.scss.
  *
- * @author Bram Vanroy
+ * @author Bram Vanroy (modified by Jelte van Boheemen) *
  */
+ @use "sass:color";
  @import "tv-variables";
  @import "tv-buttons";
  @import "clearfix";
+
 
  %fa {
      display: inline-block;
@@ -201,7 +203,7 @@
                              color: white;
 
                              span:nth-child(2) {
-                                 color: darken($text_main, 10%);
+                                color: color.adjust($text_main, $lightness: -10%);
                              }
                          }
                      }
@@ -256,7 +258,7 @@
 
                      &.hovered+ol li.highlight a span:nth-child(2),
                      &:hover+ol li.highlight a span:nth-child(2) {
-                         color: darken($text_main, 10%);
+                        color: color.adjust($text_main, $lightness: -10%);
                      }
 
                      &.hovered+ol li a.only-child,
@@ -278,7 +280,7 @@
                          li::after,
                          li::before,
                          ol::before {
-                             border-color: lighten($tree_highlight, 10%);
+                            border-color: color.adjust($tree_highlight, $lightness: 10%);
                          }
                      }
 
@@ -323,7 +325,7 @@
              padding: 10px;
              border: 5px solid white;
              border-radius: 5px;
-             background: darken(#F5F5F5, 2%);
+            background: color.adjust(#F5F5F5, $lightness: -2%);
              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
              text-align: left;
 
@@ -382,12 +384,12 @@
                  transform: translate(50%, -50%);
 
                  &:hover {
-                     background: darken($danger, 4%);
+                    background: color.adjust($danger, $lightness: -4%);
                      transform: translate(50%, -50%) scale(1.23);
                  }
 
                  &:active {
-                     background: darken($danger, 8%);
+                    background: color.adjust($danger, $lightness: -8%);
                  }
              }
          }

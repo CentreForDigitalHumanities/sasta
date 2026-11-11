@@ -1,9 +1,14 @@
+@use 'colors';
+
+$theme-font: "Open Sans", sans-serif;
+
+@use 'bulma/sass' with ($primary: colors.$primary,
+    $dark: colors.$dark,
+    $link: colors.$link,
+    $family-sans-serif: $theme-font);
 @import 'variables';
-@import 'bulma/bulma';
 @import "@creativebulma/bulma-divider";
 @import 'primeicons/primeicons.css';
-@import 'primeng/resources/themes/nova/theme.css';
-@import 'primeng/resources/primeng.css';
 
 @media print {
 
@@ -33,4 +38,26 @@
 
 .p-button:disabled {
     @extend .button
+}
+
+.p-toast-detail {
+    word-break: break-all;
+}
+tbody.p-element>tr:hover {
+    cursor: pointer;
+}
+
+.p-datatable {
+    @extend .table
+}
+
+@font-face {
+    font-family: "Open Sans";
+    src: url('/assets/fonts/Open_Sans/OpenSans-VariableFont_wdth,wght.ttf');
+}
+
+@font-face {
+    font-family: "Open Sans";
+    src: url('/assets/fonts/Open_Sans/OpenSans-Italic-VariableFont_wdth,wght.ttf');
+    font-style: italic;
 }

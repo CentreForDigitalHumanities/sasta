@@ -1,19 +1,53 @@
-from rest_framework import serializers
 
+from rest_framework import serializers
 from .models import (AnalysisRun, AssessmentMethod, AssessmentQuery, Corpus,
                      MethodCategory, Transcript, UploadFile, Utterance)
 
 
-class UploadFileSerializer(serializers.ModelSerializer):
+class CorpusOwnerValidationMixin:
+    """Only allow (re)assigning objects to corpora the requesting user owns."""
+
+    def validate_corpus(self, corpus):
+        user = self.context['request'].user
+        if corpus is None or not (corpus.user == user or user.is_superuser):
+            # mirror the message for non-existent keys to not leak existence
+            pk = getattr(corpus, 'pk', None)
+            raise serializers.ValidationError(
+                f'Invalid pk "{pk}" - object does not exist.',
+                code='does_not_exist')
+        return corpus
+
+
+class UploadFileSerializer(CorpusOwnerValidationMixin,
+                           serializers.ModelSerializer):
     class Meta:
         model = UploadFile
         fields = ['name', 'content', 'status', 'corpus']
+        # the model allows a null corpus, but uploads without one are
+        # meaningless (and would bypass the corpus ownership check)
+        extra_kwargs = {'corpus': {'required': True, 'allow_null': False}}
 
 
 class AnalysisRunSerializer(serializers.ModelSerializer):
+    task_status = serializers.CharField()
+    xlsx_results_available = serializers.BooleanField()
+    cha_results_available = serializers.BooleanField()
+    form_results_available = serializers.BooleanField()
+
     class Meta:
         model = AnalysisRun
-        fields = ('id', 'created', 'annotation_file', 'method', 'is_manual_correction')
+        fields = (
+            'id',
+            'created',
+            'annotation_file',
+            'method',
+            'is_manual_correction',
+            'task_id',
+            'task_status',
+            'xlsx_results_available',
+            'cha_results_available',
+            'form_results_available',
+        )
 
 
 class UtteranceSerializer(serializers.ModelSerializer):
@@ -32,7 +66,8 @@ class TranscriptListSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'status', 'status_name', 'date_added', 'utterances', 'corpus')
 
 
-class TranscriptDetailsSerializer(serializers.ModelSerializer):
+class TranscriptDetailsSerializer(CorpusOwnerValidationMixin,
+                                  serializers.ModelSerializer):
     def get_latest_run(self, obj):
         try:
             latest = obj.analysisruns.latest()
@@ -70,7 +105,8 @@ class CorpusListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Corpus
-        fields = ('id', 'name', 'method_category', 'num_transcripts', 'username')
+        fields = ('id', 'name', 'method_category',
+                  'num_transcripts', 'username', 'date_added')
 
 
 class CorpusDetailsSerializer(serializers.ModelSerializer):
@@ -93,10 +129,20 @@ class AssessmentQuerySerializer(serializers.ModelSerializer):
 
 class MethodCategorySerializer(serializers.ModelSerializer):
     has_form = serializers.BooleanField()
+    variants = serializers.SerializerMethodField()
 
     class Meta:
         model = MethodCategory
-        fields = ('id', 'name', 'zc_embeddings', 'levels', 'has_form')
+        fields = ('id', 'name', 'zc_embeddings',
+                  'levels', 'has_form', 'variants')
+
+    def get_variants(self, obj):
+        # TODO: implement with actual variants
+        known_variants = {}
+        cat_variants = known_variants.get(obj.name.lower(), None)
+        if cat_variants:
+            return [{'key': v.get('key'), 'label': v.get('label')} for v in cat_variants]
+        return []
 
 
 class AssessmentMethodSerializer(serializers.ModelSerializer):

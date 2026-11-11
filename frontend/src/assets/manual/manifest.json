@@ -1,0 +1,12 @@
+[
+    { "id": "main", "title": "SASTA Handleiding" },
+    { "id": "accounts", "title": "Gebruikersaccount" },
+    { "id": "corpora", "title": "Corpusoverzicht" },
+    { "id": "process", "title": "Voorbewerking" },
+    { "id": "upload", "title": "Uploaden van transcripten" },
+    { "id": "transcript", "title": "Transcriptoverzicht en analyse" },
+    {
+        "id": "sasta-input-format",
+        "title": "Invoerformaat: SASTA Input Format (SIF)"
+    }
+]

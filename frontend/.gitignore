@@ -49,3 +49,7 @@ Thumbs.db
 
 # Angular
 .angular/
+
+
+/src/environments/environment.prod.ts
+/src/environments/version.ts

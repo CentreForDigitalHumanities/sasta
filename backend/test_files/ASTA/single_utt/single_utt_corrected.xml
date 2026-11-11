@@ -1,0 +1,129 @@
+<treebank><alpino_ds version="1.14">
+  <parser build="Alpino-x86_64-linux-glibc2.5-git722-sicstus" date="2024-02-01T15:00" cats="3" skips="1"/>
+  <node begin="0" cat="top" end="14" id="0" rel="top">
+    <node begin="0" end="1" frame="verb(hebben,modal_inv,intransitive)" his="robust_skip" id="1" infl="modal_inv" lcat="--" lemma="kunnen" pos="verb" postag="WW(pv,tgw,ev)" pt="ww" pvagr="ev" pvtijd="tgw" rel="--" root="kan" sc="intransitive" sense="kan" tense="present" word="Kun" wvorm="pv"/>
+    <node begin="1" cat="du" end="14" id="2" rel="--">
+      <node begin="1" case="both" def="def" end="2" frame="pronoun(nwh,u,sg,de,both,def)" gen="de" getal="getal" his="normal" his_1="normal" id="3" lcat="np" lemma="u" naamval="nomin" num="sg" pdtype="pron" per="u" persoon="2b" pos="pron" postag="VNW(pers,pron,nomin,vol,2b,getal)" pt="vnw" rel="dp" rnum="sg" root="u" sense="u" status="vol" vwtype="pers" wh="nwh" word="u"/>
+      <node begin="2" cat="inf" end="10" id="4" rel="dp">
+        <node begin="2" case="dat_acc" def="def" end="3" frame="pronoun(nwh,fir,sg,de,dat_acc,def)" gen="de" getal="ev" his="normal" his_1="normal" id="5" lcat="np" lemma="mij" naamval="obl" num="sg" pdtype="pron" per="fir" persoon="1" pos="pron" postag="VNW(pr,pron,obl,vol,1,ev)" pt="vnw" rel="obj2" rnum="sg" root="mij" sense="mij" status="vol" vwtype="pr" wh="nwh" word="mij"/>
+        <node begin="3" end="4" frame="tmp_adverb" his="normal" his_1="normal" id="6" lcat="advp" lemma="eens" pos="adv" postag="BW()" pt="bw" rel="mod" root="eens" sense="eens" special="tmp" word="eens"/>
+        <node begin="4" end="5" frame="adverb" getal="ev" his="normal" his_1="normal" id="7" lcat="advp" lemma="wat" naamval="stan" pdtype="pron" persoon="3o" pos="adv" postag="VNW(onbep,pron,stan,vol,3o,ev)" pt="vnw" rel="mod" root="wat" sense="wat" status="vol" vwtype="onbep" word="wat"/>
+        <node begin="5" buiging="zonder" end="6" frame="verb(hebben,inf,np_sbar)" his="normal" his_1="normal" id="8" infl="inf" lcat="inf" lemma="vertellen" pos="verb" positie="vrij" postag="WW(inf,vrij,zonder)" pt="ww" rel="hd" root="vertel" sc="np_sbar" sense="vertel" word="vertellen" wvorm="inf"/>
+        <node begin="6" cat="whsub" end="10" id="9" rel="vc">
+          <node begin="6" end="7" frame="waar_adverb(om)" his="normal" his_1="normal" id="10" index="1" lcat="pp" lemma="waarom" pos="pp" postag="BW()" pt="bw" rel="whd" root="waarom" sense="waarom" special="waar" word="waarom"/>
+          <node begin="6" cat="ssub" end="10" id="11" rel="body">
+            <node begin="6" end="7" id="12" index="1" rel="mod"/>
+            <node begin="7" case="both" def="def" end="8" frame="pronoun(nwh,u,sg,de,both,def)" gen="de" getal="getal" his="normal" his_1="normal" id="13" lcat="np" lemma="u" naamval="nomin" num="sg" pdtype="pron" per="u" persoon="2b" pos="pron" postag="VNW(pers,pron,nomin,vol,2b,getal)" pt="vnw" rel="su" rnum="sg" root="u" sense="u" status="vol" vwtype="pers" wh="nwh" word="u"/>
+            <node begin="8" end="9" frame="er_loc_adverb" getal="getal" his="normal" his_1="normal" id="14" lcat="advp" lemma="hier" naamval="obl" pdtype="adv-pron" persoon="3o" pos="adv" postag="VNW(aanw,adv-pron,obl,vol,3o,getal)" pt="vnw" rel="ld" root="hier" sense="hier" special="er_loc" status="vol" vwtype="aanw" word="hier"/>
+            <node begin="9" end="10" frame="verb(unacc,sg_bent,ld_adv)" his="normal" his_1="normal" id="15" infl="sg_bent" lcat="ssub" lemma="zijn" pos="verb" postag="WW(pv,tgw,met-t)" pt="ww" pvagr="met-t" pvtijd="tgw" rel="hd" root="ben" sc="ld_adv" sense="ben" tense="present" word="bent" wvorm="pv"/>
+          </node>
+        </node>
+      </node>
+      <node begin="10" cat="whq" end="14" id="16" rel="dp">
+        <node begin="10" case="both" def="indef" end="11" frame="pronoun(ywh,thi,sg,het,both,indef,nparg)" gen="het" getal="ev" his="normal" his_1="normal" id="17" index="2" lcat="np" lemma="wat" naamval="stan" num="sg" pdtype="pron" per="thi" persoon="3o" pos="pron" postag="VNW(vb,pron,stan,vol,3o,ev)" pt="vnw" rel="whd" rnum="sg" root="wat" sense="wat" special="nparg" status="vol" vwtype="vb" wh="ywh" word="wat"/>
+        <node begin="10" cat="sv1" end="14" id="18" rel="body">
+          <node begin="10" end="11" id="19" index="2" rel="su"/>
+          <node begin="11" end="12" frame="verb(unacc,sg_is,aux_psp_zijn)" his="normal" his_1="normal" id="20" infl="sg_is" lcat="sv1" lemma="zijn" pos="verb" postag="WW(pv,tgw,ev)" pt="ww" pvagr="ev" pvtijd="tgw" rel="hd" root="ben" sc="aux_psp_zijn" sense="ben" stype="whquestion" tense="present" word="is" wvorm="pv"/>
+          <node begin="10" cat="ppart" end="14" id="21" rel="vc">
+            <node begin="10" end="11" id="22" index="2" rel="su"/>
+            <node begin="12" end="13" frame="er_vp_adverb" getal="getal" his="normal" his_1="normal" id="23" lcat="advp" lemma="er" naamval="stan" pdtype="adv-pron" persoon="3" pos="adv" postag="VNW(aanw,adv-pron,stan,red,3,getal)" pt="vnw" rel="mod" root="er" sense="er" special="er" status="red" vwtype="aanw" word="er"/>
+            <node begin="13" buiging="zonder" end="14" frame="verb(unacc,psp,intransitive)" his="normal" his_1="normal" id="24" infl="psp" lcat="ppart" lemma="gebeuren" pos="verb" positie="vrij" postag="WW(vd,vrij,zonder)" pt="ww" rel="hd" root="gebeur" sc="intransitive" sense="gebeur" word="gebeurd" wvorm="vd"/>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
+  <sentence sentid="1">Kun u mij eens wat vertellen waarom u hier bent wat is er gebeurd</sentence>
+<metadata>
+<meta type="text" name="charencoding" value="UTF8"/>
+<meta type="text" name="childage" value=""/>
+<meta type="text" name="childmonths" value=""/>
+<meta type="text" name="comment" value="##META text samplenaam = ASTA-16"/>
+<meta type="text" name="session" value="single_utt"/>
+<meta type="text" name="origutt" value="Kun u mij eens wat vertellen waarom u hier bent wat is er gebeurd"/>
+<meta type="text" name="parsefile" value="Unknown_corpus_single_utt_u00000000001.xml"/>
+<meta type="text" name="speaker" value="INV"/>
+<meta type="int" name="uttendlineno" value="8"/>
+<meta type="int" name="uttid" value="1"/>
+<meta type="int" name="uttstartlineno" value="8"/>
+<meta type="text" name="name" value="inv"/>
+<meta type="text" name="SES" value=""/>
+<meta type="text" name="age" value=""/>
+<meta type="text" name="custom" value=""/>
+<meta type="text" name="education" value=""/>
+<meta type="text" name="group" value=""/>
+<meta type="text" name="language" value="nld"/>
+<meta type="text" name="months" value=""/>
+<meta type="text" name="role" value="Other"/>
+<meta type="text" name="sex" value=""/>
+<meta type="int" name="uttno" value="1"/>
+</metadata>
+</alpino_ds><alpino_ds version="1.3">
+  <metadata>
+<meta type="text" name="charencoding" value="UTF8"/>
+<meta type="text" name="childage" value=""/>
+<meta type="text" name="childmonths" value=""/>
+<meta type="text" name="comment" value="##META text samplenaam = ASTA-16"/>
+<meta type="text" name="session" value="single_utt"/>
+<meta type="text" name="origutt" value="ja uh ik vind het beetje moeilijk om het goed te vertellen want ik heb een ongeluk gehad"/>
+<meta type="text" name="parsefile" value="Unknown_corpus_single_utt_u00000000002.xml"/>
+<meta type="text" name="speaker" value="PMA"/>
+<meta type="int" name="uttendlineno" value="9"/>
+<meta type="int" name="uttid" value="1"/>
+<meta type="int" name="uttstartlineno" value="9"/>
+<meta type="text" name="name" value="pma"/>
+<meta type="text" name="SES" value=""/>
+<meta type="text" name="age" value=""/>
+<meta type="text" name="custom" value=""/>
+<meta type="text" name="education" value=""/>
+<meta type="text" name="group" value=""/>
+<meta type="text" name="language" value="nld"/>
+<meta type="text" name="months" value=""/>
+<meta type="text" name="role" value="Other"/>
+<meta type="text" name="sex" value=""/>
+<meta type="text" name="xsid" value="1"/>
+<meta type="int" name="uttno" value="2"/>
+<xmeta name="ExtraGrammatical" atype="text" annotationwordlist="['uh']" annotationposlist="[20]" annotatedwordlist="['uh']" annotatedposlist="[20]" value="Filled Pause" cat="Syntax" subcat="None" source="SASTA" backplacement="0" penalty="10"/><xmeta name="ExtraGrammatical" atype="text" annotationwordlist="['ja']" annotationposlist="[10]" annotatedwordlist="['ja']" annotatedposlist="[10]" value="ja, nee or nou filled pause" cat="Syntax" subcat="None" source="SASTA" backplacement="0" penalty="10"/><xmeta name="tokenisation" atype="list" annotationwordlist="['ja', 'uh', 'ik', 'vind', 'het', 'beetje', 'moeilijk', 'om', 'het', 'goed', 'te', 'vertellen', 'want', 'ik', 'heb', 'een', 'ongeluk', 'gehad']" annotationposlist="[]" annotatedwordlist="[]" annotatedposlist="[]" value="['ja', 'uh', 'ik', 'vind', 'het', 'beetje', 'moeilijk', 'om', 'het', 'goed', 'te', 'vertellen', 'want', 'ik', 'heb', 'een', 'ongeluk', 'gehad']" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="10"/><xmeta name="cleanedtokenisation" atype="list" annotationwordlist="['ja', 'uh', 'ik', 'vind', 'het', 'beetje', 'moeilijk', 'om', 'het', 'goed', 'te', 'vertellen', 'want', 'ik', 'heb', 'een', 'ongeluk', 'gehad']" annotationposlist="[]" annotatedwordlist="[]" annotatedposlist="[]" value="['ja', 'uh', 'ik', 'vind', 'het', 'beetje', 'moeilijk', 'om', 'het', 'goed', 'te', 'vertellen', 'want', 'ik', 'heb', 'een', 'ongeluk', 'gehad']" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="10"/><xmeta name="cleanedtokenpositions" atype="list" annotationwordlist="[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180]" annotationposlist="[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180]" annotatedwordlist="[]" annotatedposlist="[]" value="[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180]" cat="None" subcat="None" source="CHAT/Tokenisation" backplacement="0" penalty="10"/><xmeta name="parsed_as" atype="text" annotationwordlist="ik vind het beetje moeilijk om het goed te vertellen want ik heb een ongeluk gehad" annotationposlist="[]" annotatedwordlist="[]" annotatedposlist="[]" value="ik vind het beetje moeilijk om het goed te vertellen want ik heb een ongeluk gehad" cat="Correction" subcat="None" source="SASTA" backplacement="0" penalty="0"/></metadata>
+<node begin="10" cat="top" end="181" id="0" rel="top">
+    <node begin="10" end="11" frame="tag" his="normal" his_1="normal" id="3" lcat="advp" lemma="ja" pos="tag" postag="TSW()" pt="tsw" rel="--" root="ja" sense="ja" word="ja"/>
+      <node begin="30" cat="conj" end="181" id="1" rel="--">
+      <node begin="30" cat="smain" end="121" id="2" rel="cnj">
+        <node begin="30" case="nom" def="def" end="31" frame="pronoun(nwh,fir,sg,de,nom,def)" gen="de" getal="ev" id="3" lcat="np" lemma="ik" naamval="nomin" num="sg" pdtype="pron" per="fir" persoon="1" pos="pron" postag="VNW(pers,pron,nomin,vol,1,ev)" pt="vnw" rel="su" rnum="sg" root="ik" sense="ik" status="vol" vwtype="pers" wh="nwh" word="ik"/>
+        <node begin="40" end="41" frame="verb(hebben,sg1,pred_np_vp)" id="4" infl="sg1" lcat="smain" lemma="vinden" pos="verb" postag="WW(pv,tgw,ev)" pt="ww" pvagr="ev" pvtijd="tgw" rel="hd" root="vind" sc="pred_np_vp" sense="vind" stype="declarative" tense="present" word="vind" wvorm="pv"/>
+        <node begin="50" end="51" frame="het_noun" genus="onz" getal="ev" id="5" lcat="np" lemma="het" naamval="stan" pdtype="pron" persoon="3" pos="noun" postag="VNW(pers,pron,stan,red,3,ev,onz)" pt="vnw" rel="pobj1" root="het" sense="het" special="het" status="red" vwtype="pers" word="het"/>
+        <node begin="60" cat="ap" end="71" id="6" rel="predc">
+          <node begin="60" end="61" frame="mod_noun(het,count,sg)" gen="het" genus="onz" getal="ev" graad="dim" id="7" lcat="np" lemma="beet" naamval="stan" ntype="soort" num="sg" pos="noun" postag="N(soort,ev,dim,onz,stan)" pt="n" rel="mod" rnum="sg" root="beet_DIM" sense="beet_DIM" special="mod" word="beetje"/>
+          <node aform="base" begin="70" buiging="zonder" end="71" frame="adjective(no_e(adv),subject_vp)" graad="basis" id="8" infl="no_e" lcat="ap" lemma="moeilijk" pos="adj" positie="vrij" postag="ADJ(vrij,basis,zonder)" pt="adj" rel="hd" root="moeilijk" sc="subject_vp" sense="moeilijk" vform="adj" word="moeilijk"/>
+        </node>
+        <node begin="80" cat="oti" end="121" id="9" rel="vc">
+          <node begin="80" end="81" frame="complementizer(om)" id="10" lcat="oti" lemma="om" pos="comp" postag="VZ(init)" pt="vz" rel="cmp" root="om" sc="om" sense="om" vztype="init" word="om"/>
+          <node begin="90" cat="ti" end="121" id="11" rel="body">
+            <node begin="110" end="111" frame="complementizer(te)" id="12" lcat="ti" lemma="te" pos="comp" postag="VZ(init)" pt="vz" rel="cmp" root="te" sc="te" sense="te" vztype="init" word="te"/>
+            <node begin="90" cat="inf" end="121" id="13" rel="body">
+              <node begin="90" end="91" frame="determiner(het,nwh,nmod,pro,nparg,wkpro)" genus="onz" getal="ev" id="14" infl="het" lcat="np" lemma="het" naamval="stan" pdtype="pron" persoon="3" pos="det" postag="VNW(pers,pron,stan,red,3,ev,onz)" pt="vnw" rel="obj1" rnum="sg" root="het" sense="het" status="red" vwtype="pers" wh="nwh" word="het"/>
+              <node aform="base" begin="100" buiging="zonder" end="101" frame="adjective(no_e(adv))" graad="basis" id="15" infl="no_e" lcat="ap" lemma="goed" pos="adj" positie="vrij" postag="ADJ(vrij,basis,zonder)" pt="adj" rel="mod" root="goed" sense="goed" vform="adj" word="goed"/>
+              <node begin="120" buiging="zonder" end="121" frame="verb(hebben,inf,transitive)" id="16" infl="inf" lcat="inf" lemma="vertellen" pos="verb" positie="vrij" postag="WW(inf,vrij,zonder)" pt="ww" rel="hd" root="vertel" sc="transitive" sense="vertel" word="vertellen" wvorm="inf"/>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node begin="130" conjtype="neven" end="131" frame="conj(want)" id="17" lcat="vg" lemma="want" pos="vg" postag="VG(neven)" pt="vg" rel="crd" root="want" sense="want" word="want"/>
+      <node begin="140" cat="smain" end="181" id="18" rel="cnj">
+        <node begin="140" case="nom" def="def" end="141" frame="pronoun(nwh,fir,sg,de,nom,def)" gen="de" getal="ev" id="19" index="1" lcat="np" lemma="ik" naamval="nomin" num="sg" pdtype="pron" per="fir" persoon="1" pos="pron" postag="VNW(pers,pron,nomin,vol,1,ev)" pt="vnw" rel="su" rnum="sg" root="ik" sense="ik" status="vol" vwtype="pers" wh="nwh" word="ik"/>
+        <node begin="150" end="151" frame="verb(hebben,sg1,aux_psp_hebben)" id="20" infl="sg1" lcat="smain" lemma="hebben" pos="verb" postag="WW(pv,tgw,ev)" pt="ww" pvagr="ev" pvtijd="tgw" rel="hd" root="heb" sc="aux_psp_hebben" sense="heb" stype="declarative" tense="present" word="heb" wvorm="pv"/>
+        <node begin="160" cat="ppart" end="181" id="21" rel="vc">
+          <node begin="140" end="141" id="22" index="1" rel="su"/>
+          <node begin="160" cat="np" end="171" id="23" rel="obj1">
+            <node begin="160" end="161" frame="determiner(een)" id="24" infl="een" lcat="detp" lemma="een" lwtype="onbep" naamval="stan" npagr="agr" pos="det" postag="LID(onbep,stan,agr)" pt="lid" rel="det" root="een" sense="een" word="een"/>
+            <node begin="170" end="171" frame="noun(het,count,sg)" gen="het" genus="onz" getal="ev" graad="basis" id="25" lcat="np" lemma="ongeluk" naamval="stan" ntype="soort" num="sg" pos="noun" postag="N(soort,ev,basis,onz,stan)" pt="n" rel="hd" rnum="sg" root="ongeluk" sense="ongeluk" word="ongeluk"/>
+          </node>
+          <node begin="180" buiging="zonder" end="181" frame="verb(hebben,psp,transitive_ndev)" id="26" infl="psp" lcat="ppart" lemma="hebben" pos="verb" positie="vrij" postag="WW(vd,vrij,zonder)" pt="ww" rel="hd" root="heb" sc="transitive_ndev" sense="heb" word="gehad" wvorm="vd"/>
+        </node>
+      </node>
+    </node>
+  <node begin="20" end="21" frame="--" his="skip" id="1" lcat="--" lemma="uh" pos="--" postag="TSW()" pt="tsw" rel="--" root="uh" sense="uh" word="uh"/>
+    </node>
+  <sentence sentid="1">ja uh ik vind het beetje moeilijk om het goed te vertellen want ik heb een ongeluk gehad</sentence><comments>
+    <comment>Q#ng1706799665|ik vind het beetje moeilijk om het goed te vertellen want ik heb een ongeluk gehad|1|1|-12.662841177789993</comment>
+  </comments>
+</alpino_ds></treebank>

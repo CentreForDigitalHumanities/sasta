@@ -5,6 +5,7 @@ import {
     faExternalLinkAlt,
     faFileUpload,
     faFolder,
+    faHome,
     faListAlt,
     faUser,
     faUserShield,
@@ -13,6 +14,7 @@ import { AuthService } from '@services';
 import { ShowState, animations } from '@shared/animations';
 
 @Component({
+    standalone: false,
     animations,
     selector: 'sas-menu',
     templateUrl: './menu.component.html',
@@ -28,6 +30,7 @@ export class MenuComponent implements OnInit {
     faFileUpload = faFileUpload;
     faUserShield = faUserShield;
     faExternalLink = faExternalLinkAlt;
+    faHome = faHome;
 
     version = environment.appVersion;
     docsAvailable: boolean;
@@ -78,6 +81,6 @@ export class MenuComponent implements OnInit {
     }
 
     navigateToDocs(): void {
-        window.open(environment.docs, '_blank');
+        window.open(`${environment.docs}/`, '_blank');
     }
 }

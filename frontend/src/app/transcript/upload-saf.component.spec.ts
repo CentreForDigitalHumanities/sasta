@@ -1,9 +1,11 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { MessageService } from 'primeng/api';
 import { Transcript } from '@models';
+import { MessageService } from 'primeng/api';
 
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing';
 import { UploadSafComponent } from './upload-saf.component';
+import { DialogModule } from 'primeng/dialog';
 
 describe('UploadSafComponent', () => {
     let component: UploadSafComponent;
@@ -42,7 +44,11 @@ describe('UploadSafComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [UploadSafComponent],
-            imports: [HttpClientTestingModule],
+            imports: [
+                HttpClientTestingModule,
+                FontAwesomeTestingModule,
+                DialogModule,
+            ],
             providers: [MessageService],
         }).compileComponents();
     }));

@@ -2,6 +2,11 @@
 Common settings between development and production environments.
 Values here should be imported in settings.py
 '''
+from sastadev.conf import settings as sdsettings
+from sastadev.sentence_parser import parse
+
+sdsettings.PARSE_FUNC = parse
+
 # Application settings
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -10,7 +15,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.sites',
-    'livereload',
     'django.contrib.staticfiles',
     'django_celery_results',
     'rest_framework',
@@ -18,14 +22,14 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'rest_auth',
-    'rest_auth.registration',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
     'revproxy',
     'analysis',
     'authentication',
     'parse',
     'convert',
-    'sastadev'
+    'annotations',
 ]
 
 MIDDLEWARE = [
@@ -36,7 +40,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 TEMPLATES = [
@@ -106,9 +110,9 @@ REST_FRAMEWORK = {
 
 # Authentication
 SITE_ID = 1
-ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_LOGIN_METHODS = {'email', 'username'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 
 # Celery
 CELERY_RESULT_BACKEND = 'django-db'

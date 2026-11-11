@@ -1,0 +1,12 @@
+@UTF8
+@Begin
+@Languages:	nld
+@Participants:	PMA pma Other, INV inv Other
+@ID:	nld||PMA|||||Other|||
+@ID:	nld||INV|||||Other|||
+@Comment:	##META text samplenaam = ASTA-16
+*INV:	Kun u mij eens wat vertellen waarom u hier bent wat is er gebeurd
+*PMA:	ja uh ik vind het beetje moeilijk om het goed te vertellen want ik heb een ongeluk gehad
+%xsid:	1
+%xsyn:	X, X, K, PV, N, lemma, A, BIJZIN, LEX, lemma, BIJZIN, PV, N, lemma, LEX, lemma
+@End

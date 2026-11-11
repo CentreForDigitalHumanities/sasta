@@ -1,4 +1,4 @@
-<ng-container *ngIf="corpus">
+@if (corpus) {
     <h3 class="title is-4"><span class="tag is-primary is-light">{{defaultTam?.category.name}}</span> {{ corpus.name }}
     </h3>
     <div class="buttons">
@@ -22,27 +22,33 @@
         </button>
     </div>
 
-    <div class="field" *ngIf="(authService.currentUser$ | async).isAdmin">
-        <label class="label"> Default method </label>
-        <div class="control">
-            <p-dropdown [options]="groupedTams" [(ngModel)]="defaultTam" placeholder="No default"
-                name="default-tam-dropdown" [group]="true" showClear="true" appendTo="body"
-                (onChange)="changeDefaultMethod()" [disabled]="!(groupedTams?.length > 0)">
-            </p-dropdown>
+    @if ((authService.currentUser$ | async).isAdmin) {
+        <div class="field">
+            <label class="label"> Default method </label>
+            <div class="control">
+                <p-select [options]="groupedTams" [(ngModel)]="defaultTam" placeholder="No default"
+                    name="default-tam-dropdown" [group]="true" showClear="true" appendTo="body"
+                    (onChange)="changeDefaultMethod()" [disabled]="!(groupedTams?.length > 0)">
+                </p-select>
+            </div>
         </div>
-    </div>
-    <table class="table is-fullwidth is-hoverable">
-        <thead>
+    }
+
+    <p-table [value]="corpus.transcripts" [rowHover]="true" sortField="date_added" [sortOrder]="-1">
+        <ng-template pTemplate="header">
             <tr>
-                <th>Transcript</th>
-                <th>Status</th>
-                <th>Utterances (#)</th>
-                <th>Created on</th>
+                <th pSortableColumn="name">Transcript<p-sortIcon field="name" /></th>
+                <th pSortableColumn="status_name">Status<p-sortIcon field="status_name" /></th>
+                <th pSortableColumn="utterances.length">
+                    Utterances (#) <p-sortIcon field="utterances.length" />
+                </th>
+                <th pSortableColumn="date_added">Created on<p-sortIcon field="date_added" /></th>
                 <th class="has-text-right">Actions</th>
             </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let transcript of corpus.transcripts">
+        </ng-template>
+
+        <ng-template pTemplate="body" let-transcript>
+            <tr>
                 <td class="transcript-name" [routerLink]="['/transcript/', transcript.id]">
                     <a>{{ transcript.name }}</a>
                 </td>
@@ -64,6 +70,7 @@
                     </div>
                 </td>
             </tr>
-        </tbody>
-    </table>
-</ng-container>
+        </ng-template>
+
+    </p-table>
+}

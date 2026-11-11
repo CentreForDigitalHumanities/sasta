@@ -4,18 +4,19 @@ import os
 import zipfile
 from io import BytesIO
 from itertools import chain
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 from uuid import uuid4
 
-from analysis.annotations.utils import clean_item
 from analysis.managers import SastaQueryManager
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from lxml import etree as ET
 from sastadev.external_functions import form_map
+from sastadev.methods import Method
 from sastadev.query import Query
-
+from sastadev.readmethod import read_method
+from celery.result import AsyncResult
 logger = logging.getLogger('sasta')
 
 
@@ -58,6 +59,9 @@ class MethodCategory(models.Model):
     def has_form(self):
         return True if self.get_form_function() else False
 
+    def get_current_method(self):
+        return self.definitions.latest()
+
 
 class AssessmentMethod(models.Model):
     def upload_path(self, filename):
@@ -68,7 +72,8 @@ class AssessmentMethod(models.Model):
     content = models.FileField(
         upload_to=upload_path, blank=True, null=True, max_length=500)
     category = models.ForeignKey(
-        MethodCategory, related_name='definitions', blank=True, null=True, on_delete=models.CASCADE)
+        MethodCategory, related_name='definitions',
+        blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -77,12 +82,11 @@ class AssessmentMethod(models.Model):
         unique_together = (('category', 'name'))
         get_latest_by = ('date_added', )
 
-    def get_item_mapping(self, sep):
-        queries = self.queries.all()
-        mapping = {}
-        for q in queries:
-            mapping.update(q.get_item_mapping(sep))
-        return mapping
+    def to_sastadev(self, variant: Optional[str] = None) -> Method:
+        return read_method(
+            methodname=self.category.name.lower(),
+            methodfilename=self.content.path,
+            variant=variant)
 
 
 class Corpus(models.Model):
@@ -94,9 +98,12 @@ class Corpus(models.Model):
     date_added = models.DateField(auto_now_add=True)
     date_modified = models.DateField(auto_now=True)
     default_method = models.ForeignKey(AssessmentMethod,
-                                       on_delete=models.SET_NULL, related_name='corpora', blank=True, null=True)
+                                       on_delete=models.SET_NULL,
+                                       related_name='corpora',
+                                       blank=True, null=True)
     method_category = models.ForeignKey(
-        MethodCategory, on_delete=models.SET_DEFAULT, default=1, related_name='corpora')
+        MethodCategory, on_delete=models.SET_DEFAULT,
+        default=1, related_name='corpora')
 
     def __str__(self):
         return self.name
@@ -176,9 +183,11 @@ class Transcript(models.Model):
         except Exception:
             raise
 
-    def get_filepaths(self) -> Tuple[str]:
+    def get_filepaths(self) -> Tuple:
         if self.corrected_content:
-            return (self.content.path, self.parsed_content.path, self.corrected_content.path)
+            return (self.content.path,
+                    self.parsed_content.path,
+                    self.corrected_content.path)
         return (self.content.path, self.parsed_content.path)
 
     @property
@@ -192,6 +201,13 @@ class Transcript(models.Model):
 
     def parseable(self):
         return self.status in (self.CONVERTED, self.PARSING_FAILED)
+
+    @property
+    def latest_run(self):
+        try:
+            return self.analysisruns.latest()
+        except AnalysisRun.DoesNotExist:
+            return None
 
 
 class Utterance(models.Model):
@@ -229,15 +245,17 @@ class Utterance(models.Model):
     def word_elements(self) -> List[ET._Element]:
         '''List of word elements, sorted by word (begin, end)'''
         word_elements = self.syntree.findall('.//node[@word]')
-        return sorted(word_elements, key=lambda x: (int(x.attrib.get('begin')), int(x.attrib.get('end'))))
+        return sorted(word_elements, key=lambda x: (int(x.attrib.get('begin')),
+                                                    int(x.attrib.get('end'))))
 
     @property
     @functools.lru_cache(maxsize=128)
-    def word_position_mapping(self) -> List[Tuple[Optional[int], Optional[int]]]:
+    def word_position_mapping(self) -> List[Dict]:
         ''' List of dictionaries (begin, end) for each word in the utterance
             starts with { begin:None, end:None } to represent unaligned
         '''
-        mapping = [{'begin': int(el.attrib.get('begin')), 'end': int(el.attrib.get('end'))}
+        mapping = [{'begin': int(el.attrib.get('begin')),
+                    'end': int(el.attrib.get('end'))}
                    for el in self.word_elements]
         return [{'begin': None, 'end': None}] + mapping
 
@@ -281,7 +299,7 @@ class AssessmentQuery(models.Model):
         default=list)
     implies = ArrayField(
         base_field=models.CharField(max_length=50, blank=True),
-        default=list)
+        default=list, null=True, blank=True)
     original = models.BooleanField()
     pages = models.CharField(max_length=50, blank=True, default='')
     fase = models.IntegerField(blank=True, null=True)
@@ -289,9 +307,11 @@ class AssessmentQuery(models.Model):
     inform = models.CharField(max_length=20, blank=True, default='')
     screening = models.CharField(max_length=20, blank=True, default=True)
     process = models.IntegerField(blank=True, null=True)
+    literal = models.CharField(max_length=200, blank=True, default='')
     stars = models.CharField(max_length=50, blank=True, default='')
     filter = models.CharField(max_length=200, blank=True, default='')
-    variants = models.CharField(max_length=200, blank=True, default='')
+    variants = ArrayField(
+        base_field=models.CharField(max_length=200, blank=True), default=list, null=True, blank=True)
     unused1 = models.CharField(max_length=50, blank=True, default='')
     unused2 = models.CharField(max_length=50, blank=True, default='')
     comments = models.TextField(blank=True, default='')
@@ -311,19 +331,6 @@ class AssessmentQuery(models.Model):
         if cleanresult == ['']:
             return []
         return cleanresult
-
-    def get_item_mapping(self, sep):
-        ''' mapping of all possible items (including altitems) to this query'''
-        if (not self.item) or (not self.level):
-            return {}
-        result = {(clean_item(self.item), self.level.lower()):
-                  (self.query_id, self.fase)}
-        if self.altitems:
-            for item in self.altitems:
-                if (clean_item(item), self.level.lower()) not in result:
-                    result[(clean_item(item), self.level.lower())] = (
-                        self.query_id, self.fase)
-        return result
 
     def to_sastadev(self) -> Query:
         sastadev_mapping = {'query_id': 'id'}
@@ -353,15 +360,53 @@ class AnalysisRun(models.Model):
     transcript = models.ForeignKey(
         Transcript, related_name='analysisruns', on_delete=models.CASCADE)
     method = models.ForeignKey(
-        AssessmentMethod, related_name='analysisruns', on_delete=models.CASCADE)
+        AssessmentMethod, related_name='analysisruns',
+        on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
-    query_file = models.FileField(upload_to=upload_path, max_length=500)
-    annotation_file = models.FileField(upload_to=upload_path, max_length=500)
+    query_file = models.FileField(
+        upload_to=upload_path, max_length=500, blank=True, null=True
+    )
+    annotation_file = models.FileField(
+        upload_to=upload_path, max_length=500, blank=True, null=True
+    )
+    form_file = models.FileField(
+        upload_to=upload_path, max_length=500, blank=True, null=True
+    )
+    annotated_chat_file = models.FileField(
+        upload_to=upload_path, max_length=500, blank=True, null=True
+    )
+
+    allresults = models.JSONField(blank=True, null=True)
     is_manual_correction = models.BooleanField(
-        default=False, help_text='this run was generated by parsing a user-uploaded SAF-file')
+        default=False,
+        help_text='this run was generated by parsing a user-uploaded SAF-file')
+
+    # For async parses, attach a celery task id
+    task_id = models.CharField(blank=True, max_length=100)
 
     class Meta:
         get_latest_by = "created"
 
     def __str__(self):
         return f'{self.transcript.name}'
+
+    def task_success(self):
+        return self.task_status() == 'SUCCESS'
+
+    def task_status(self):
+        if self.task_id:
+            result = AsyncResult(self.task_id)
+            return result.status
+        return None
+
+    @property
+    def xlsx_results_available(self):
+        return bool(self.annotation_file) and self.task_success()
+
+    @property
+    def cha_results_available(self):
+        return bool(self.annotated_chat_file) and self.task_success()
+
+    @property
+    def form_results_available(self):
+        return bool(self.form_file) and self.task_success()

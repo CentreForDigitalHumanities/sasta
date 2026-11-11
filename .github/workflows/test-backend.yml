@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        python-version: [3.7]
+        python-version: [3.13]
 
     services:
       # Label used to access the service container
@@ -45,11 +45,19 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Cache pip dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('backend/requirements-dev.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-${{ matrix.python-version }}-
+          ${{ runner.os }}-pip-
     - name: Install Python dependencies
       run: |
         cd backend
         python -m pip install --upgrade pip
-        yarn install-back
+        yarn install-back-dev
     - name: Test with pytest
       env:
         # Provide PostgreSQL environment variables in order to default to TCP connection
@@ -62,5 +70,6 @@ jobs:
         cd backend
         yarn django migrate
         yarn install-back
-        pytest
+        # No Alpino server in CI: skip tests that need one
+        pytest -m "not alpino"
 

@@ -1,14 +1,12 @@
 import os.path as op
 
 import pytest
-from analysis.conftest import stap_category, tarsp_category
 
 from .chat_reader import ChatDocument
 from .conftest import TEST_DIR
 
 
 @pytest.mark.django_db
-@pytest.mark.usefixtures("tarsp_category")
 def test_chat_reader(chafiles, tarsp_category):
     for (input, _) in chafiles:
         doc = ChatDocument.from_chatfile(input, tarsp_category)
@@ -16,7 +14,6 @@ def test_chat_reader(chafiles, tarsp_category):
 
 
 @pytest.mark.django_db
-@pytest.mark.usefixtures("tarsp_category", "stap_category")
 def test_marking_postcodes(chafiles, tarsp_category, stap_category):
     inf = op.join(TEST_DIR, 'TD16.cha')
 
