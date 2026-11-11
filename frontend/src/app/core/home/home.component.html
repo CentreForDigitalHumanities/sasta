@@ -1,16 +1,15 @@
 <div class="content">
 
     <h1>Getting started</h1>
-    <ng-container *ngIf="(isAuthenticated$ | async); else notAuthenticated">
+    @if ((isAuthenticated$ | async)) {
         <ul>
             <li>Read the <a (click)="navigateToDocs()">documentation</a> (in Dutch) to learn about using SASTA.</li>
             <li>Navigate to <a [routerLink]="['/corpora']">your corpora</a> to analyse transcripts.</li>
         </ul>
-    </ng-container>
-    <ng-template #notAuthenticated>
+    } @else {
         <p>To begin, <a [routerLink]="['/login']">login</a> or <a [routerLink]="['/register']">create an account</a>.
         </p>
-    </ng-template>
+    }
 
     <h1>About SASTA</h1>
     <p>

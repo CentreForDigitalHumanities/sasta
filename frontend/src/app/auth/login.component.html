@@ -33,12 +33,13 @@
                     </span>
                 </div>
             </div>
-            <div
-                *ngIf="errors$ | async as errors"
-                class="notification is-danger"
-            >
-                <p *ngFor="let error of errors">{{ error }}</p>
-            </div>
+            @if (errors$ | async; as errors) {
+                <div class="notification is-danger">
+                    @for (error of errors; track error) {
+                        <p>{{ error }}</p>
+                    }
+                </div>
+            }
                 <div class="level">
                     <div class="level-left">
                         <div class="level-item">

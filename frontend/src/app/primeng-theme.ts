@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { definePreset } from '@primeng/themes';
-import Nora from '@primeng/themes/nora';
+import { definePreset } from '@primeuix/themes';
+import Nora from '@primeuix/themes/nora';
 
 const bulmaPrimaryScheme = {
     50: 'var(--bulma-primary-95)',

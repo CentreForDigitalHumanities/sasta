@@ -1,4 +1,4 @@
-<ng-container *ngIf="corpora$ | async as corpora; else loading">
+@if (corpora$ | async; as corpora) {
     <p-table [value]="corpora" [rowHover]="true" sortField="date_added" [sortOrder]="-1">
         <ng-template pTemplate="header">
             <tr>
@@ -6,12 +6,11 @@
                 <th pSortableColumn="num_transcripts">
                     Transcripts (#) <p-sortIcon field="num_transcripts" />
                 </th>
-                <th
-                    pSortableColumn="username"
-                    *ngIf="(authService.currentUser$ | async).isAdmin"
-                >
-                    Owner <p-sortIcon field="username" />
-                </th>
+                @if ((authService.currentUser$ | async).isAdmin) {
+                    <th pSortableColumn="username">
+                        Owner <p-sortIcon field="username" />
+                    </th>
+                }
                 <th pSortableColumn="date_added">Created on<p-sortIcon field="date_added" /></th>
                 <th class="has-text-right">Actions</th>
             </tr>
@@ -20,9 +19,11 @@
             <tr [routerLink]="['/corpora/', corpus.id]">
                 <td>{{ corpus.name }}</td>
                 <td>{{ corpus.num_transcripts || "0" }}</td>
-                <td *ngIf="(authService.currentUser$ | async).isAdmin">
-                    {{ corpus.username }}
-                </td>
+                @if ((authService.currentUser$ | async).isAdmin) {
+                    <td>
+                        {{ corpus.username }}
+                    </td>
+                }
                 <td>{{ corpus.date_added | date: "dd/MM/yyyy" }}</td>
                 <td class="has-text-right">
                     <div class="buttons is-right">
@@ -44,15 +45,16 @@
         </ng-template>
     </p-table>
 
-    <h1 *ngIf="corpora.length === 0" class="title is-2">
-        No corpora yet!
-        <a [routerLink]="['/upload']" routerLinkActive="is-active"> Upload </a>
-    </h1>
+    @if (corpora.length === 0) {
+        <h1 class="title is-2">
+            No corpora yet!
+            <a [routerLink]="['/upload']" routerLinkActive="is-active"> Upload </a>
+        </h1>
+    }
 
     <p-confirmDialog [dismissableMask]="true"></p-confirmDialog>
-</ng-container>
-<ng-template #loading>
+} @else {
     <div>
         <progress class="progress is-small is-primary" max="100"></progress>
     </div>
-</ng-template>
+}
