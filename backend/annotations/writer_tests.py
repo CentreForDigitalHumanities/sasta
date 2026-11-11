@@ -6,8 +6,8 @@ from annotations.writers.saf_xlsx import SAFWriter
 from .utils import ljust
 
 
-def test_safwriter(safwriter: SAFWriter, tmp_path):
-    with open(tmp_path / 'saf_writer_test.xlsx', 'wb') as f:
+def test_safwriter(safwriter: SAFWriter):
+    with open('/Users/a3248526/Documents/saf_writer_test.xlsx', 'wb') as f:
         safwriter.write(f)
     assert safwriter
 
