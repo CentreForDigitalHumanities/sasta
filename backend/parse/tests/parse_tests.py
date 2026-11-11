@@ -6,6 +6,7 @@ import pytest
 from parse.parse_utils import initial_parse
 
 
+@pytest.mark.alpino
 @pytest.mark.skip(reason="need to figure out c2a uttids")
 def test_c2a_parse(testfiles_dir, tmp_path):
     infile = op.join(testfiles_dir, 'ASTA', 'single_utt', 'single_utt.cha')

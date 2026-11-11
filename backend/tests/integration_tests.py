@@ -15,6 +15,7 @@ def test_analysis(db, all_transcripts):
         assert results
 
 
+@pytest.mark.alpino
 @pytest.mark.skip('Integration tests need adaptation to new SASTADEV')
 def test_single_transcript_fullrun(db, single_utt, single_utt_transcript):
     """Make sure a single transcript can be run through the full pipeline"""
