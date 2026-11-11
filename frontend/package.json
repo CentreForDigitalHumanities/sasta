@@ -39,7 +39,7 @@
         "@fortawesome/free-solid-svg-icons": "~7.3.1",
         "@primeuix/themes": "~2.0.3",
         "bulma": "~1.0.4",
-        "fast-xml-parser": "~5.7.2",
+        "fast-xml-parser": "~5.12.0",
         "file-saver": "~2.0.0",
         "jquery": "~3.7.0",
         "lassy-xpath": "~0.15.0",
@@ -79,5 +79,12 @@
         "karma-jasmine-html-reporter": "^2.1.0",
         "ts-node": "~7.0.0",
         "typescript": "~5.9.3"
+    },
+    "resolutions": {
+        "**/cacache/glob": "14.0.4",
+        "**/@npmcli/package-json/glob": "14.0.4",
+        "**/ignore-walk/minimatch": "11.0.8",
+        "**/@tufjs/models/minimatch": "11.0.8",
+        "**/@typescript-eslint/typescript-estree/minimatch": "11.0.8"
     }
 }
