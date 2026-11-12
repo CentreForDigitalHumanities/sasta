@@ -35,14 +35,6 @@ export class MethodService {
         return this.methods$;
     }
 
-    public getMethodsForCategory(c: MethodCategory): Observable<Method[]> {
-        return this.methods$.pipe(
-            map((methods) =>
-                methods.filter((method) => method.category.id === c.id)
-            )
-        );
-    }
-
     public getCategories(): Observable<MethodCategory[]> {
         return this.categories$;
     }
@@ -59,16 +51,6 @@ export class MethodService {
             map((methods) => methods.filter((method) => method.id === id)),
             map((methods) => methods[0])
         );
-    }
-
-    async upload(method: Method): Promise<Method> {
-        const formData: FormData = new FormData();
-        formData.append('content', method.content as File, method.content.name);
-        formData.append('name', method.name);
-        const response = await this.http
-            .post<Method>('/api/assessment_methods/', formData)
-            .toPromise();
-        return response;
     }
 
     groupMethods(methods: Method[], categoryID: number): SelectItemGroup[] {
