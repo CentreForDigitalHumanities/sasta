@@ -233,7 +233,12 @@ def correct_treebank(transcript: Transcript):
             allsamplecorrections={},
             thissamplecorrections={},
             treebank=treebank,
-            contextdict={}
+            contextdict={},
+            # TODO: these cache spelling corrections between runs; sastadev only reads
+            # them when dospellingcorrection is on. Sort out persistence together with
+            # dospellingcorrection, dohistory and the sample corrections.
+            children_correctionsdict={},
+            adult_correctionsdict={}
         )
 
         corr, error_dict, origandalts = correcttreebank(
