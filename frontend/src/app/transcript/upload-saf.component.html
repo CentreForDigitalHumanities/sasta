@@ -37,7 +37,7 @@
                 <p class="title is-4">Errors reading SAF file</p>
                 <p class="subtitle is-6">Please resolve these and try again.</p>
                 <ul>
-                    @for (error of parseErrors; track error) {
+                    @for (error of parseErrors; track $index) {
                         <li>{{error}}</li>
                     }
                 </ul>

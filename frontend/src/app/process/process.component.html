@@ -24,7 +24,7 @@
                 <th>Convert</th>
                 <th>Parse</th>
             </tr>
-            @for (transcript of corpus.transcripts; track transcript) {
+            @for (transcript of corpus.transcripts; track transcript.id) {
                 <tr sas-transcript-progress [transcript]="transcript"></tr>
             }
         </tbody>

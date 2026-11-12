@@ -138,7 +138,7 @@
         <div class="metadata">
             <div class="card" #metadataCard>
                 <table class="table">
-                    @for (item of metadata; track item) {
+                    @for (item of metadata; track item.name) {
                         <tr>
                             <th>{{item.name}}</th>
                             <td [innerHTML]="item.value"></td>

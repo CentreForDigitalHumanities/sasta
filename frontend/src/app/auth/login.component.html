@@ -35,7 +35,7 @@
             </div>
             @if (errors$ | async; as errors) {
                 <div class="notification is-danger">
-                    @for (error of errors; track error) {
+                    @for (error of errors; track $index) {
                         <p>{{ error }}</p>
                     }
                 </div>
