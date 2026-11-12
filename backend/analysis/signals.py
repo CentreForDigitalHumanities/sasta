@@ -18,7 +18,7 @@ from .models import (
     Transcript,
     UploadFile,
 )
-from .utils import extract, read_TAM
+from .utils import extract, validate_TAM
 
 logger = logging.getLogger('sasta')
 
@@ -71,7 +71,7 @@ def file_delete(sender, instance, **kwargs):
 @receiver(post_save, sender=AssessmentMethod)
 def read_method_file(sender, instance, created, **kwargs):
     try:
-        read_TAM(instance)
+        validate_TAM(instance)
     except Exception as error:
         logger.exception(error)
         print(f'error in read_tam_file:\t{error}')

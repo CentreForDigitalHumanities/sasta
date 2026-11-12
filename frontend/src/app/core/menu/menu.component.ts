@@ -6,7 +6,6 @@ import {
     faFileUpload,
     faFolder,
     faHome,
-    faListAlt,
     faUser,
     faUserShield,
 } from '@fortawesome/free-solid-svg-icons';
@@ -26,7 +25,6 @@ export class MenuComponent implements OnInit {
 
     faUser = faUser;
     faFolder = faFolder;
-    faListAlt = faListAlt;
     faFileUpload = faFileUpload;
     faUserShield = faUserShield;
     faExternalLink = faExternalLinkAlt;
@@ -38,13 +36,13 @@ export class MenuComponent implements OnInit {
     constructor(
         private ngZone: NgZone,
         public authService: AuthService,
-        private router: Router
+        private router: Router,
     ) {}
 
     ngOnInit(): void {
         this.authService.getDocumentation().subscribe(
             (res) => (this.docsAvailable = res.status === 200),
-            (err) => (this.docsAvailable = err.status === 200)
+            (err) => (this.docsAvailable = err.status === 200),
         );
     }
 
@@ -57,7 +55,7 @@ export class MenuComponent implements OnInit {
             () => {
                 this.router.navigate(['/login']);
             },
-            (err) => console.error('Http Error', err)
+            (err) => console.error('Http Error', err),
         );
     }
 

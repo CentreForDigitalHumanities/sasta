@@ -39,7 +39,7 @@ class UtteranceInline(admin.TabularInline):
 
 @admin.register(Transcript)
 class TranscriptAdmin(admin.ModelAdmin):
-    inlines = (UtteranceInline, )
+    inlines = (UtteranceInline,)
     list_display = ('__str__', 'corpus', 'status', 'has_corrections')
     list_filter = ('status', 'corpus')
     model = Transcript
@@ -57,12 +57,8 @@ class UploadFileAdmin(admin.ModelAdmin):
 class AssessmentMethodAdmin(admin.ModelAdmin):
     model = AssessmentMethod
     readonly_fields = ('date_added',)
-    list_display = ('category', 'name', 'queries')
+    list_display = ('category', 'name')
 
-    def queries(self, obj):
-        if not obj.content:
-            return 0
-        return len(obj.to_sastadev().queries)
 
 @admin.register(CompoundFile)
 class CompoundFileAdmin(admin.ModelAdmin):

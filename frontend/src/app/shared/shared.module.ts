@@ -16,11 +16,9 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { StepsModule } from 'primeng/steps';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
-import { RenderStringArrayPipe } from './pipes/render-string-array.pipe';
 
 const primeNGModules = [
     // PrimeNG
-    AccordionModule,
     CheckboxModule,
     ConfirmDialogModule,
     DialogModule,
@@ -37,13 +35,8 @@ const primeNGModules = [
 ];
 
 @NgModule({
-    declarations: [RenderStringArrayPipe],
+    declarations: [],
     imports: [CommonModule, FontAwesomeModule, FormsModule, ...primeNGModules],
-    exports: [
-        ...primeNGModules,
-        FontAwesomeModule,
-        FormsModule,
-        RenderStringArrayPipe,
-    ],
+    exports: [...primeNGModules, FontAwesomeModule, FormsModule],
 })
 export class SharedModule {}

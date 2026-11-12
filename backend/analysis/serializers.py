@@ -1,4 +1,3 @@
-
 from rest_framework import serializers
 from .models import (
     AnalysisRun,
@@ -20,13 +19,12 @@ class CorpusOwnerValidationMixin:
             # mirror the message for non-existent keys to not leak existence
             pk = getattr(corpus, 'pk', None)
             raise serializers.ValidationError(
-                f'Invalid pk "{pk}" - object does not exist.',
-                code='does_not_exist')
+                f'Invalid pk "{pk}" - object does not exist.', code='does_not_exist'
+            )
         return corpus
 
 
-class UploadFileSerializer(CorpusOwnerValidationMixin,
-                           serializers.ModelSerializer):
+class UploadFileSerializer(CorpusOwnerValidationMixin, serializers.ModelSerializer):
     class Meta:
         model = UploadFile
         fields = ['name', 'content', 'status', 'corpus']
@@ -62,7 +60,16 @@ class UtteranceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Utterance
-        fields = ('id', 'sentence', 'speaker', 'utt_id', 'uttno', 'xsid', 'for_analysis', 'parse_tree')
+        fields = (
+            'id',
+            'sentence',
+            'speaker',
+            'utt_id',
+            'uttno',
+            'xsid',
+            'for_analysis',
+            'parse_tree',
+        )
 
 
 class TranscriptListSerializer(serializers.ModelSerializer):
@@ -70,11 +77,20 @@ class TranscriptListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Transcript
-        fields = ('id', 'name', 'status', 'status_name', 'date_added', 'utterances', 'corpus')
+        fields = (
+            'id',
+            'name',
+            'status',
+            'status_name',
+            'date_added',
+            'utterances',
+            'corpus',
+        )
 
 
-class TranscriptDetailsSerializer(CorpusOwnerValidationMixin,
-                                  serializers.ModelSerializer):
+class TranscriptDetailsSerializer(
+    CorpusOwnerValidationMixin, serializers.ModelSerializer
+):
     def get_latest_run(self, obj):
         try:
             latest = obj.analysisruns.latest()
@@ -97,35 +113,63 @@ class TranscriptDetailsSerializer(CorpusOwnerValidationMixin,
 
     class Meta:
         model = Transcript
-        fields = ('id', 'name', 'content',
-                  'parsed_content', 'corrected_content', 'status', 'status_name', 'date_added',
-                  'corpus', 'utterances', 'latest_run', 'latest_corrections', 'target_speakers')
+        fields = (
+            'id',
+            'name',
+            'content',
+            'parsed_content',
+            'corrected_content',
+            'status',
+            'status_name',
+            'date_added',
+            'corpus',
+            'utterances',
+            'latest_run',
+            'latest_corrections',
+            'target_speakers',
+        )
 
 
 class CorpusListSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
     num_transcripts = serializers.SerializerMethodField()
-    username = serializers.CharField(source="user.username", read_only=True)
+    username = serializers.CharField(source='user.username', read_only=True)
 
     def get_num_transcripts(self, obj):
         return obj.transcripts.count()
 
     class Meta:
         model = Corpus
-        fields = ('id', 'name', 'method_category',
-                  'num_transcripts', 'username', 'date_added')
+        fields = (
+            'id',
+            'name',
+            'method_category',
+            'num_transcripts',
+            'username',
+            'date_added',
+        )
 
 
 class CorpusDetailsSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
     # files = UploadFileSerializer(read_only=True, many=True)
     transcripts = TranscriptListSerializer(read_only=True, many=True)
-    username = serializers.CharField(source="user.username", read_only=True)
+    username = serializers.CharField(source='user.username', read_only=True)
 
     class Meta:
         model = Corpus
-        fields = ('id', 'name', 'status', 'default_method', 'method_category',
-                  'date_added', 'date_modified', 'transcripts', 'username')
+        fields = (
+            'id',
+            'name',
+            'status',
+            'default_method',
+            'method_category',
+            'date_added',
+            'date_modified',
+            'transcripts',
+            'username',
+        )
+
 
 class MethodCategorySerializer(serializers.ModelSerializer):
     has_form = serializers.BooleanField()
@@ -133,15 +177,16 @@ class MethodCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MethodCategory
-        fields = ('id', 'name', 'zc_embeddings',
-                  'levels', 'has_form', 'variants')
+        fields = ('id', 'name', 'zc_embeddings', 'levels', 'has_form', 'variants')
 
     def get_variants(self, obj):
         # TODO: implement with actual variants
         known_variants = {}
         cat_variants = known_variants.get(obj.name.lower(), None)
         if cat_variants:
-            return [{'key': v.get('key'), 'label': v.get('label')} for v in cat_variants]
+            return [
+                {'key': v.get('key'), 'label': v.get('label')} for v in cat_variants
+            ]
         return []
 
 

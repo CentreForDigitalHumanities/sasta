@@ -1,8 +1,8 @@
 import datetime
 import errno
-from io import BytesIO
 import logging
 import os
+from io import BytesIO
 from shutil import copyfile
 from zipfile import ZipFile
 
@@ -12,12 +12,12 @@ import docx.oxml.text.paragraph
 import docx.table
 import docx.text.paragraph
 import pandas as pd
-from analysis import models as sasta_models
 from django.core.files import File
 from django.core.files.base import ContentFile
 from docx import Document
-from sastadev.methods import Method
 from sastadev.readmethod import read_method
+
+from analysis import models as sasta_models
 
 logger = logging.getLogger('sasta')
 
@@ -160,8 +160,8 @@ def docx_to_txt(filepath, delete_docx=True):
         logger.exception(error)
 
 
-def read_TAM(method_model) -> None:
-    ''' Read the method and create queries for a Method model'''
+def validate_TAM(method_model) -> None:
+    """Read the method, used to sniff out errors"""
     filepath = method_model.content.path
     category = method_model.category.name.lower()
     logger.info(f'TAM-Reader:\treading {os.path.basename(filepath)}')
