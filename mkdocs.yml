@@ -17,7 +17,6 @@ nav:
     - Voorbewerking (process): 'process.md'
     - Corpus-overzicht: 'corpora.md'
     - Transcript-overzicht: 'transcript.md'
-    - Methode-overzicht: 'methodes.md'
     - Invoerformaten:
         - Anonimisatie: 'input-formats/anonimisatie.md'
         - SASTA Input Format (SIF): 'input-formats/sif.md'
