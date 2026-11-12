@@ -36,17 +36,6 @@
                     </a>
                 }
                 @if (isAuthenticated()) {
-                    <a [routerLink]="['/methods']" routerLinkActive="is-active"
-                        class="navbar-item">
-                        <span class="icon-text">
-                            <span class="icon">
-                                <fa-icon [icon]="faListAlt"></fa-icon>
-                            </span>
-                            <span>Methods</span>
-                        </span>
-                    </a>
-                }
-                @if (isAuthenticated()) {
                     <a [routerLink]="['/upload']" routerLinkActive="is-active"
                         class="navbar-item">
                         <span class="icon-text">

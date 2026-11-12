@@ -1,4 +1,3 @@
-import { Query } from './query';
 import { MethodCategory } from './methodcategory';
 
 export interface Method {
@@ -7,5 +6,4 @@ export interface Method {
     category: MethodCategory;
     content: File | { name: string };
     date_added?: Date;
-    queries: Query[];
 }

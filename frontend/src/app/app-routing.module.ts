@@ -19,11 +19,6 @@ const routes: Routes = [
             import('./corpus/corpus.module').then((m) => m.CorpusModule),
     },
     {
-        path: 'methods',
-        loadChildren: () =>
-            import('./method/method.module').then((m) => m.MethodModule),
-    },
-    {
         path: 'upload',
         component: UploadComponent,
         canActivate: [AuthGuard],
