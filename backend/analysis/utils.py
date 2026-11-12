@@ -165,17 +165,8 @@ def read_TAM(method_model) -> None:
     filepath = method_model.content.path
     category = method_model.category.name.lower()
     logger.info(f'TAM-Reader:\treading {os.path.basename(filepath)}')
-    method = read_method(category, filepath)
-    create_queries(method, method_model)
+    read_method(category, filepath)
     logger.info('TAM-Reader:\treading done')
-
-
-def create_queries(method: Method, model: sasta_models.AssessmentMethod):
-    cnt = 0
-    for q in method.queries.values():
-        sasta_models.AssessmentQuery.objects.create_from_sastadev(q, model)
-        cnt += 1
-    logger.info(f'Created {cnt} queries for method {model.name}')
 
 
 def compare_methods(old_method_path, new_method_path: str):

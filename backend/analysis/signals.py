@@ -9,8 +9,15 @@ from django.db.models.fields.files import FieldFile
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 
-from .models import (AnalysisRun, AssessmentMethod, AssessmentQuery, Compound,
-                     CompoundFile, Corpus, Transcript, UploadFile)
+from .models import (
+    AnalysisRun,
+    AssessmentMethod,
+    Compound,
+    CompoundFile,
+    Corpus,
+    Transcript,
+    UploadFile,
+)
 from .utils import extract, read_TAM
 
 logger = logging.getLogger('sasta')
@@ -63,9 +70,6 @@ def file_delete(sender, instance, **kwargs):
 
 @receiver(post_save, sender=AssessmentMethod)
 def read_method_file(sender, instance, created, **kwargs):
-    if not created:
-        # on update: delete all queries related to this method
-        AssessmentQuery.objects.filter(method=instance).delete()
     try:
         read_TAM(instance)
     except Exception as error:

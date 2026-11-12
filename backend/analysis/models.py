@@ -7,14 +7,12 @@ from itertools import chain
 from typing import Dict, List, Optional, Tuple
 from uuid import uuid4
 
-from analysis.managers import SastaQueryManager
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from lxml import etree as ET
 from sastadev.external_functions import form_map
 from sastadev.methods import Method
-from sastadev.query import Query
 from sastadev.readmethod import read_method
 from celery.result import AsyncResult
 logger = logging.getLogger('sasta')
@@ -283,74 +281,6 @@ class UploadFile(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class AssessmentQuery(models.Model):
-    method = models.ForeignKey(AssessmentMethod, related_name='queries',
-                               on_delete=models.CASCADE)
-
-    query_id = models.CharField(max_length=4)
-    cat = models.CharField(max_length=50, blank=True, default='')
-    subcat = models.CharField(max_length=50, blank=True, default='')
-    level = models.CharField(max_length=50, blank=True, default='')
-    item = models.CharField(max_length=50, blank=True, default='')
-    altitems = ArrayField(
-        base_field=models.CharField(max_length=50, blank=True),
-        default=list)
-    implies = ArrayField(
-        base_field=models.CharField(max_length=50, blank=True),
-        default=list, null=True, blank=True)
-    original = models.BooleanField()
-    pages = models.CharField(max_length=50, blank=True, default='')
-    fase = models.IntegerField(blank=True, null=True)
-    query = models.CharField(max_length=5000, blank=True, default='')
-    inform = models.CharField(max_length=20, blank=True, default='')
-    screening = models.CharField(max_length=20, blank=True, default=True)
-    process = models.IntegerField(blank=True, null=True)
-    literal = models.CharField(max_length=200, blank=True, default='')
-    stars = models.CharField(max_length=50, blank=True, default='')
-    filter = models.CharField(max_length=200, blank=True, default='')
-    variants = ArrayField(
-        base_field=models.CharField(max_length=200, blank=True), default=list, null=True, blank=True)
-    unused1 = models.CharField(max_length=50, blank=True, default='')
-    unused2 = models.CharField(max_length=50, blank=True, default='')
-    comments = models.TextField(blank=True, default='')
-
-    # Manager
-    objects = SastaQueryManager()
-
-    def __str__(self):
-        return self.query_id
-
-    def get_items_list(self, str, sep, lower=True):
-        rawresult = str.split(sep)
-        if lower:
-            cleanresult = [w.strip().lower() for w in rawresult]
-        else:
-            cleanresult = [w.strip() for w in rawresult]
-        if cleanresult == ['']:
-            return []
-        return cleanresult
-
-    def to_sastadev(self) -> Query:
-        sastadev_mapping = {'query_id': 'id'}
-        processes = ['pre', 'core', 'post', 'form']
-        relevant_fields = [f for f in self._meta.fields
-                           if f.get_internal_type()
-                           not in ('AutoField', 'ForeignKey', 'id')]
-        values = {f.name: getattr(self, f.name) for f in relevant_fields}
-        # Convert process back to string
-        values['process'] = processes[values.pop('process')]
-
-        for k, v in list(values.items()):
-            if k in sastadev_mapping:
-                values[sastadev_mapping.get(k)] = values.pop(k)
-
-        return Query(**values)
-
-    class Meta:
-        unique_together = ('method', 'query_id')
-
 
 class AnalysisRun(models.Model):
     def upload_path(self, filename):

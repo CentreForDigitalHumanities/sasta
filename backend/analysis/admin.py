@@ -3,8 +3,17 @@ from __future__ import unicode_literals
 
 from django.contrib import admin
 
-from .models import (AnalysisRun, AssessmentMethod, AssessmentQuery, Compound, CompoundFile,
-                     Corpus, MethodCategory, Transcript, UploadFile, Utterance)
+from .models import (
+    AnalysisRun,
+    AssessmentMethod,
+    Compound,
+    CompoundFile,
+    Corpus,
+    MethodCategory,
+    Transcript,
+    UploadFile,
+    Utterance,
+)
 
 
 class TranscriptInline(admin.TabularInline):
@@ -51,15 +60,9 @@ class AssessmentMethodAdmin(admin.ModelAdmin):
     list_display = ('category', 'name', 'queries')
 
     def queries(self, obj):
-        if obj.queries:
-            return len(obj.queries.all())
-        return 0
-
-
-@admin.register(AssessmentQuery)
-class AssessmentQueryAdmin(admin.ModelAdmin):
-    model = AssessmentQuery
-
+        if not obj.content:
+            return 0
+        return len(obj.to_sastadev().queries)
 
 @admin.register(CompoundFile)
 class CompoundFileAdmin(admin.ModelAdmin):

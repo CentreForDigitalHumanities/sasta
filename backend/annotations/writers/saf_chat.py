@@ -52,7 +52,9 @@ def enrich_chat(transcript: Transcript,
 
     # create mapping of query_ids to items
     items_mapping = {
-        q.query_id: q.item for q in method.queries.all() if cast_to_bool(q.inform)}
+        query_id: query.item
+        for query_id, query in method.to_sastadev().queries.items()
+        if cast_to_bool(query.inform)}
 
     results_by_word = _items_by_utt_word(
         allresults.exactresults, items_mapping)

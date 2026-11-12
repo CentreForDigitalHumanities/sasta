@@ -1,7 +1,14 @@
 
 from rest_framework import serializers
-from .models import (AnalysisRun, AssessmentMethod, AssessmentQuery, Corpus,
-                     MethodCategory, Transcript, UploadFile, Utterance)
+from .models import (
+    AnalysisRun,
+    AssessmentMethod,
+    Corpus,
+    MethodCategory,
+    Transcript,
+    UploadFile,
+    Utterance,
+)
 
 
 class CorpusOwnerValidationMixin:
@@ -120,13 +127,6 @@ class CorpusDetailsSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'status', 'default_method', 'method_category',
                   'date_added', 'date_modified', 'transcripts', 'username')
 
-
-class AssessmentQuerySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AssessmentQuery
-        fields = '__all__'
-
-
 class MethodCategorySerializer(serializers.ModelSerializer):
     has_form = serializers.BooleanField()
     variants = serializers.SerializerMethodField()
@@ -147,11 +147,9 @@ class MethodCategorySerializer(serializers.ModelSerializer):
 
 class AssessmentMethodSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
-    queries = AssessmentQuerySerializer(read_only=True, many=True)
     date_added = serializers.DateField(format='%d-%m-%Y', read_only=True)
     category = MethodCategorySerializer()
 
     class Meta:
         model = AssessmentMethod
-        fields = ('id', 'name', 'category', 'content',
-                  'date_added', 'queries', )
+        fields = ('id', 'name', 'category', 'content', 'date_added')

@@ -37,11 +37,13 @@ def querycounts_to_xlsx(allresults: AllResults, method: AssessmentMethod):
     for (k, _), v in res.items():
         reduced_results[k] += v
 
+    queries = method.to_sastadev().queries
+
     # write rows of data
     for qid in natsorted(reduced_results):
         # get query info
         cntr = reduced_results[qid]
-        q = method.queries.get(query_id=qid)
+        q = queries[qid]
 
         # write the total row
         total_row = [qid, q.item, q.fase or NOT_APPLICABLE_LABEL,
